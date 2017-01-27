@@ -1,5 +1,8 @@
 package jml.anfis;
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.MatchingIterator;
+import jml.utils.MatrixOperations;
+
 public class Anfis {
 	double minError = 0.001;
 	int maxIterCnt = 100;
@@ -17,8 +20,14 @@ public class Anfis {
 	
 	double [] membershipParams;
 	double [] linearParams;
-		
-	public Anfis() {
+	int linearParamCnt;
+
+    double[][] X;
+    double[][][] S;
+    double gamma = 1000;
+
+
+    public Anfis() {
 		
 	}	
 	
@@ -42,9 +51,21 @@ public class Anfis {
 		normalizedVals = new double[ruleList.length];
 		defuzzVals = new double[ruleList.length];
 		// +1 bias parameter
-		linearParams = new double[inputCnt+1];
-		for (int i=0;i<linearParams.length; i++) 
-			linearParams[i] = 0.5;
+		linearParamCnt = (ruleList.length+1)*ruleList.length;
+		linearParams = new double[linearParamCnt];
+	}
+
+	void start(double[][] inputs,double[] outputs) {
+		// initialize S matrix: S = gamma*I
+		// gamma - positive large number
+		// I     - Identity matrix
+		S = new double[inputs.length][linearParamCnt][linearParamCnt];
+		for (int i=0; i<S.length; i++)
+			S[0][i][i] = gamma * 1.0;
+
+		//
+		X = new double[inputs.length][linearParamCnt];
+
 	}
 
 	double runForward(double [] inputs) {
@@ -81,9 +102,46 @@ public class Anfis {
 		
 		return outputVal;
 	}
-	
-	void calculateLinear() {
-		
+
+
+
+    // idx - index of the sample
+    // A - n*(m+1)x1 sized vector
+    // B - desired value
+	void calculateLinear(int idx, double [][] A, double B) {
+        double sum = 0.0;
+
+		System.out.println("Size of S : ["+S.length+", "+S[0].length+"]");
+		System.out.println("Size of A : ["+A.length+", "+A[0].length+"]");
+
+        try {
+			double [][] A_trans =  MatrixOperations.transpose(A);
+
+			double [][] S_A 	= MatrixOperations.multiplySimple(S[idx-1],A);
+			double [][] AT_S 	= MatrixOperations.multiplySimple(A_trans,S[idx-1]);
+			double [][] AT_S_A = MatrixOperations.multiplySimple(A_trans,S_A);
+			double [][] S_A_AT_S = MatrixOperations.multiplySimple(S_A,AT_S);
+
+
+			/*
+			System.out.println("Size of A_trans : ["+A_trans.length+", "+A_trans[0].length+"]");
+			System.out.println("Size of S_A : ["+S_A.length+", "+S_A[0].length+"]");
+			System.out.println("Size of AT_S : ["+AT_S.length+", "+AT_S[0].length+"]");
+			System.out.println("Size of AT_S_A : ["+AT_S_A.length+", "+AT_S_A[0].length+"]");
+			System.out.println("Size of S_A_AT_S : ["+S_A_AT_S.length+", "+S_A_AT_S[0].length+"]");
+			*/
+
+			// AT_S_A is 1x1 matrix
+			double S_div = 1 + AT_S_A[0][0];
+			double [][] S_frac = MatrixOperations.divideByNumber(S_A_AT_S,S_div);
+
+			// Calculate next S[]
+			S[idx] = MatrixOperations.subtract(S[idx-1],S_frac);
+		}
+		catch (Exception ex) {
+        	System.out.println(getClass().toString()+".calculateLinear(): "+ex);
+		}
+
 	}
 	
 	void calculateFuzzy() {
@@ -96,19 +154,27 @@ public class Anfis {
 	
 	public void runLearning() {
 		int iterCnt = 0;
+		double err = Double.MAX_VALUE;
 		
 		while ((err > minError) && (iterCnt++ < maxIterCnt) ) {
 			//runForward();
-			calculateLinear();
+			//calculateLinear();
 			calculateFuzzy();
+			err = 0.0;
 		}
 	}
 	
 	public static void main (String [] args) {
 		Anfis anfis = new Anfis();
 		anfis.initialize();
-		anfis.runForward(new double[]{0.1, 0.2,-0.5,0.5});
-		System.out.println("Output: "+anfis.getOutputVal());
+		//anfis.runForward(new double[]{0.1, 0.2,-0.5,0.5});
+		//System.out.println("Output: "+anfis.getOutputVal());
+
+		double [][] A = new double[20][1];
+		double [] B = new double[69];
+		anfis.start(A,B);
+		anfis.calculateLinear(1,A,B[0]);
+
 	}
 }
 
