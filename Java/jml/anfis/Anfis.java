@@ -51,7 +51,7 @@ public class Anfis {
 		normalizedVals = new double[ruleList.length];
 		defuzzVals = new double[ruleList.length];
 		// +1 bias parameter
-		linearParamCnt = (ruleList.length+1)*ruleList.length;
+		linearParamCnt = (inputCnt+1)*ruleList.length;
 		linearParams = new double[linearParamCnt];
 	}
 
@@ -104,6 +104,41 @@ public class Anfis {
 	}
 
 
+    double forwardPass(int idx,double [] inputs,double output) {
+        // calculate Activation values
+        for (int i = 0; i< activationList.length; i++) {
+            activationList[i].activate(inputs);
+        }
+
+        // calculate Rules and total sum of them (for normalization phase)
+        double ruleSum = 0.0;
+        for (int i = 0;i < ruleList.length; i++) {
+            ruleSum += ruleList[i].calculate(activationList);
+        }
+
+        // Normalize - iterate through rules and calculate normalized value
+        for (int i=0; i<normalizedVals.length; i++) {
+            normalizedVals[i] = ruleList[i].getRuleVal()/ruleSum;
+        }
+
+        double [][] A = new double[linearParamCnt][1];
+
+        // Linear part
+        for (int i=0; i<defuzzVals.length; i++) {
+            // bias parameter
+            A[i*(inputs.length+1)][0] = normalizedVals[i];
+
+            // mu*(input values)
+            for (int j=0; j<inputs.length; j++) {
+                A[i*(inputs.length+1)+1+j][0] = normalizedVals[i]*inputs[j];
+            }
+        }
+
+        calculateLinear(idx,A,output);
+
+        return outputVal;
+    }
+
 
     // idx - index of the sample
     // A - n*(m+1)x1 sized vector
@@ -122,7 +157,6 @@ public class Anfis {
 			double [][] AT_S_A = MatrixOperations.multiplySimple(A_trans,S_A);
 			double [][] S_A_AT_S = MatrixOperations.multiplySimple(S_A,AT_S);
 
-
 			/*
 			System.out.println("Size of A_trans : ["+A_trans.length+", "+A_trans[0].length+"]");
 			System.out.println("Size of S_A : ["+S_A.length+", "+S_A[0].length+"]");
@@ -137,6 +171,17 @@ public class Anfis {
 
 			// Calculate next S[]
 			S[idx] = MatrixOperations.subtract(S[idx-1],S_frac);
+
+
+			// Calculating X....
+            double [][] X_d = new double[1][X.length];
+            X_d[0] = X[idx-1];
+            X_d = MatrixOperations.transpose(X_d);
+            double [][] new_S_A = MatrixOperations.multiplySimple(S[idx],A);
+            double [][] AT_X = MatrixOperations.multiplySimple(A_trans,X_d);
+            double diff = B - AT_X[0][0];
+            System.out.println("Diff = "+diff);
+            X[idx] = MatrixOperations.add(X_d, MatrixOperations.multiplyByNumber(new_S_A,diff))[0];
 		}
 		catch (Exception ex) {
         	System.out.println(getClass().toString()+".calculateLinear(): "+ex);

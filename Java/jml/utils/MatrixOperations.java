@@ -72,6 +72,14 @@ public class MatrixOperations {
         return sum(matrixA,matrixB,-1);
     }
 
+    public static double[][] multiplyByNumber(double[][] matrixX,double val) throws Exception {
+        for (int i=0; i<matrixX.length; i++)
+            for (int j=0; j<matrixX[0].length; j++)
+                matrixX[i][j] = matrixX[i][j] * val;
+
+        return matrixX;
+    }
+
     public static double[][] divideByNumber(double[][] matrixX,double val) throws Exception {
         if (val == 0)
             throw new NullPointerException("Division by Zero!");
