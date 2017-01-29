@@ -59,13 +59,18 @@ public class Anfis {
 		// initialize S matrix: S = gamma*I
 		// gamma - positive large number
 		// I     - Identity matrix
-		S = new double[inputs.length][linearParamCnt][linearParamCnt];
+        // Note: we need to keep only 2 values of S - previous (index=0) and current (index=1)
+		S = new double[2][linearParamCnt][linearParamCnt];
 		for (int i=0; i<S.length; i++)
 			S[0][i][i] = gamma * 1.0;
 
-		//
-		X = new double[inputs.length][linearParamCnt];
+		// Used to find the best linear parameters
+		X = new double[2][linearParamCnt];
 
+		// iterate over the training set
+		for (int i=0; i<inputs.length; i++) {
+            forwardPass(inputs[i],outputs[i]);
+        }
 	}
 
 	double runForward(double [] inputs) {
@@ -104,7 +109,7 @@ public class Anfis {
 	}
 
 
-    double forwardPass(int idx,double [] inputs,double output) {
+    double forwardPass(double [] inputs,double output) {
         // calculate Activation values
         for (int i = 0; i< activationList.length; i++) {
             activationList[i].activate(inputs);
@@ -134,16 +139,40 @@ public class Anfis {
             }
         }
 
-        calculateLinear(idx,A,output);
+        calculateLinear(A,output);
+        linearParams = X[1];
 
-        return outputVal;
+
+        return -1;
+    }
+
+    // Calculate Error based on linear params and run backpropogation
+    void backwardPass(double [] inputs, double output) {
+        // Defuzzification
+        for (int i=0; i<defuzzVals.length; i++) {
+            // bias parameter
+            defuzzVals[i] += linearParams[i*(inputs.length+1)] * normalizedVals[i];
+
+            // linearParams * mu *(input values)
+            for (int j=0; j<inputs.length; j++) {
+                defuzzVals[i] += linearParams[i*(inputs.length+1)+1+j] * normalizedVals[i]*inputs[j];
+            }
+
+        }
+
+        // Summations
+        for (int i = 0; i<defuzzVals.length; i++) {
+            outputVal += defuzzVals[i];
+        }
+
+        double error = Math.pow((output-outputVal),2);
     }
 
 
     // idx - index of the sample
     // A - n*(m+1)x1 sized vector
     // B - desired value
-	void calculateLinear(int idx, double [][] A, double B) {
+	void calculateLinear(double [][] A, double B) {
         double sum = 0.0;
 
 		System.out.println("Size of S : ["+S.length+", "+S[0].length+"]");
@@ -152,8 +181,8 @@ public class Anfis {
         try {
 			double [][] A_trans =  MatrixOperations.transpose(A);
 
-			double [][] S_A 	= MatrixOperations.multiplySimple(S[idx-1],A);
-			double [][] AT_S 	= MatrixOperations.multiplySimple(A_trans,S[idx-1]);
+			double [][] S_A 	= MatrixOperations.multiplySimple(S[0],A);
+			double [][] AT_S 	= MatrixOperations.multiplySimple(A_trans,S[0]);
 			double [][] AT_S_A = MatrixOperations.multiplySimple(A_trans,S_A);
 			double [][] S_A_AT_S = MatrixOperations.multiplySimple(S_A,AT_S);
 
@@ -170,27 +199,28 @@ public class Anfis {
 			double [][] S_frac = MatrixOperations.divideByNumber(S_A_AT_S,S_div);
 
 			// Calculate next S[]
-			S[idx] = MatrixOperations.subtract(S[idx-1],S_frac);
+			S[1] = MatrixOperations.subtract(S[0],S_frac);
 
 
 			// Calculating X....
             double [][] X_d = new double[1][X.length];
-            X_d[0] = X[idx-1];
+            X_d[0] = X[0];
             X_d = MatrixOperations.transpose(X_d);
-            double [][] new_S_A = MatrixOperations.multiplySimple(S[idx],A);
+            double [][] new_S_A = MatrixOperations.multiplySimple(S[1],A);
             double [][] AT_X = MatrixOperations.multiplySimple(A_trans,X_d);
             double diff = B - AT_X[0][0];
             System.out.println("Diff = "+diff);
-            X[idx] = MatrixOperations.add(X_d, MatrixOperations.multiplyByNumber(new_S_A,diff))[0];
+            X[1] = MatrixOperations.add(X_d, MatrixOperations.multiplyByNumber(new_S_A,diff))[0];
+
+            // keep current values as previous
+            S[0] = S[1];
+            X[0] = X[1];
+
 		}
 		catch (Exception ex) {
         	System.out.println(getClass().toString()+".calculateLinear(): "+ex);
 		}
 
-	}
-	
-	void calculateFuzzy() {
-		
 	}
 
 	public double getOutputVal() {
@@ -204,7 +234,6 @@ public class Anfis {
 		while ((err > minError) && (iterCnt++ < maxIterCnt) ) {
 			//runForward();
 			//calculateLinear();
-			calculateFuzzy();
 			err = 0.0;
 		}
 	}
@@ -218,7 +247,7 @@ public class Anfis {
 		double [][] A = new double[20][1];
 		double [] B = new double[69];
 		anfis.start(A,B);
-		anfis.calculateLinear(1,A,B[0]);
+		anfis.calculateLinear(A,B[0]);
 
 	}
 }
