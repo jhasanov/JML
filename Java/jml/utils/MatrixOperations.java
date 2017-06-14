@@ -15,6 +15,10 @@ public class MatrixOperations {
 
         double [][] result = new double[rows][cols];
 
+        for (int i=0; i<rows; i++)
+            for (int j =0; j< cols; j++)
+                result[i][j] = matrixX[j][i];
+
         return result;
     }
 

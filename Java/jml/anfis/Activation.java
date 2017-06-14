@@ -106,8 +106,9 @@ public class Activation {
     public double activate(double[] inputs) {
         if (mf == MembershipFunc.SIGMOID)
             activationVal = sigmoidFunc(inputs[inputNo],params[0]);
-        else if (mf == MembershipFunc.BELL)
+        else if (mf == MembershipFunc.BELL) {
             activationVal = bellFunc(inputs[inputNo], params[0], params[1], params[2]);
+        }
         else
             activationVal = -1.0;
 

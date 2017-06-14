@@ -1,6 +1,14 @@
 package jml.anfis;
 
+import jml.utils.FileOperations;
 import jml.utils.MatrixOperations;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Anfis {
     double minError = 0.001;
@@ -63,6 +71,14 @@ public class Anfis {
         // Initialize linear parameters (coefficients) with random numbers
         for (int i = 0; i < linearParamCnt; i++)
             linearParams[i] = Math.random();
+
+        for (int k = 0; k < activationCnt; k++) {
+            if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                System.out.println("   Initial Bell params: ("+activationList[k].params[0]+","+activationList[k].params[1]+","+activationList[k].params[2]+")");
+            } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                System.out.println("Initial Sigmoid params: ("+activationList[k].params[0]+")");
+            }
+        }
     }
 
     /**
@@ -116,12 +132,13 @@ public class Anfis {
         //   ki         - linear parameters, where k0 is bias
         for (int i = 0; i < defuzzVals.length; i++) {
             for (int j = 0; j < inputs.length; j++) {
-                defuzzVals[i] += linearParams[j] * inputs[j];
+                defuzzVals[i] += linearParams[i * (inputs.length + 1) + j] * inputs[j];
             }
             // add bias parameter
-            defuzzVals[i] += linearParams[linearParams.length - 1];
+            defuzzVals[i] += linearParams[i * (inputs.length + 1) + inputs.length];
             defuzzVals[i] *= normalizedVals[i];
         }
+
         if (tillLayerID == 4)
             return defuzzVals;
 
@@ -145,12 +162,12 @@ public class Anfis {
         double alpha = 0.01; // use formula
 
         // sum of all errors
-        double totalError = 0.0;
+        double totalError = Double.MAX_VALUE;
         // iteration count
         int iterCnt = 0;
 
         // repeat until error is minimized or max epoch count is reached
-        while ((totalError > minError) && (iterCnt < epochCnt)) {
+        while ((totalError > minError) && (iterCnt++ < epochCnt)) {
             // ---- First iterate over all input data and find Consequent Parameters
 
             // initialize S matrix: S = gamma*I
@@ -166,10 +183,12 @@ public class Anfis {
 
 
             // iterate over the training set - batch mode
-            for (int i = 0; i < inputs.length; i++) {
+            for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
                 // pass till normalization and keep results
-                double[] x = inputs[i];
+                double[] x = inputs[recIdx];
                 double[] normOutput = forwardPass(x, 3);
+
+                //System.out.print("Iteration: " + recIdx);
 
                 // This matrix stores input information for the LSE learning.
                 // It stores the input of the defuzzification layer - output of the normalization layer and inputs to the ANFIS
@@ -184,85 +203,100 @@ public class Anfis {
                         A[j * (x.length + 1) + 1 + k][0] = normOutput[j] * x[k];
                     }
                 }
-
-                calculateLinearParams(A, outputs[i]);
+                calculateLinearParams(A, outputs[recIdx]);
             }
-        }
-        System.out.println("Consequent Parameters found");
-        // update consequent params
-        linearParams = X[1];
 
-        // --- Iterate over all input data and find Premise Parameters
-        for (int i = 0; i < inputs.length; i++) {
-            // pass till the end and calculate output value
-            double[] outputValue = forwardPass(inputs[i], -1);
+            System.out.println("Consequent Parameters found");
+            // update consequent params
+            linearParams = X[1];
 
-            // calculate error
-            totalError += Math.pow(outputValue[0] - outputs[i], 2);
-            // --- Run BACK PROPOGATION ---
+            // --- Iterate over all input data and find Premise Parameters
+            totalError = 0.0;
+            System.out.println("Backpropogation starts");
+            for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
+                // pass till the end and calculate output value
+                double[] outputValue = forwardPass(inputs[recIdx], -1);
 
-            // calculate Error->Output->Defuzz->Normalization gradients
-            for (int k = 0; k < defuzzVals.length; k++) {
+                // calculate error
+                totalError += Math.pow(outputValue[0] - outputs[recIdx], 2);
+                // --- Run BACK PROPOGATION ---
 
-                double f = 0.0;
-                for (int m = 0; m < linearParamCnt; m++) {
-                    f += linearParams[m] * inputs[i][m];
+                // calculate Error->Output->Defuzz->Normalization gradients
+                for (int k = 0; k < defuzzVals.length; k++) {
+
+                    double f = 0.0;
+                    for (int m = 0; m < inputs[recIdx].length; m++) {
+                        f += linearParams[k * (inputs[recIdx].length + 1) + m] * inputs[recIdx][m];
+                    }
+                    // add bias parameter
+                    f += linearParams[k * (inputs[recIdx].length + 1) + inputs[recIdx].length];
+
+                    normalizedGrads[k] = alpha * (outputValue[0] - outputs[recIdx]) * f * normalizedVals[k] * (1 - normalizedVals[k]);
                 }
-                // add bias parameter
-                f += linearParams[linearParams.length - 1];
 
-                normalizedGrads[k] = alpha * (outputValue[0] - outputs[i]) * f * normalizedVals[k] * (1 - normalizedVals[k]);
-            }
+                // calculate Normalization->Rules gradients
+                for (int k = 0; k < ruleList.length; k++) {
+                    // Iterate over each "Rule<->Normalization" connection
+                    double sum = 0.0;
+                    ruleList[k].gradientVal = 0.0;
+                    for (int m = 0; m < normalizedGrads.length; m++) {
+                        ruleList[k].gradientVal += normalizedGrads[m] * (1 / ruleList[k].getRuleVal());
+                    }
+                }
 
-            // calculate Normalization->Rules gradients
-            for (int k = 0; k < ruleList.length; k++) {
-                // Iterate over each "Rule<->Normalization" connection
-                double sum = 0.0;
-                ruleList[k].gradientVal = 0.0;
-                for (int m = 0; m < normalizedGrads.length; m++) {
-                    ruleList[k].gradientVal += normalizedGrads[m] * (1 / ruleList[k].getRuleVal());
+                // calculate gradients for each membership function (Rules->Membership)
+                // first reset all values
+                for (int k = 0; k < activationCnt; k++) {
+                    activationList[k].gradientVal = 0.0;
+                }
+
+                for (int k = 0; k < ruleList.length; k++) {
+                    // find all connected membership functions to each rule and summarize the value
+                    for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
+                        int idx = ruleList[k].inputActivations[m];
+
+                        activationList[idx].gradientVal += ruleList[k].ruleVal;
+                    }
+                }
+
+                // Now, find final gradients!
+                for (int k = 0; k < activationCnt; k++) {
+                    if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                        // derivatives A,B and C
+                        double ad, bd, cd;
+
+                        ad = activationList[k].calcDerivative(inputs[recIdx], 1);
+                        bd = activationList[k].calcDerivative(inputs[recIdx], 2);
+                        cd = activationList[k].calcDerivative(inputs[recIdx], 3);
+
+                        activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
+                        activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
+                        activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
+                    } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                        // derivatives A
+                        double ad;
+
+                        ad = activationList[k].calcDerivative(inputs[recIdx], 1);
+
+                        activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
+                    }
                 }
             }
 
-            // calculate gradients for each membership function (Rules->Membership)
-            // first reset all values
-            for (int k = 0; k < activationCnt; k++) {
-                activationList[k].gradientVal = 0.0;
-            }
-
-            for (int k = 0; k < ruleList.length; k++) {
-                // find all connected membership functions to each rule and summarize the value
-                for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
-                    int idx = ruleList[k].inputActivations[m];
-
-                    activationList[idx].gradientVal += ruleList[k].ruleVal;
-                }
-            }
-
-            // Now, find final gradients!
+            // adjust parameters
             for (int k = 0; k < activationCnt; k++) {
                 if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                    // derivatives A,B and C
-                    double ad,bd, cd;
-
-                    ad = activationList[k].calcDerivative(inputs[i],1);
-                    bd = activationList[k].calcDerivative(inputs[i],2);
-                    cd = activationList[k].calcDerivative(inputs[i],3);
-
-                    activationList[k].params_delta[0] += ad*activationList[k].gradientVal;
-                    activationList[k].params_delta[1] += bd*activationList[k].gradientVal;
-                    activationList[k].params_delta[2] += cd*activationList[k].gradientVal;
+                    activationList[k].params[0] += activationList[k].params_delta[0]/inputs.length;
+                    activationList[k].params[1] += activationList[k].params_delta[1]/inputs.length;
+                    activationList[k].params[2] += activationList[k].params_delta[2]/inputs.length;
+                    System.out.println("   Bell params: ("+activationList[k].params[0]+","+activationList[k].params[1]+","+activationList[k].params[2]+")");
                 } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                    // derivatives A
-                    double ad;
-
-                    ad = activationList[k].calcDerivative(inputs[i],1);
-
-                    activationList[k].params_delta[0] += ad*activationList[k].gradientVal;
+                    activationList[k].params[0] += activationList[k].params_delta[0]/inputs.length;
+                    System.out.println("Sigmoid params: ("+activationList[k].params[0]+")");
                 }
             }
 
-
+            System.out.println("Epoch = " + iterCnt + " Total Error = " + totalError);
         }
 
     }
@@ -276,8 +310,10 @@ public class Anfis {
     void calculateLinearParams(double[][] A, double B) {
         double sum = 0.0;
 
-        System.out.println("Size of S : [" + S.length + ", " + S[0].length + "]");
+        /*
+        System.out.println("Size of S : [" + S[0].length + ", " + S[0][0].length + "]");
         System.out.println("Size of A : [" + A.length + ", " + A[0].length + "]");
+        */
 
         try {
             double[][] A_trans = MatrixOperations.transpose(A);
@@ -287,13 +323,13 @@ public class Anfis {
             double[][] AT_S_A = MatrixOperations.multiplySimple(A_trans, S_A);
             double[][] S_A_AT_S = MatrixOperations.multiplySimple(S_A, AT_S);
 
-			/*
+            /*
             System.out.println("Size of A_trans : ["+A_trans.length+", "+A_trans[0].length+"]");
 			System.out.println("Size of S_A : ["+S_A.length+", "+S_A[0].length+"]");
 			System.out.println("Size of AT_S : ["+AT_S.length+", "+AT_S[0].length+"]");
 			System.out.println("Size of AT_S_A : ["+AT_S_A.length+", "+AT_S_A[0].length+"]");
 			System.out.println("Size of S_A_AT_S : ["+S_A_AT_S.length+", "+S_A_AT_S[0].length+"]");
-			*/
+            */
 
             // AT_S_A is 1x1 matrix
             double S_div = 1 + AT_S_A[0][0];
@@ -302,7 +338,6 @@ public class Anfis {
             // Calculate next S[]
             S[1] = MatrixOperations.subtract(S[0], S_frac);
 
-
             // Calculating X....
             double[][] X_d = new double[1][X.length];
             X_d[0] = X[0];
@@ -310,8 +345,9 @@ public class Anfis {
             double[][] new_S_A = MatrixOperations.multiplySimple(S[1], A);
             double[][] AT_X = MatrixOperations.multiplySimple(A_trans, X_d);
             double diff = B - AT_X[0][0];
-            System.out.println("Diff = " + diff);
-            X[1] = MatrixOperations.add(X_d, MatrixOperations.multiplyByNumber(new_S_A, diff))[0];
+            //System.out.println("; Diff = " + diff);
+            double[][] res = MatrixOperations.add(X_d, MatrixOperations.multiplyByNumber(new_S_A, diff));
+            X[1] = MatrixOperations.transpose(res)[0];
 
             // keep current values as previous
             S[0] = S[1];
@@ -321,17 +357,25 @@ public class Anfis {
         }
     }
 
+
     public static void main(String[] args) {
         Anfis anfis = new Anfis();
         anfis.initialize();
-        //anfis.runForward(new double[]{0.1, 0.2,-0.5,0.5});
-        //System.out.println("Output: "+anfis.getOutputVal());
 
-        double[][] A = new double[20][1];
-        double[] B = new double[69];
+        double[][] A = FileOperations.readData("D:\\Dropbox\\Public\\inputs.csv", ",");
+        double[][] B = FileOperations.readData("D:\\Dropbox\\Public\\outputs.csv", ",");
+        //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
+        try {
+            B = MatrixOperations.transpose(B);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         int epochs = 10;
         double error = 0.001;
-        anfis.startHybridLearning(epochs, error, A, B);
+        System.out.println("Starting with:");
+        System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
+        anfis.startHybridLearning(epochs, error, A, B[0]);
     }
 }
 
