@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import static java.lang.Float.NaN;
+
 public class Anfis {
     double minError = 0.001;
     int maxIterCnt = 100;
@@ -157,9 +159,11 @@ public class Anfis {
      * @param inputs   all training inputs
      * @param outputs  desired outputs
      */
-    void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs) {
+    void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize) {
         // learning rate
         double alpha = 0.01; // use formula
+        double [] errors = new double[epochCnt];
+        double maxError = 0.0;
 
         // sum of all errors
         double totalError = Double.MAX_VALUE;
@@ -218,7 +222,7 @@ public class Anfis {
                 double[] outputValue = forwardPass(inputs[recIdx], -1);
 
                 // calculate error
-                totalError += Math.pow(outputValue[0] - outputs[recIdx], 2);
+                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2);
                 // --- Run BACK PROPOGATION ---
 
                 // calculate Error->Output->Defuzz->Normalization gradients
@@ -231,7 +235,7 @@ public class Anfis {
                     // add bias parameter
                     f += linearParams[k * (inputs[recIdx].length + 1) + inputs[recIdx].length];
 
-                    normalizedGrads[k] = alpha * (outputValue[0] - outputs[recIdx]) * f * normalizedVals[k] * (1 - normalizedVals[k]);
+                    normalizedGrads[k] = alpha * (outputs[recIdx] - outputValue[0]) * f * normalizedVals[k] * (1 - normalizedVals[k]);
                 }
 
                 // calculate Normalization->Rules gradients
@@ -269,6 +273,9 @@ public class Anfis {
                         bd = activationList[k].calcDerivative(inputs[recIdx], 2);
                         cd = activationList[k].calcDerivative(inputs[recIdx], 3);
 
+                        if (Double.isNaN(bd)) {
+                            System.out.println("NAAAAN");
+                        }
                         activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
                         activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
                         activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
@@ -289,13 +296,14 @@ public class Anfis {
                     activationList[k].params[0] += activationList[k].params_delta[0]/inputs.length;
                     activationList[k].params[1] += activationList[k].params_delta[1]/inputs.length;
                     activationList[k].params[2] += activationList[k].params_delta[2]/inputs.length;
-                    System.out.println("   Bell params: ("+activationList[k].params[0]+","+activationList[k].params[1]+","+activationList[k].params[2]+")");
+                    //System.out.println("   Bell params: ("+activationList[k].params[0]+","+activationList[k].params[1]+","+activationList[k].params[2]+")");
                 } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                     activationList[k].params[0] += activationList[k].params_delta[0]/inputs.length;
-                    System.out.println("Sigmoid params: ("+activationList[k].params[0]+")");
+                    //System.out.println("Sigmoid params: ("+activationList[k].params[0]+")");
                 }
             }
-
+            errors[epochCnt] = totalError;
+            maxError = Math.max(maxError,totalError);
             System.out.println("Epoch = " + iterCnt + " Total Error = " + totalError);
         }
 
@@ -371,11 +379,11 @@ public class Anfis {
             e.printStackTrace();
         }
 
-        int epochs = 10;
+        int epochs = 100;
         double error = 0.001;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        anfis.startHybridLearning(epochs, error, A, B[0]);
+        anfis.startHybridLearning(epochs, error, A, B[0],true);
     }
 }
 

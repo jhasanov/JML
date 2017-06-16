@@ -32,9 +32,9 @@ public class Activation {
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
-            params[0] = 0;
+            params[0] = Math.random();
             params[1] = 1;
-            params[2] = 0.5;
+            params[2] = Math.random();
         }
     }
 
@@ -58,7 +58,9 @@ public class Activation {
 
     public double bellFuncDerivA(double x, double a, double b, double c) {
         double bellVal = bellFunc(x,a,b,c);
-        double modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
+        double modulusSign = 1.0;
+        if (x != a)
+         modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
         return Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign;
     }
@@ -66,12 +68,18 @@ public class Activation {
     public double bellFuncDerivB(double x, double a, double b, double c) {
         double bellVal = bellFunc(x,a,b,c);
 
+        // Note: when (X==A), Math.log(Math.abs((x-a) /c)) term will return "Infinity"...
+        if (x == a)
+            x += 0.001;
         return -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2;
     }
 
     public double bellFuncDerivC(double x, double a, double b, double c) {
         double bellVal = bellFunc(x,a,b,c);
-        double modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
+        double modulusSign = 1.0;
+
+        if (x!= a)
+            modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
         return Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign;
     }

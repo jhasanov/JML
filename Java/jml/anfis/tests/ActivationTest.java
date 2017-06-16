@@ -89,8 +89,8 @@ public class ActivationTest {
         double eps = 0.0001;
         double delta = 0.0000001;
 
-        double x = Math.random();
-        double a = Math.random();
+        double x = 0.03494215 ;//Math.random();
+        double a = 0.3;//Math.random();
         double b = 1.0;//Math.random();
         double c = Math.random();
 
