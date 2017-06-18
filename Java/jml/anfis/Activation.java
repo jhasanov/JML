@@ -32,9 +32,9 @@ public class Activation {
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
-            params[0] = Math.random();
-            params[1] = 1;
-            params[2] = Math.random();
+            params[0] = Math.random(); //0.1;//
+            params[1] = Math.random(); //0.5;//
+            params[2] = Math.random(); //0.8;//
         }
     }
 
