@@ -19,7 +19,7 @@ public class LSE_Optimization {
 
         int paramCnt = A[0].length;
         S = new double[2][paramCnt][paramCnt];
-        for (int i = 0; i < S.length; i++)
+        for (int i = 0; i < S[0].length; i++)
             S[0][i][i] = gamma * 1.0;
 
         // Used to find the best linear parameters

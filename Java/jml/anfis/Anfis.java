@@ -158,7 +158,7 @@ public class Anfis {
      */
     void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize) {
         // learning rate
-        double alpha = 0.005; // use formula
+        double alpha = 0.01; // use formula
         double[] errors = new double[epochCnt];
         double maxError = 0.0;
         GraphPanel graphPanel = new GraphPanel();
@@ -177,52 +177,29 @@ public class Anfis {
 
         // repeat until error is minimized or max epoch count is reached
         while ((totalError > minError) && (iterCnt++ < epochCnt)) {
-            // ---- First iterate over all input data and find Consequent Parameters
-
-
-
-            totalError = 0.0;
             // This matrix stores input information for the LSE learning.
             // It stores the input of the defuzzification layer - output of the normalization layer and inputs to the ANFIS
             double[][] A = new double[inputs.length][linearParamCnt];
-            // iterate over the training set - batch mode
+
             for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
                 // pass till normalization and keep results
                 double[] x = inputs[recIdx];
                 double[] normOutput = forwardPass(x, 3);
-
-                //System.out.print("Iteration: " + recIdx);
-
 
                 for (int j = 0; j < defuzzVals.length; j++) {
                     // input values
                     for (int k = 0; k < x.length; k++) {
                         A[recIdx][j * (x.length + 1) + k] = normOutput[j] * x[k];
                     }
-
                     // bias parameter
                     A[recIdx][j * (x.length + 1) + x.length] = normOutput[j];
                 }
-
             }
+
+            // Runs Sequental LSE in batch mode to find consequent parameters
             LSE_Optimization lse = new LSE_Optimization();
             double [] linearP = lse.findParameters(A, outputs);
-
-            /*
-            // Test if linear minimization happens:
-            // Calculate output value and get difference
-            System.out.print("Consequent Parameters found: Error before="+totalError);
-            // update consequent params
             linearParams = linearP;
-            // calculate error after setting new Consequent Parameters
-            totalError = 0.0;
-            for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
-                double[] outputValue = forwardPass(inputs[recIdx], -1);
-                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2);
-            }
-            System.out.println(". Error after="+totalError);
-
-            */
 
             // --- Iterate over all input data and find Premise Parameters
             totalError = 0.0;
