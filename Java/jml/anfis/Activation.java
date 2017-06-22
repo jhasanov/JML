@@ -42,6 +42,10 @@ public class Activation {
         return (1 / (1 + Math.exp(a*x)));
     }
 
+    public double sigmoidFunc(double x) {
+        return (1 / (1 + Math.exp(params[0]*x)));
+    }
+
     /**
      * derivative of the sigmoid function
      *
@@ -54,6 +58,10 @@ public class Activation {
 
     public double bellFunc(double x, double a, double b, double c) {
         return (1/(1+Math.pow(Math.abs((x-a)/c),2*b)));
+    }
+
+    public double bellFunc(double x) {
+        return (1/(1+Math.pow(Math.abs((x-params[0])/params[2]),2*params[1])));
     }
 
     public double bellFuncDerivA(double x, double a, double b, double c) {

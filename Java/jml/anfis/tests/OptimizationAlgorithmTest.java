@@ -35,9 +35,9 @@ public class OptimizationAlgorithmTest {
         System.out.print("Parameters: [");
         for (int i=0; i<parameters.length; i++) {
             System.out.print("" + parameters[i] + " ");
-            //assertTrue(Math.abs(parameters[i] - i +1) < 0.001);
+            assertTrue(Math.abs(parameters[i] - (i +1)) < 0.001);
         }
-        System.out.println("]");
+        System.out.println("] - passed");
 
     }
 }

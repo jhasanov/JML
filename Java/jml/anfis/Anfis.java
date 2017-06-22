@@ -182,8 +182,9 @@ public class Anfis {
             double[][] A = new double[inputs.length][linearParamCnt];
 
             for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
-                // pass till normalization and keep results
                 double[] x = inputs[recIdx];
+
+                // pass till normalization and keep results
                 double[] normOutput = forwardPass(x, 3);
 
                 for (int j = 0; j < defuzzVals.length; j++) {
@@ -203,7 +204,7 @@ public class Anfis {
 
             // --- Iterate over all input data and find Premise Parameters
             totalError = 0.0;
-            System.out.print("Backpropogation : ");
+
             for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
                 // pass till the end and calculate output value
                 double[] outputValue = forwardPass(inputs[recIdx], -1);
@@ -291,10 +292,38 @@ public class Anfis {
             }
             errors[iterCnt - 1] = totalError;
             maxError = Math.max(maxError, totalError);
+
+
             graphPanel.setData(maxError, errors);
             System.out.println("Epoch = " + iterCnt + " Total Error = " + totalError);
         }
 
+        // Print parameters of Membership Functions after learning
+        for (int k = 0; k < activationCnt; k++) {
+            if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                System.out.println("   Final Bell params: (" + activationList[k].params[0] + "," + activationList[k].params[1] + "," + activationList[k].params[2] + ")");
+            } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                System.out.println("Final Sigmoid params: (" + activationList[k].params[0] + ")");
+            }
+        }
+
+        // Visualize Membership functions
+        if (bVisualize) {
+            JFrame[] mfFrame = new JFrame[activationCnt];
+            int frameWidth = 400;
+            int framwHeight = 300;
+            int horizWndCnt = 3; // count of windows in one horizontal line
+            int pad = 20; // space between adjacent windows
+            for (int k = 0; k < activationCnt; k++) {
+                // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
+                MFGraph mfg = new MFGraph(activationList[k], -10, 10,-1,1);
+                mfFrame[k] = new JFrame("Activation " + k);
+                mfFrame[k].setSize(frameWidth, framwHeight);
+                mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
+                mfFrame[k].add(mfg);
+                mfFrame[k].setVisible(true);
+            }
+        }
     }
 
     public static void main(String[] args) {
