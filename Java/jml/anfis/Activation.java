@@ -38,6 +38,15 @@ public class Activation {
         }
     }
 
+    @Override
+    public Activation clone() {
+        Activation newObj = new Activation(inputNo,mf);
+        newObj.mf = mf;
+        newObj.params = params.clone();
+
+        return newObj;
+    }
+
     public double sigmoidFunc(double x,double a) {
         return (1 / (1 + Math.exp(a*x)));
     }

@@ -163,6 +163,10 @@ public class Anfis {
         double maxError = 0.0;
         GraphPanel graphPanel = new GraphPanel();
 
+        Activation[] oldActivations = activationList.clone();
+        for (int i=0; i<activationCnt; i++)
+            oldActivations[i] = activationList[i].clone();
+
         if (bVisualize) {
             JFrame frame = new JFrame("ANFIS Learning");
             frame.setSize(600, 300);
@@ -307,7 +311,7 @@ public class Anfis {
             }
         }
 
-        // Visualize Membership functions
+        // Visualize Membership functions (show initial and updated MFs)
         if (bVisualize) {
             JFrame[] mfFrame = new JFrame[activationCnt];
             int frameWidth = 400;
@@ -316,7 +320,7 @@ public class Anfis {
             int pad = 20; // space between adjacent windows
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
-                MFGraph mfg = new MFGraph(activationList[k], -10, 10,-1,1);
+                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k],-7, 7,-1,1);
                 mfFrame[k] = new JFrame("Activation " + k);
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
