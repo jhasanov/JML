@@ -42,7 +42,7 @@ public class Anfis {
      */
     public void initialize() {
         // setup activations
-        activationList = new Activation[6];
+        activationList = new Activation[activationCnt];
         activationList[0] = new Activation(0, Activation.MembershipFunc.SIGMOID);
         activationList[1] = new Activation(0, Activation.MembershipFunc.BELL);
         activationList[2] = new Activation(1, Activation.MembershipFunc.SIGMOID);
@@ -52,10 +52,10 @@ public class Anfis {
 
         // setup rules
         ruleList = new Rule[4];
-        ruleList[0] = new Rule((new int[]{0, 2, 3, 4}), Rule.RuleOperation.AND);
-        ruleList[1] = new Rule((new int[]{1, 3, 3, 4}), Rule.RuleOperation.AND);
-        ruleList[2] = new Rule((new int[]{1, 2, 3, 4}), Rule.RuleOperation.AND);
-        ruleList[3] = new Rule((new int[]{0, 3, 3, 4}), Rule.RuleOperation.AND);
+        ruleList[0] = new Rule((new int[]{0, 2, 4, 5}), Rule.RuleOperation.AND);
+        ruleList[1] = new Rule((new int[]{1, 3, 5, 5}), Rule.RuleOperation.AND);
+        ruleList[2] = new Rule((new int[]{1, 2, 4, 5}), Rule.RuleOperation.AND);
+        ruleList[3] = new Rule((new int[]{0, 3, 5, 5}), Rule.RuleOperation.AND);
 
         normalizedVals = new double[ruleList.length];
         defuzzVals = new double[ruleList.length];
@@ -288,15 +288,12 @@ public class Anfis {
                     activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
                     activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length;
                     activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length;
-                    //System.out.println("   Bell params: ("+activationList[k].params[0]+","+activationList[k].params[1]+","+activationList[k].params[2]+")");
                 } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                     activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
-                    //System.out.println("Sigmoid params: ("+activationList[k].params[0]+")");
                 }
             }
             errors[iterCnt - 1] = totalError;
             maxError = Math.max(maxError, totalError);
-
 
             graphPanel.setData(maxError, errors);
             System.out.println("Epoch = " + iterCnt + " Total Error = " + totalError);
@@ -320,7 +317,7 @@ public class Anfis {
             int pad = 20; // space between adjacent windows
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
-                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k],-7, 7,-1,1);
+                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k],-10, 10,-1,1);
                 mfFrame[k] = new JFrame("Activation " + k);
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
@@ -344,7 +341,7 @@ public class Anfis {
         }
 
         int epochs = 20;
-        double error = 0.001;
+        double error = 0.01;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);

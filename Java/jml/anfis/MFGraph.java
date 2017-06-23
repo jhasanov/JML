@@ -36,25 +36,27 @@ public class MFGraph extends JPanel {
     @Override
     protected void paintComponent(Graphics gr) {
         super.paintComponent(gr);
-        gr.setColor(Color.BLUE);
+        Graphics2D gr2 = (Graphics2D)gr;
+        gr2.setColor(Color.BLUE);
         Dimension dim = getSize();
 
-        gr.setColor(Color.BLUE);
+        gr2.setColor(Color.BLUE);
 
         if (mfFunc.mf == Activation.MembershipFunc.SIGMOID)
-            gr.drawString("SIGMOID",horizPad,20);
+            gr2.drawString("SIGMOID",horizPad,20);
         else if (mfFunc.mf == Activation.MembershipFunc.BELL)
-            gr.drawString("BELL",horizPad,20);
-        gr.setColor(Color.DARK_GRAY);
-        gr.drawString("Initial MF",horizPad,40);
-        gr.setColor(Color.BLUE);
-        gr.drawString("All range",horizPad,60);
-        gr.setColor(Color.MAGENTA);
-        gr.drawString("Intput data",horizPad,80);
+            gr2.drawString("BELL",horizPad,20);
+        gr2.setColor(Color.DARK_GRAY);
+        gr2.drawString("Initial MF",horizPad,40);
+        gr2.setColor(Color.BLUE);
+        gr2.drawString("Updated MF",horizPad,60);
+        gr2.setColor(Color.MAGENTA);
+        gr2.drawString("Intput data range",horizPad,80);
 
-        gr.setColor(Color.BLUE);
-        gr.drawString(""+xMin,horizPad,dim.height-vertPad);
-        gr.drawString(""+xMax,dim.width-horizPad,dim.height-vertPad);
+        gr2.setColor(Color.BLUE);
+
+        gr2.drawString(""+xMin,horizPad,dim.height-vertPad);
+        gr2.drawString(""+xMax,dim.width-horizPad,dim.height-vertPad);
 
         double horizSteps, vertSteps;
         horizSteps = (dim.width - horizPad * 2) / (xMax - xMin);
@@ -63,6 +65,19 @@ public class MFGraph extends JPanel {
 
         if (mfFunc != null) {
             for (int i = 0; i < dim.width - 2 * horizPad; i++) {
+
+                // draw input data range:
+                int leftInputRange = (int) (horizPad+(valueMin-xMin)*horizSteps);
+                int rightInputRange = (int) (horizPad+(valueMax-xMin)*horizSteps);
+                gr2.setColor(Color.MAGENTA);
+                float [] dash = {5.0f};
+                Stroke dashedStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+                        10.0f, dash, 0.0f);
+                gr2.setStroke(dashedStroke);
+                gr2.drawLine(leftInputRange,vertPad,leftInputRange,(int)(dim.getHeight()-vertPad));
+                gr2.drawLine(rightInputRange,vertPad,rightInputRange,(int)(dim.getHeight()-vertPad));
+
+                gr2.setStroke(new BasicStroke(1.0f));
                 int sigValCurr = 0;
                 int sigValInit = 0;
                 if (mfFunc.mf == Activation.MembershipFunc.SIGMOID) {
@@ -77,16 +92,16 @@ public class MFGraph extends JPanel {
                 int y = dim.height - (vertPad + sigValInit);
 
                 // draw activation function with initial parameters
-                gr.setColor(Color.DARK_GRAY);
-                gr.drawRect(x, y, 1, 1);
+                gr2.setColor(Color.DARK_GRAY);
+                gr2.drawRect(x, y, 1, 1);
 
                 // draw current activation function
                 y = dim.height - (vertPad + sigValCurr);
                 if (( i > (valueMin-xMin)*horizSteps) && ( i < (valueMax-xMin)*horizSteps) )
-                    gr.setColor(Color.MAGENTA);
+                    gr2.setColor(Color.MAGENTA);
                 else
-                    gr.setColor(Color.BLUE);
-                gr.drawRect(x, y, 1, 1);
+                    gr2.setColor(Color.BLUE);
+                gr2.drawRect(x, y, 1, 1);
             }
         }
 
