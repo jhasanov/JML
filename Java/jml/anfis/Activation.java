@@ -2,7 +2,7 @@ package jml.anfis;
 
 
 /**
- * Created by itjamal on 6/8/2017.
+ * Created by Jamal Hasanov on 6/8/2017.
  */
 public class Activation {
     enum MembershipFunc {SIGMOID, BELL}

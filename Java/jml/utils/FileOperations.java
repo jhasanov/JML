@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * Created by itjamal on 6/13/2017.
+ * Created by Jamal Hasanov on 6/13/2017.
  */
 public class FileOperations {
 

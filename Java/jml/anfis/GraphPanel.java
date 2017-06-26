@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by itjamal on 6/17/2017.
+ * Created by Jamal Hasanov on 6/17/2017.
  */
 public class GraphPanel extends JPanel{
     double maxDataVal = 0.0;

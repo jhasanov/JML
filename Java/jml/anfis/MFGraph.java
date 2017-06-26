@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by itjamal on 6/22/2017.
+ * Created by Jamal Hasanov on 6/22/2017.
  */
 public class MFGraph extends JPanel {
     Activation mfFunc, mfBefore;
@@ -20,8 +20,8 @@ public class MFGraph extends JPanel {
      * @param mf Membership Function
      * @param xMin minimum X value of the drawing range
      * @param xMax maximum X value of the drawing range
-     * @param vmin minimum value that your data gets (inputs to this MF). Should be >= xMin
-     * @param vmax maximum value that your data gets (inputs to this MF). Should be <= xMax
+     * @param vmin minimum value that your data gets (inputs to this activationMF). Should be >= xMin
+     * @param vmax maximum value that your data gets (inputs to this activationMF). Should be <= xMax
      * @param mfBefore Activation parameters before the training (initial parameters)
      */
     public MFGraph(Activation mf, Activation mfBefore, double xMin, double xMax,double vmin, double vmax) {
@@ -47,9 +47,9 @@ public class MFGraph extends JPanel {
         else if (mfFunc.mf == Activation.MembershipFunc.BELL)
             gr2.drawString("BELL",horizPad,20);
         gr2.setColor(Color.DARK_GRAY);
-        gr2.drawString("Initial MF",horizPad,40);
+        gr2.drawString("Initial activationMF",horizPad,40);
         gr2.setColor(Color.BLUE);
-        gr2.drawString("Updated MF",horizPad,60);
+        gr2.drawString("Updated activationMF",horizPad,60);
         gr2.setColor(Color.MAGENTA);
         gr2.drawString("Intput data range",horizPad,80);
 

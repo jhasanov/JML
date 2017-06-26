@@ -3,7 +3,7 @@ package jml.anfis;
 import jml.utils.MatrixOperations;
 
 /**
- * Created by itjamal on 6/18/2017.
+ * Created by Jamal Hasanov on 6/18/2017.
  */
 public class LSE_Optimization {
     double[][] X;

@@ -1,24 +1,18 @@
 package jml.anfis;
 
-import jml.utils.FileOperations;
-import jml.utils.MatrixOperations;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-
-import static java.lang.Float.NaN;
 
 public class Anfis {
-    double minError = 0.001;
-    int maxIterCnt = 100;
-
-    int inputCnt = 4;
-    int activationCnt = 6;
+    int inputCnt = 0;
+    int activationCnt = 0;
 
     Activation[] activationList;
     Rule[] ruleList;
@@ -33,30 +27,16 @@ public class Anfis {
     double[] linearParams;
     int linearParamCnt;
 
-    public double getOutputVal() {
-        return outputVal;
+    public Anfis(int inputCnt, int activationCnt) {
+        this.inputCnt = inputCnt;
+        this.activationCnt = activationCnt;
     }
 
+
     /**
-     * Initialization of the ANFIS. This method initializes all layers (inputs, rules, etc) of the network.
+     * Creates all layer connection and set initial values.
      */
-    public void initialize() {
-        // setup activations
-        activationList = new Activation[activationCnt];
-        activationList[0] = new Activation(0, Activation.MembershipFunc.SIGMOID);
-        activationList[1] = new Activation(0, Activation.MembershipFunc.BELL);
-        activationList[2] = new Activation(1, Activation.MembershipFunc.SIGMOID);
-        activationList[3] = new Activation(1, Activation.MembershipFunc.BELL);
-        activationList[4] = new Activation(2, Activation.MembershipFunc.BELL);
-        activationList[5] = new Activation(3, Activation.MembershipFunc.BELL);
-
-        // setup rules
-        ruleList = new Rule[4];
-        ruleList[0] = new Rule((new int[]{0, 2, 4, 5}), Rule.RuleOperation.AND);
-        ruleList[1] = new Rule((new int[]{1, 3, 5, 5}), Rule.RuleOperation.AND);
-        ruleList[2] = new Rule((new int[]{1, 2, 4, 5}), Rule.RuleOperation.AND);
-        ruleList[3] = new Rule((new int[]{0, 3, 5, 5}), Rule.RuleOperation.AND);
-
+    public void init() {
         normalizedVals = new double[ruleList.length];
         defuzzVals = new double[ruleList.length];
 
@@ -78,6 +58,44 @@ public class Anfis {
                 System.out.println("Initial Sigmoid params: (" + activationList[k].params[0] + ")");
             }
         }
+
+    }
+
+    /**
+     * Saves ANFIS structure and parameters in a file
+     *
+     * @param filename XML file to store the ANFIS data
+     */
+    public void saveAnfisToFile(String filename) {
+        //;
+
+    }
+
+    /**
+     * Load Anfis structure and parameters from file
+     *
+     * @param filename XML file with the ANFIS structure
+     */
+    public static Anfis loadAnfisFromFile(String filename) {
+        Anfis anfis = null;
+        try {
+            System.out.println("Loading ANFIS from file: " + filename);
+            File inputFile = new File(filename);
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+            AnfisXmlHandler anfisXml = new AnfisXmlHandler();
+            saxParser.parse(inputFile, anfisXml);
+
+            anfis = new Anfis(anfisXml.inputCnt, anfisXml.activationCnt);
+            anfis.activationList = anfisXml.getActivationList();
+            anfis.ruleList = anfisXml.getRuleList();
+            anfis.init();
+        } catch (Exception ex) {
+            System.out.println("Anfis.loadAnfis(): " + ex);
+        } finally {
+            return anfis;
+        }
+
     }
 
     /**
@@ -164,7 +182,7 @@ public class Anfis {
         GraphPanel graphPanel = new GraphPanel();
 
         Activation[] oldActivations = activationList.clone();
-        for (int i=0; i<activationCnt; i++)
+        for (int i = 0; i < activationCnt; i++)
             oldActivations[i] = activationList[i].clone();
 
         if (bVisualize) {
@@ -203,7 +221,7 @@ public class Anfis {
 
             // Runs Sequental LSE in batch mode to find consequent parameters
             LSE_Optimization lse = new LSE_Optimization();
-            double [] linearP = lse.findParameters(A, outputs);
+            double[] linearP = lse.findParameters(A, outputs);
             linearParams = linearP;
 
             // --- Iterate over all input data and find Premise Parameters
@@ -317,7 +335,7 @@ public class Anfis {
             int pad = 20; // space between adjacent windows
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
-                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k],-10, 10,-1,1);
+                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -10, 10, -1, 1);
                 mfFrame[k] = new JFrame("Activation " + k);
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
@@ -327,25 +345,6 @@ public class Anfis {
         }
     }
 
-    public static void main(String[] args) {
-        Anfis anfis = new Anfis();
-        anfis.initialize();
-
-        double[][] A = FileOperations.readData("D:\\Dropbox\\Public\\inputs.csv", ",");
-        double[][] B = FileOperations.readData("D:\\Dropbox\\Public\\outputs.csv", ",");
-        //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
-        try {
-            B = MatrixOperations.transpose(B);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int epochs = 20;
-        double error = 0.01;
-        System.out.println("Starting with:");
-        System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        anfis.startHybridLearning(epochs, error, A, B[0], true);
-    }
 }
 
 class Input {
@@ -388,6 +387,97 @@ class Rule {
 
     public double getRuleVal() {
         return ruleVal;
+    }
+
+}
+
+class AnfisXmlHandler extends DefaultHandler {
+    ArrayList<Activation> activationList = new ArrayList<Activation>();
+    ArrayList<Rule> ruleList = new ArrayList<Rule>();
+    int[] ruleArr;
+
+    Activation activation;
+
+    int inputCnt = 0;
+    int activationCnt = 0;
+    int ruleCnt = 0;
+    int layerId = 1;
+    int activationId = 0;
+    int ruleIdx = 0;
+    String activationMF = "";
+    String ruleOperation = "";
+
+    @Override
+    public void startElement(String uri,
+                             String localName, String qName, Attributes attributes)
+            throws SAXException {
+        if (qName.equalsIgnoreCase("structure")) {
+            inputCnt = Integer.parseInt(attributes.getValue("inputs"));
+            activationCnt = Integer.parseInt(attributes.getValue("activations"));
+            ruleCnt = Integer.parseInt(attributes.getValue("rules"));
+            ruleArr = new int[ruleCnt];
+            System.out.print("Input count: " + inputCnt+", ");
+            System.out.print("Activation count: " + activationCnt+", ");
+            System.out.println("Rule count: " + ruleCnt);
+        } else if (qName.equalsIgnoreCase("layer")) {
+            layerId = Integer.parseInt(attributes.getValue("id"));
+            System.out.println("Layer ID : " + layerId);
+        } else if (qName.equalsIgnoreCase("param")) {
+            activationId = Integer.parseInt(attributes.getValue("id"));
+            activationMF = attributes.getValue("MF");
+            ruleOperation = attributes.getValue("OPERATION");
+            System.out.println("   Params : (" + activationId + "," + activationMF + "," + ruleOperation + ")");
+        } else if (qName.equalsIgnoreCase("input")) {
+            int inputId = Integer.parseInt(attributes.getValue("id"));
+            System.out.println("      Input: " + inputId);
+            // In case of Activation Layer
+            if (layerId == 1) {
+                activation = new Activation(inputId-1, Activation.MembershipFunc.valueOf(activationMF));
+            } else if (layerId == 2) {
+                ruleArr[ruleIdx++] = inputId - 1; // because of Java array index
+            }
+        } else if (qName.equalsIgnoreCase("coef")) {
+            int coefId = Integer.parseInt(attributes.getValue("id"));
+            double coefVal = Double.parseDouble(attributes.getValue("val"));
+            activation.params[coefId - 1] = coefVal;
+            System.out.println("      Coef: (" + coefId + "," + coefVal + ")");
+        }
+    }
+
+    @Override
+    public void endElement(String uri,
+                           String localName, String qName) throws SAXException {
+        if (qName.equalsIgnoreCase("layer")) {
+            System.out.println("/Layer");
+        } else if (qName.equalsIgnoreCase("param")) {
+            if (layerId == 1) {
+                // add Activation object to a list
+                activationList.add(activation);
+            }
+            if (layerId == 2) {
+                // add Rule object to a list
+                Rule rule = new Rule(ruleArr, Rule.RuleOperation.valueOf(ruleOperation));
+                ruleList.add(rule);
+                ruleIdx = 0;
+                ruleArr = new int[ruleCnt];
+            }
+        }
+    }
+
+    public int getInputCnt() {
+        return inputCnt;
+    }
+
+    public int getActivationCnt() {
+        return activationCnt;
+    }
+
+    public Activation[] getActivationList() {
+        return activationList.toArray(new Activation[activationList.size()]);
+    }
+
+    public Rule[] getRuleList() {
+        return ruleList.toArray(new Rule[ruleList.size()]);
     }
 
 }

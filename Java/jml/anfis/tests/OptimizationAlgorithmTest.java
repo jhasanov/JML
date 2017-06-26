@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by itjamal on 6/18/2017.
+ * Created by Jamal Hasanov on 6/18/2017.
  */
 public class OptimizationAlgorithmTest {
 
