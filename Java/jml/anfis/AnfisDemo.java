@@ -26,9 +26,9 @@ public class AnfisDemo {
         // setup rules
         anfis.ruleList = new Rule[4];
         anfis.ruleList[0] = new Rule((new int[]{0, 2, 4, 5}), Rule.RuleOperation.AND);
-        anfis.ruleList[1] = new Rule((new int[]{1, 3, 5, 5}), Rule.RuleOperation.AND);
+        anfis.ruleList[1] = new Rule((new int[]{1, 3, 4, 5}), Rule.RuleOperation.AND);
         anfis.ruleList[2] = new Rule((new int[]{1, 2, 4, 5}), Rule.RuleOperation.AND);
-        anfis.ruleList[3] = new Rule((new int[]{0, 3, 5, 5}), Rule.RuleOperation.AND);
+        anfis.ruleList[3] = new Rule((new int[]{0, 3, 4, 5}), Rule.RuleOperation.AND);
 
         // here anfis generates the remaining nodes
         anfis.init();
@@ -37,8 +37,8 @@ public class AnfisDemo {
     }
 
     public static void main(String[] args) {
-        Anfis anfis = new AnfisDemo().setParameters();
-        //Anfis anfis = Anfis.loadAnfisFromFile("D:\\Dropbox\\Public\\ANFIS_conf.txt");;
+        //Anfis anfis = new AnfisDemo().setParameters();
+        Anfis anfis = Anfis.loadAnfisFromFile("D:\\Dropbox\\Public\\ANFIS_conf.xml");;
 
         double[][] A = FileOperations.readData("D:\\Dropbox\\Public\\inputs.csv", ",");
         double[][] B = FileOperations.readData("D:\\Dropbox\\Public\\outputs.csv", ",");
@@ -54,6 +54,7 @@ public class AnfisDemo {
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);
+        //anfis.saveAnfisToFile("D:\\Dropbox\\Public\\ANFIS_conf.xml");
     }
 
 }

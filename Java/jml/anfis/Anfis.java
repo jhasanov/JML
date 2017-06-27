@@ -1,5 +1,7 @@
 package jml.anfis;
 
+import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
+import org.w3c.dom.Document;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -7,7 +9,12 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.swing.*;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Anfis {
@@ -67,12 +74,83 @@ public class Anfis {
      * @param filename XML file to store the ANFIS data
      */
     public void saveAnfisToFile(String filename) {
-        //;
+        try  {
+            System.out.println("Saving ANFIS to file: " + filename);
+            OutputStream outputStream = new FileOutputStream(new File(filename));
+            XMLOutputFactory xmlOF = XMLOutputFactory.newInstance();
+            // This line of code makes XML structure formatted
+            XMLStreamWriter xmlWrite = new IndentingXMLStreamWriter(xmlOF.createXMLStreamWriter(outputStream));
+
+            xmlWrite.writeStartDocument();
+            xmlWrite.writeStartElement("anfis");
+
+            // Storing ANFIS structure
+            xmlWrite.writeStartElement("structure");
+            xmlWrite.writeAttribute("inputs",""+inputCnt);
+            xmlWrite.writeAttribute("activations",""+activationCnt);
+            xmlWrite.writeAttribute("rules",""+ruleList.length);
+            xmlWrite.writeEndElement();
+
+            // Writing Activation Layer
+            xmlWrite.writeStartElement("layer");
+            xmlWrite.writeAttribute("id","1");
+            xmlWrite.writeAttribute("desc","ACTIVATION");
+
+            for (int i=0; i<activationCnt; i++) {
+                xmlWrite.writeStartElement("param");
+                xmlWrite.writeAttribute("id",""+(i+1));
+                xmlWrite.writeAttribute("MF",activationList[i].mf.toString());
+
+                // add parameters
+                xmlWrite.writeStartElement("input");
+                xmlWrite.writeAttribute("id",""+(activationList[i].inputNo+1));
+                xmlWrite.writeEndElement();
+
+                // add coefficients
+                for (int j = 0; j<activationList[i].params.length; j++) {
+                    xmlWrite.writeStartElement("coef");
+                    xmlWrite.writeAttribute("id",""+(j+1));
+                    xmlWrite.writeAttribute("val",""+activationList[i].params[j]);
+                    xmlWrite.writeEndElement();
+                }
+
+                xmlWrite.writeEndElement();
+            }
+            xmlWrite.writeEndElement();
+
+            // Writing Rule Layer
+            xmlWrite.writeStartElement("layer");
+            xmlWrite.writeAttribute("id","2");
+            xmlWrite.writeAttribute("desc","RULE");
+
+            for (int i=0; i<ruleList.length; i++) {
+                xmlWrite.writeStartElement("param");
+                xmlWrite.writeAttribute("id",""+(i+1));
+                xmlWrite.writeAttribute("OPERATION",ruleList[i].oper.toString());
+
+                // add inputs
+                for (int j = 0; j<ruleList[i].inputActivations.length; j++) {
+                    xmlWrite.writeStartElement("input");
+                    xmlWrite.writeAttribute("id",""+(ruleList[i].inputActivations[j]+1));
+                    xmlWrite.writeEndElement();
+                }
+
+                xmlWrite.writeEndElement();
+            }
+
+            xmlWrite.writeEndElement();
+
+            xmlWrite.writeEndDocument();
+            xmlWrite.close();
+        }
+        catch (Exception ex) {
+            System.out.println("Anfis.saveAnfisToFile(): "+filename);
+        }
 
     }
 
     /**
-     * Load Anfis structure and parameters from file
+     * Load Anfis structure and parameters from file (SAP parser is used).
      *
      * @param filename XML file with the ANFIS structure
      */
@@ -91,7 +169,7 @@ public class Anfis {
             anfis.ruleList = anfisXml.getRuleList();
             anfis.init();
         } catch (Exception ex) {
-            System.out.println("Anfis.loadAnfis(): " + ex);
+            System.out.println("Anfis.loadAnfisFromFile(): " + ex);
         } finally {
             return anfis;
         }
