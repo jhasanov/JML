@@ -41,10 +41,10 @@ public class AnfisDemo {
      */
     public void trainAnfis() {
         //Anfis anfis = setParameters();
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf.xml");;
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial.xml");;
 
-        double[][] A = FileOperations.readData("inputs.csv", ",");
-        double[][] B = FileOperations.readData("outputs.csv", ",");
+        double[][] A = FileOperations.readData("train_inputs.csv", ",");
+        double[][] B = FileOperations.readData("train_outputs.csv", ",");
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);
@@ -52,22 +52,52 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 50;
-        double error = 0.01;
+        int epochs = 200;
+        double error = 0.101;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);
         // Save ANFIS config in a file
-        anfis.saveAnfisToFile("ANFIS_conf.xml");
+        anfis.saveAnfisToFile("ANFIS_conf_curr.xml");
     }
 
     /**
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis() {
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf.xml");;
-        double[] returnVal = anfis.forwardPass(new double[] {0.003888914,-0.005979061},-1, false);
-        System.out.println("Output: "+returnVal[0]);
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_curr.xml");;
+        int totalCnt = 0;
+        int truePos = 0;
+        int falsePos = 0;
+        int trueNeg = 0;
+        int falseNeg = 0;
+
+        double [][] testData = FileOperations.readData("unit_test_data/test_ANFIS_1.csv",",");
+
+        for (int i=0; i< testData.length; i++) {
+            double [] inputs = new double[] {testData[i][0],testData[i][1]};
+            double output = testData[i][2];
+            double[] returnVal = anfis.forwardPass(inputs,-1, false);
+            totalCnt++;
+
+            if (returnVal[0] >= 0.5) {
+                if (output == 1)
+                    truePos++;
+                else
+                    falsePos++;
+            }
+            else if (returnVal[0] < 0.5) {
+                if (output == 0)
+                    trueNeg++;
+                else
+                    falseNeg++;
+            }
+        }
+
+        System.out.println("TEST RESULT: ");
+        System.out.println("Total samples: "+totalCnt);
+        System.out.println("True Positives: "+truePos+"; True Negatives: "+trueNeg);
+        System.out.println("False Positives: "+falsePos+"; False Negatives: "+falseNeg);
     }
 
     public static void main(String[] args) {
