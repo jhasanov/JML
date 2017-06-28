@@ -17,8 +17,8 @@ public class OptimizationAlgorithmTest {
     @Test
     public void testLSE() {
         // Read INPUT and OUTPUT data from file:
-        double[][] A = FileOperations.readData("D:\\Dropbox\\Public\\inputs_LSE.csv", ",");
-        double[][] B = FileOperations.readData("D:\\Dropbox\\Public\\outputs_LSE.csv", ",");
+        double[][] A = FileOperations.readData("unit_test_data/test_inputs_LSE.csv", ",");
+        double[][] B = FileOperations.readData("unit_test_data/test_outputs_LSE.csv", ",");
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);

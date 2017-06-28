@@ -36,12 +36,15 @@ public class AnfisDemo {
         return anfis;
     }
 
-    public static void main(String[] args) {
-        //Anfis anfis = new AnfisDemo().setParameters();
-        Anfis anfis = Anfis.loadAnfisFromFile("D:\\Dropbox\\Public\\ANFIS_conf.xml");;
+    /**
+     * Train ANFIS network with parameters
+     */
+    public void trainAnfis() {
+        //Anfis anfis = setParameters();
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf.xml");;
 
-        double[][] A = FileOperations.readData("D:\\Dropbox\\Public\\inputs.csv", ",");
-        double[][] B = FileOperations.readData("D:\\Dropbox\\Public\\outputs.csv", ",");
+        double[][] A = FileOperations.readData("inputs.csv", ",");
+        double[][] B = FileOperations.readData("outputs.csv", ",");
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);
@@ -54,7 +57,25 @@ public class AnfisDemo {
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);
-        //anfis.saveAnfisToFile("D:\\Dropbox\\Public\\ANFIS_conf.xml");
+        // Save ANFIS config in a file
+        anfis.saveAnfisToFile("ANFIS_conf.xml");
+    }
+
+    /**
+     * Load ANFIS from config file and test given parameter
+     */
+    public void testAnfis() {
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf.xml");;
+        double[] returnVal = anfis.forwardPass(new double[] {0.003888914,-0.005979061},-1, false);
+        System.out.println("Output: "+returnVal[0]);
+    }
+
+    public static void main(String[] args) {
+        /* Run this to train ANFIS network */
+        //new AnfisDemo().trainAnfis();
+
+        /* Run this to test ANFIS network */
+        new AnfisDemo().testAnfis();
     }
 
 }

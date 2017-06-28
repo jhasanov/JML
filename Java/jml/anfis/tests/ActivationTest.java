@@ -47,7 +47,7 @@ public class ActivationTest {
 
     @Test
     public void testTokenizer() {
-        ArrayList records = loadValidationData("D:\\Sources\\Java\\JML\\Java\\jml\\anfis\\tests\\TestValidation.txt");
+        ArrayList records = loadValidationData("unit_test_data/TestValidation.txt");
 
         ArrayList values = (ArrayList) records.get(0);
         assertTrue(values.get(0).equals(Double.parseDouble("1")));
@@ -67,7 +67,7 @@ public class ActivationTest {
         double eps = 0.001;
         double x, a, b, c, expectation;
 
-        ArrayList records = loadValidationData("D:\\Sources\\Java\\JML\\Java\\jml\\anfis\\tests\\BellFuncValidation.csv");
+        ArrayList records = loadValidationData("unit_test_data/BellFuncValidation.csv");
 
         for (int i=0; i<records.size(); i++) {
             ArrayList values = (ArrayList)records.get(i);

@@ -53,10 +53,12 @@ public class Anfis {
 
         // +1 bias parameter
         linearParamCnt = (inputCnt + 1) * ruleList.length;
-        linearParams = new double[linearParamCnt];
-        // Initialize linear parameters (coefficients) with random numbers
-        for (int i = 0; i < linearParamCnt; i++)
-            linearParams[i] = Math.random();
+        if ((linearParams == null) || (linearParams.length == 0) ) {
+            linearParams = new double[linearParamCnt];
+            // Initialize linear parameters (coefficients) with random numbers
+            for (int i = 0; i < linearParamCnt; i++)
+                linearParams[i] = Math.random();
+        }
 
         for (int k = 0; k < activationCnt; k++) {
             if (activationList[k].mf == Activation.MembershipFunc.BELL) {
@@ -74,7 +76,7 @@ public class Anfis {
      * @param filename XML file to store the ANFIS data
      */
     public void saveAnfisToFile(String filename) {
-        try  {
+        try {
             System.out.println("Saving ANFIS to file: " + filename);
             OutputStream outputStream = new FileOutputStream(new File(filename));
             XMLOutputFactory xmlOF = XMLOutputFactory.newInstance();
@@ -86,31 +88,31 @@ public class Anfis {
 
             // Storing ANFIS structure
             xmlWrite.writeStartElement("structure");
-            xmlWrite.writeAttribute("inputs",""+inputCnt);
-            xmlWrite.writeAttribute("activations",""+activationCnt);
-            xmlWrite.writeAttribute("rules",""+ruleList.length);
+            xmlWrite.writeAttribute("inputs", "" + inputCnt);
+            xmlWrite.writeAttribute("activations", "" + activationCnt);
+            xmlWrite.writeAttribute("rules", "" + ruleList.length);
             xmlWrite.writeEndElement();
 
             // Writing Activation Layer
             xmlWrite.writeStartElement("layer");
-            xmlWrite.writeAttribute("id","1");
-            xmlWrite.writeAttribute("desc","ACTIVATION");
+            xmlWrite.writeAttribute("id", "1");
+            xmlWrite.writeAttribute("desc", "ACTIVATION");
 
-            for (int i=0; i<activationCnt; i++) {
+            for (int i = 0; i < activationCnt; i++) {
                 xmlWrite.writeStartElement("param");
-                xmlWrite.writeAttribute("id",""+(i+1));
-                xmlWrite.writeAttribute("MF",activationList[i].mf.toString());
+                xmlWrite.writeAttribute("id", "" + (i + 1));
+                xmlWrite.writeAttribute("MF", activationList[i].mf.toString());
 
                 // add parameters
                 xmlWrite.writeStartElement("input");
-                xmlWrite.writeAttribute("id",""+(activationList[i].inputNo+1));
+                xmlWrite.writeAttribute("id", "" + (activationList[i].inputNo + 1));
                 xmlWrite.writeEndElement();
 
                 // add coefficients
-                for (int j = 0; j<activationList[i].params.length; j++) {
+                for (int j = 0; j < activationList[i].params.length; j++) {
                     xmlWrite.writeStartElement("coef");
-                    xmlWrite.writeAttribute("id",""+(j+1));
-                    xmlWrite.writeAttribute("val",""+activationList[i].params[j]);
+                    xmlWrite.writeAttribute("id", "" + (j + 1));
+                    xmlWrite.writeAttribute("val", "" + activationList[i].params[j]);
                     xmlWrite.writeEndElement();
                 }
 
@@ -120,18 +122,18 @@ public class Anfis {
 
             // Writing Rule Layer
             xmlWrite.writeStartElement("layer");
-            xmlWrite.writeAttribute("id","2");
-            xmlWrite.writeAttribute("desc","RULE");
+            xmlWrite.writeAttribute("id", "2");
+            xmlWrite.writeAttribute("desc", "RULE");
 
-            for (int i=0; i<ruleList.length; i++) {
+            for (int i = 0; i < ruleList.length; i++) {
                 xmlWrite.writeStartElement("param");
-                xmlWrite.writeAttribute("id",""+(i+1));
-                xmlWrite.writeAttribute("OPERATION",ruleList[i].oper.toString());
+                xmlWrite.writeAttribute("id", "" + (i + 1));
+                xmlWrite.writeAttribute("OPERATION", ruleList[i].oper.toString());
 
                 // add inputs
-                for (int j = 0; j<ruleList[i].inputActivations.length; j++) {
+                for (int j = 0; j < ruleList[i].inputActivations.length; j++) {
                     xmlWrite.writeStartElement("input");
-                    xmlWrite.writeAttribute("id",""+(ruleList[i].inputActivations[j]+1));
+                    xmlWrite.writeAttribute("id", "" + (ruleList[i].inputActivations[j] + 1));
                     xmlWrite.writeEndElement();
                 }
 
@@ -140,11 +142,24 @@ public class Anfis {
 
             xmlWrite.writeEndElement();
 
+            // Writing Linear (Consequent) Parameters
+            xmlWrite.writeStartElement("consequent_coefs");
+            xmlWrite.writeAttribute("count", "" + linearParamCnt);
+
+            for (int i = 0; i < linearParamCnt; i++) {
+                xmlWrite.writeStartElement("consequent_coef");
+                xmlWrite.writeAttribute("idx", "" + (i + 1));
+                xmlWrite.writeAttribute("val", "" + linearParams[i]);
+                xmlWrite.writeEndElement();
+            }
+
+            xmlWrite.writeEndElement();
+
+            // close document tag
             xmlWrite.writeEndDocument();
             xmlWrite.close();
-        }
-        catch (Exception ex) {
-            System.out.println("Anfis.saveAnfisToFile(): "+filename);
+        } catch (Exception ex) {
+            System.out.println("Anfis.saveAnfisToFile(): " + filename);
         }
 
     }
@@ -167,6 +182,7 @@ public class Anfis {
             anfis = new Anfis(anfisXml.inputCnt, anfisXml.activationCnt);
             anfis.activationList = anfisXml.getActivationList();
             anfis.ruleList = anfisXml.getRuleList();
+            anfis.linearParams = anfisXml.getLinearParams();
             anfis.init();
         } catch (Exception ex) {
             System.out.println("Anfis.loadAnfisFromFile(): " + ex);
@@ -183,21 +199,30 @@ public class Anfis {
      * @param tillLayerID layer till which forward pass shall go (inclusively).
      *                    If tillLayerID = 3, the pass will go through Activation (1), Rules (2) and Normalization(3) layers.
      *                    If tillLayerID = -1, pass goes till the end and output is returned as double[1]
+     * @param bVerbose    if TRUE, shows the values of all layers
      * @return output of the ANFIS layer
      */
-    double[] forwardPass(double[] inputs, int tillLayerID) {
+    double[] forwardPass(double[] inputs, int tillLayerID, boolean bVerbose) {
         double[] layerOutput;
 
+        if (bVerbose)
+            System.out.println("Layer 1 outputs:");
         // calculate Activation values
         layerOutput = new double[activationCnt];
         for (int i = 0; i < activationList.length; i++) {
             activationList[i].activate(inputs);
             layerOutput[i] = activationList[i].activationVal;
+            if (bVerbose)
+                System.out.print("" + layerOutput[i] + " ");
         }
+        if (bVerbose)
+            System.out.println();
 
         if (tillLayerID == 1)
             return layerOutput;
 
+        if (bVerbose)
+            System.out.println("Layer 2 outputs:");
 
         // calculate Rules and total sum of them (for normalization phase)
         layerOutput = new double[ruleList.length];
@@ -205,18 +230,34 @@ public class Anfis {
         for (int i = 0; i < ruleList.length; i++) {
             ruleSum += ruleList[i].calculate(activationList);
             layerOutput[i] = ruleList[i].getRuleVal();
+            if (bVerbose)
+                System.out.print("" + layerOutput[i] + " ");
         }
+
+        if (bVerbose)
+            System.out.println();
 
         if (tillLayerID == 2)
             return layerOutput;
 
+        if (bVerbose)
+            System.out.println("Layer 3 outputs:");
+
         // Normalize - iterate through rules and calculate normalized value
         for (int i = 0; i < normalizedVals.length; i++) {
             normalizedVals[i] = ruleList[i].getRuleVal() / ruleSum;
+            if (bVerbose)
+                System.out.print("" + normalizedVals[i] + " ");
         }
+
+        if (bVerbose)
+            System.out.println();
 
         if (tillLayerID == 3)
             return normalizedVals;
+
+        if (bVerbose)
+            System.out.println("Layer 4 outputs:");
 
         // Defuzzification
         // 	 Od = normVals * (k0 + k1*x1 + k2*x2 + ... + kn*xn)
@@ -232,16 +273,26 @@ public class Anfis {
             // add bias parameter
             defuzzVals[i] += linearParams[i * (inputs.length + 1) + inputs.length];
             defuzzVals[i] *= normalizedVals[i];
+            if (bVerbose)
+                System.out.print("" + defuzzVals[i] + " ");
         }
+
+        if (bVerbose)
+            System.out.println();
 
         if (tillLayerID == 4)
             return defuzzVals;
 
         // Summations
+        if (bVerbose)
+            System.out.println("Layer 5 outputs:");
+
         layerOutput = new double[1];
         for (int i = 0; i < defuzzVals.length; i++) {
             layerOutput[0] += defuzzVals[i];
         }
+        if (bVerbose)
+            System.out.println("" + layerOutput[0]);
         return layerOutput;
     }
 
@@ -285,7 +336,7 @@ public class Anfis {
                 double[] x = inputs[recIdx];
 
                 // pass till normalization and keep results
-                double[] normOutput = forwardPass(x, 3);
+                double[] normOutput = forwardPass(x, 3, false);
 
                 for (int j = 0; j < defuzzVals.length; j++) {
                     // input values
@@ -307,7 +358,7 @@ public class Anfis {
 
             for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
                 // pass till the end and calculate output value
-                double[] outputValue = forwardPass(inputs[recIdx], -1);
+                double[] outputValue = forwardPass(inputs[recIdx], -1, false);
 
                 // calculate error
                 totalError += Math.pow(outputs[recIdx] - outputValue[0], 2);
@@ -475,6 +526,7 @@ class AnfisXmlHandler extends DefaultHandler {
     int[] ruleArr;
 
     Activation activation;
+    double[] linearParams;
 
     int inputCnt = 0;
     int activationCnt = 0;
@@ -494,8 +546,8 @@ class AnfisXmlHandler extends DefaultHandler {
             activationCnt = Integer.parseInt(attributes.getValue("activations"));
             ruleCnt = Integer.parseInt(attributes.getValue("rules"));
             ruleArr = new int[ruleCnt];
-            System.out.print("Input count: " + inputCnt+", ");
-            System.out.print("Activation count: " + activationCnt+", ");
+            System.out.print("Input count: " + inputCnt + ", ");
+            System.out.print("Activation count: " + activationCnt + ", ");
             System.out.println("Rule count: " + ruleCnt);
         } else if (qName.equalsIgnoreCase("layer")) {
             layerId = Integer.parseInt(attributes.getValue("id"));
@@ -510,7 +562,7 @@ class AnfisXmlHandler extends DefaultHandler {
             System.out.println("      Input: " + inputId);
             // In case of Activation Layer
             if (layerId == 1) {
-                activation = new Activation(inputId-1, Activation.MembershipFunc.valueOf(activationMF));
+                activation = new Activation(inputId - 1, Activation.MembershipFunc.valueOf(activationMF));
             } else if (layerId == 2) {
                 ruleArr[ruleIdx++] = inputId - 1; // because of Java array index
             }
@@ -519,6 +571,14 @@ class AnfisXmlHandler extends DefaultHandler {
             double coefVal = Double.parseDouble(attributes.getValue("val"));
             activation.params[coefId - 1] = coefVal;
             System.out.println("      Coef: (" + coefId + "," + coefVal + ")");
+        } else if (qName.equalsIgnoreCase("consequent_coefs")) {
+            int paramCnt = Integer.parseInt(attributes.getValue("count"));
+            linearParams = new double[paramCnt];
+        } else if (qName.equalsIgnoreCase("consequent_coef")) {
+            int paramIdx = Integer.parseInt(attributes.getValue("idx"));
+            double paramVal = Double.parseDouble(attributes.getValue("val"));
+            linearParams[paramIdx - 1] = paramVal;
+            System.out.println("      Consequent Coef: (" + paramIdx + "," + paramVal + ")");
         }
     }
 
@@ -548,6 +608,10 @@ class AnfisXmlHandler extends DefaultHandler {
 
     public int getActivationCnt() {
         return activationCnt;
+    }
+
+    public double[] getLinearParams() {
+        return linearParams;
     }
 
     public Activation[] getActivationList() {
