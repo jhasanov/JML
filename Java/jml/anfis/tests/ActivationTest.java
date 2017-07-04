@@ -89,37 +89,40 @@ public class ActivationTest {
         double eps = 0.0001;
         double delta = 0.0000001;
 
-        double x = 0.03494215 ;//Math.random();
-        double a = 0.3;//Math.random();
-        double b = 1.0;//Math.random();
+        double x = Math.random();
+        double a = Math.random();
+        double b = Math.random();
         double c = Math.random();
 
         System.out.println("\n--- Testing Bell function derivatives... ");
         System.out.println("x="+x+"; a="+a+"; b="+b+"; c="+c);
 
-        double funcVal = activationFunc.bellFunc(x,a,b,c);
-        double funcVal_d = 0.0;
+        double funcVal_d1 = 0.0;
+        double funcVal_d2 = 0.0;
 
         // Test A derivative
-        funcVal_d = activationFunc.bellFunc(x, a+delta,b,c);
+        funcVal_d1 = activationFunc.bellFunc(x, a+delta,b,c);
+        funcVal_d2 = activationFunc.bellFunc(x, a-delta,b,c);
         double derivVal = activationFunc.bellFuncDerivA(x,a,b,c);
-        double stepVal = (funcVal_d - funcVal)/delta;
+        double stepVal = (funcVal_d1 - funcVal_d2)/(2*delta);
         System.out.print("Derivative A... f'()="+derivVal+"; step val="+stepVal);
         assertTrue((derivVal - stepVal)<eps);
         System.out.println(" -> passed");
 
         // Test B derivative
-        funcVal_d = activationFunc.bellFunc(x, a,b+delta,c);
+        funcVal_d1 = activationFunc.bellFunc(x, a,b+delta,c);
+        funcVal_d2 = activationFunc.bellFunc(x, a,b-delta,c);
         derivVal = activationFunc.bellFuncDerivB(x,a,b,c);
-        stepVal = (funcVal_d - funcVal)/delta;
+        stepVal = (funcVal_d1 - funcVal_d2)/(2*delta);
         System.out.print("Derivative B... f'()="+derivVal+"; step val="+stepVal);
         assertTrue(Math.abs(derivVal - stepVal)<eps);
         System.out.println(" -> passed");
 
         // Test C derivative
-        funcVal_d = activationFunc.bellFunc(x, a,b,c+delta);
+        funcVal_d1 = activationFunc.bellFunc(x, a,b,c+delta);
+        funcVal_d2 = activationFunc.bellFunc(x, a,b,c-delta);
         derivVal = activationFunc.bellFuncDerivC(x,a,b,c);
-        stepVal = (funcVal_d - funcVal)/delta;
+        stepVal = (funcVal_d1 - funcVal_d2)/(2*delta);
         System.out.print("Derivative C... f'()="+derivVal+"; step val="+stepVal);
         assertTrue(Math.abs(derivVal - stepVal)<eps);
         System.out.println(" -> passed");
@@ -136,15 +139,13 @@ public class ActivationTest {
         System.out.println("\n--- Testing Sigmoid function derivatives... ");
         System.out.println("x="+x+"; a="+a);
 
-        double funcVal = activationFunc.sigmoidFunc(x,a);
-
-        double funcVal_d = activationFunc.sigmoidFunc(x, a+delta);
+        double funcVal_d1 = activationFunc.sigmoidFunc(x, a+delta);
+        double funcVal_d2 = activationFunc.sigmoidFunc(x, a-delta);
         double derivVal = activationFunc.sigmoidFuncDerivA(x,a);
-        double stepVal = (funcVal_d - funcVal)/delta;
+        double stepVal = (funcVal_d1 - funcVal_d2)/(2*delta);
         System.out.print("Derivative if Sigmoid... f'()="+derivVal+"; step val="+stepVal);
         assertTrue(Math.abs(derivVal - stepVal)<eps);
         System.out.println(" -> passed");
-
     }
 
 }

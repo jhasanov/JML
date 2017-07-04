@@ -52,8 +52,8 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 200;
-        double error = 0.101;
+        int epochs = 150;
+        double error = 0.01;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);
@@ -102,10 +102,10 @@ public class AnfisDemo {
 
     public static void main(String[] args) {
         /* Run this to train ANFIS network */
-        //new AnfisDemo().trainAnfis();
+        new AnfisDemo().trainAnfis();
 
         /* Run this to test ANFIS network */
-        new AnfisDemo().testAnfis();
+        //new AnfisDemo().testAnfis();
     }
 
 }

@@ -11,6 +11,7 @@ public class Activation {
     MembershipFunc mf;
     double[] params;
     double[] params_delta; // sum of updates to the param
+    double[] params_prev_delta; // previous value of the delta (used with momentum)
     int inputNo; // index of the input
 
     double activationVal = 0.0;
@@ -28,10 +29,12 @@ public class Activation {
         if (mf == MembershipFunc.SIGMOID) {
             params = new double[1];
             params_delta = new double[1];
+            params_prev_delta = new double[1];
             params[0] = 0.5;
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
+            params_prev_delta = new double[3];
             params[0] = Math.random(); //0.1;//
             params[1] = Math.random(); //0.5;//
             params[2] = Math.random(); //0.8;//

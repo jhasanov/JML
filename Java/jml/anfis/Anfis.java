@@ -306,6 +306,7 @@ public class Anfis {
     void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize) {
         // learning rate
         double alpha = 0.01; // use formula
+        double momentum = 0.9;
         double[] errors = new double[epochCnt];
         double maxError = 0.0;
         GraphPanel graphPanel = new GraphPanel();
@@ -361,7 +362,7 @@ public class Anfis {
                 double[] outputValue = forwardPass(inputs[recIdx], -1, false);
 
                 // calculate error
-                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2);
+                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2)/2;
                 // --- Run BACK PROPOGATION ---
 
                 // calculate Error->Output->Defuzz->Normalization gradients
@@ -398,7 +399,7 @@ public class Anfis {
                     for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
                         int idx = ruleList[k].inputActivations[m];
 
-                        activationList[idx].gradientVal += ruleList[k].ruleVal;
+                        activationList[idx].gradientVal += ruleList[k].gradientVal;
                     }
                 }
 
@@ -432,11 +433,21 @@ public class Anfis {
             // adjust parameters
             for (int k = 0; k < activationCnt; k++) {
                 if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
-                    activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length;
-                    activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length;
+                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum*activationList[k].params_prev_delta[0];
+                    activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length + momentum*activationList[k].params_prev_delta[1];
+                    activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length + momentum*activationList[k].params_prev_delta[2];
+                    // resetting the weight adjustments
+                    activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
+                    activationList[k].params_prev_delta[1] = activationList[k].params_delta[1] / inputs.length;
+                    activationList[k].params_prev_delta[2] = activationList[k].params_delta[2] / inputs.length;
+                    activationList[k].params_delta[0] = 0.0;
+                    activationList[k].params_delta[1] = 0.0;
+                    activationList[k].params_delta[2] = 0.0;
                 } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
+                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum*activationList[k].params_prev_delta[0];
+                    // resetting the weight adjustment
+                    activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
+                    activationList[k].params_delta[0] = 0.0;
                 }
             }
             errors[iterCnt - 1] = totalError;
