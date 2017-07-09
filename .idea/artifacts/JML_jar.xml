@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact name="JML:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/JML_jar</output-path>
+  <artifact build-on-make="true" name="JML:jar">
+    <output-path>$PROJECT_DIR$/dist/</output-path>
     <root id="root">
       <element id="archive" name="JML.jar">
         <element id="module-output" name="JML" />
