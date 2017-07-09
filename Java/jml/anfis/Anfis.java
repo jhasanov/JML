@@ -53,6 +53,7 @@ public class Anfis {
 
         // +1 bias parameter
         linearParamCnt = (inputCnt + 1) * ruleList.length;
+        // if not given in XML file
         if ((linearParams == null) || (linearParams.length == 0) ) {
             linearParams = new double[linearParamCnt];
             // Initialize linear parameters (coefficients) with random numbers
@@ -61,6 +62,10 @@ public class Anfis {
         }
 
         for (int k = 0; k < activationCnt; k++) {
+            // if no params given in XML
+            if (activationList[k].params == null )
+                activationList[k].setRandomParams();
+
             if (activationList[k].mf == Activation.MembershipFunc.BELL) {
                 System.out.println("   Initial Bell params: (" + activationList[k].params[0] + "," + activationList[k].params[1] + "," + activationList[k].params[2] + ")");
             } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
@@ -307,6 +312,7 @@ public class Anfis {
         // learning rate
         double alpha = 0.01; // use formula
         double momentum = 0.9;
+        double rho = 0.9;
         double[] errors = new double[epochCnt];
         double maxError = 0.0;
         GraphPanel graphPanel = new GraphPanel();
@@ -579,17 +585,23 @@ class AnfisXmlHandler extends DefaultHandler {
             }
         } else if (qName.equalsIgnoreCase("coef")) {
             int coefId = Integer.parseInt(attributes.getValue("id"));
-            double coefVal = Double.parseDouble(attributes.getValue("val"));
-            activation.params[coefId - 1] = coefVal;
-            System.out.println("      Coef: (" + coefId + "," + coefVal + ")");
+            String val = attributes.getValue("val");
+            if (val == null)
+                activation.params[coefId - 1] = Math.random();
+            else
+                activation.params[coefId - 1] = Double.parseDouble(val);
+            System.out.println("      Coef: (" + coefId + "," + activation.params[coefId - 1] + ")");
         } else if (qName.equalsIgnoreCase("consequent_coefs")) {
             int paramCnt = Integer.parseInt(attributes.getValue("count"));
             linearParams = new double[paramCnt];
         } else if (qName.equalsIgnoreCase("consequent_coef")) {
             int paramIdx = Integer.parseInt(attributes.getValue("idx"));
-            double paramVal = Double.parseDouble(attributes.getValue("val"));
-            linearParams[paramIdx - 1] = paramVal;
-            System.out.println("      Consequent Coef: (" + paramIdx + "," + paramVal + ")");
+            String val = attributes.getValue("val");
+            if (val == null)
+                linearParams[paramIdx - 1] = Math.random();
+            else
+                linearParams[paramIdx - 1] = Double.parseDouble(val);
+            System.out.println("      Consequent Coef: (" + paramIdx + "," + linearParams[paramIdx - 1] + ")");
         }
     }
 

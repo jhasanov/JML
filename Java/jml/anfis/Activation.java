@@ -30,14 +30,14 @@ public class Activation {
             params = new double[1];
             params_delta = new double[1];
             params_prev_delta = new double[1];
-            params[0] = 0.5;
+            params[0] = Math.random();
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
             params_prev_delta = new double[3];
-            params[0] = Math.random(); //0.1;//
-            params[1] = Math.random(); //0.5;//
-            params[2] = Math.random(); //0.8;//
+            params[0] = Math.random();
+            params[1] = Math.random();
+            params[2] = Math.random();
         }
     }
 
@@ -48,6 +48,22 @@ public class Activation {
         newObj.params = params.clone();
 
         return newObj;
+    }
+
+    public void setRandomParams() {
+        if (mf == MembershipFunc.SIGMOID) {
+            params = new double[1];
+            params_delta = new double[1];
+            params_prev_delta = new double[1];
+            params[0] = Math.random();
+        } else if (mf == MembershipFunc.BELL) {
+            params = new double[3];
+            params_delta = new double[3];
+            params_prev_delta = new double[3];
+            params[0] = Math.random();
+            params[1] = Math.random();
+            params[2] = Math.random();
+        }
     }
 
     public double sigmoidFunc(double x,double a) {

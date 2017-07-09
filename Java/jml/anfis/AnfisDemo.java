@@ -41,7 +41,7 @@ public class AnfisDemo {
      */
     public void trainAnfis() {
         //Anfis anfis = setParameters();
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial.xml");;
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial - Old.xml");;
 
         double[][] A = FileOperations.readData("train_inputs.csv", ",");
         double[][] B = FileOperations.readData("train_outputs.csv", ",");
@@ -52,13 +52,13 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 150;
+        int epochs = 100;
         double error = 0.01;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
         anfis.startHybridLearning(epochs, error, A, B[0], true);
         // Save ANFIS config in a file
-        anfis.saveAnfisToFile("ANFIS_conf_curr.xml");
+        anfis.saveAnfisToFile("ANFIS_conf_trained.xml");
     }
 
     /**
@@ -80,13 +80,13 @@ public class AnfisDemo {
             double[] returnVal = anfis.forwardPass(inputs,-1, false);
             totalCnt++;
 
-            if (returnVal[0] >= 0.5) {
+            if (returnVal[0] >= 0.9) {
                 if (output == 1)
                     truePos++;
                 else
                     falsePos++;
             }
-            else if (returnVal[0] < 0.5) {
+            else if (returnVal[0] < 0.9) {
                 if (output == 0)
                     trueNeg++;
                 else

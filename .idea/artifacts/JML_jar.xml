@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact name="JML:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JML_jar</output-path>
+    <root id="root">
+      <element id="archive" name="JML.jar">
+        <element id="module-output" name="JML" />
+      </element>
+      <element id="library" level="module" name="JUnit4" module-name="JML" />
+      <element id="file-copy" path="$APPLICATION_HOME_DIR$/lib/junit.jar" />
+    </root>
+  </artifact>
+</component>
