@@ -41,7 +41,7 @@ public class AnfisDemo {
      */
     public void trainAnfis() {
         //Anfis anfis = setParameters();
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial - Old.xml");;
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial.xml");;
 
         double[][] A = FileOperations.readData("train_inputs.csv", ",");
         double[][] B = FileOperations.readData("train_outputs.csv", ",");

@@ -54,7 +54,7 @@ public class Anfis {
         // +1 bias parameter
         linearParamCnt = (inputCnt + 1) * ruleList.length;
         // if not given in XML file
-        if ((linearParams == null) || (linearParams.length == 0) ) {
+        if ((linearParams == null) || (linearParams.length == 0)) {
             linearParams = new double[linearParamCnt];
             // Initialize linear parameters (coefficients) with random numbers
             for (int i = 0; i < linearParamCnt; i++)
@@ -63,7 +63,7 @@ public class Anfis {
 
         for (int k = 0; k < activationCnt; k++) {
             // if no params given in XML
-            if (activationList[k].params == null )
+            if (activationList[k].params == null)
                 activationList[k].setRandomParams();
 
             if (activationList[k].mf == Activation.MembershipFunc.BELL) {
@@ -313,6 +313,8 @@ public class Anfis {
         double alpha = 0.01; // use formula
         double momentum = 0.9;
         double rho = 0.9;
+        // used to reset parameters when value is NaN
+        boolean bReset = false;
         double[] errors = new double[epochCnt];
         double maxError = 0.0;
         GraphPanel graphPanel = new GraphPanel();
@@ -332,6 +334,7 @@ public class Anfis {
         double totalError = Double.MAX_VALUE;
         // iteration count
         int iterCnt = 0;
+        errors[0] = 100000;
 
         // repeat until error is minimized or max epoch count is reached
         while ((totalError > minError) && (iterCnt++ < epochCnt)) {
@@ -362,13 +365,14 @@ public class Anfis {
 
             // --- Iterate over all input data and find Premise Parameters
             totalError = 0.0;
+            int recIdx = 0;
 
-            for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
+            for (recIdx = 0; recIdx < inputs.length; recIdx++) {
                 // pass till the end and calculate output value
                 double[] outputValue = forwardPass(inputs[recIdx], -1, false);
 
                 // calculate error
-                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2)/2;
+                totalError += Math.pow(outputs[recIdx] - outputValue[0], 2) / 2;
                 // --- Run BACK PROPOGATION ---
 
                 // calculate Error->Output->Defuzz->Normalization gradients
@@ -411,6 +415,11 @@ public class Anfis {
 
                 // Now, find final gradients!
                 for (int k = 0; k < activationCnt; k++) {
+                    if (bReset) {
+                        bReset = false;
+                        break;
+                    }
+
                     if (activationList[k].mf == Activation.MembershipFunc.BELL) {
                         // derivatives A,B and C
                         double ad, bd, cd;
@@ -419,48 +428,65 @@ public class Anfis {
                         bd = activationList[k].calcDerivative(inputs[recIdx], 2);
                         cd = activationList[k].calcDerivative(inputs[recIdx], 3);
 
-                        if (Double.isNaN(bd)) {
-                            System.out.println("NAAAAN");
+                        if ((Double.isNaN(ad)) || (Double.isNaN(bd)) || (Double.isNaN(cd))) {
+                            System.out.println("NAN - Bell - resetting");
+                            for (int l = 0; l < activationCnt; l++)
+                                activationList[l].setRandomParams();
+                            totalError = 1000;
+                            bReset = true;
+                            continue;
+                        } else {
+                            activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
+                            activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
+                            activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
                         }
-                        activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
-                        activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
-                        activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
                     } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                         // derivatives A
                         double ad;
 
                         ad = activationList[k].calcDerivative(inputs[recIdx], 1);
-
-                        activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
+                        if ((Double.isNaN(ad))) {
+                            System.out.println("NAN - Sigm - resetting");
+                            for (int l = 0; l < activationCnt; l++)
+                                activationList[l].setRandomParams();
+                            totalError = 1000;
+                            bReset = true;
+                            continue;
+                        } else
+                            activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
                     }
                 }
             }
 
-            // adjust parameters
-            for (int k = 0; k < activationCnt; k++) {
-                if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum*activationList[k].params_prev_delta[0];
-                    activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length + momentum*activationList[k].params_prev_delta[1];
-                    activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length + momentum*activationList[k].params_prev_delta[2];
-                    // resetting the weight adjustments
-                    activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
-                    activationList[k].params_prev_delta[1] = activationList[k].params_delta[1] / inputs.length;
-                    activationList[k].params_prev_delta[2] = activationList[k].params_delta[2] / inputs.length;
-                    activationList[k].params_delta[0] = 0.0;
-                    activationList[k].params_delta[1] = 0.0;
-                    activationList[k].params_delta[2] = 0.0;
-                } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                    activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum*activationList[k].params_prev_delta[0];
-                    // resetting the weight adjustment
-                    activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
-                    activationList[k].params_delta[0] = 0.0;
+            if (recIdx == inputs.length) {
+                // adjust parameters
+                for (int k = 0; k < activationCnt; k++) {
+                    if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                        activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum * activationList[k].params_prev_delta[0];
+                        activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length + momentum * activationList[k].params_prev_delta[1];
+                        activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length + momentum * activationList[k].params_prev_delta[2];
+                        // resetting the weight adjustments
+                        activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
+                        activationList[k].params_prev_delta[1] = activationList[k].params_delta[1] / inputs.length;
+                        activationList[k].params_prev_delta[2] = activationList[k].params_delta[2] / inputs.length;
+                        activationList[k].params_delta[0] = 0.0;
+                        activationList[k].params_delta[1] = 0.0;
+                        activationList[k].params_delta[2] = 0.0;
+                    } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                        activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length + momentum * activationList[k].params_prev_delta[0];
+                        // resetting the weight adjustment
+                        activationList[k].params_prev_delta[0] = activationList[k].params_delta[0] / inputs.length;
+                        activationList[k].params_delta[0] = 0.0;
+                    }
                 }
-            }
-            errors[iterCnt - 1] = totalError;
+                errors[iterCnt - 1] = totalError;
+            } else // if interrupted due to reset
+                continue;
+
             maxError = Math.max(maxError, totalError);
 
             graphPanel.setData(maxError, errors);
-            System.out.println("Epoch = " + iterCnt + " Total Error = " + totalError);
+            System.out.println("Epoch = " + iterCnt + "; alpha = " + alpha + "; Total Error = " + totalError);
         }
 
         // Print parameters of Membership Functions after learning

@@ -31,6 +31,8 @@ public class Activation {
             params_delta = new double[1];
             params_prev_delta = new double[1];
             params[0] = Math.random();
+            gradientVal = 0.0;
+            activationVal = 0.0;
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
@@ -38,6 +40,8 @@ public class Activation {
             params[0] = Math.random();
             params[1] = Math.random();
             params[2] = Math.random();
+            gradientVal = 0.0;
+            activationVal = 0.0;
         }
     }
 
@@ -56,6 +60,8 @@ public class Activation {
             params_delta = new double[1];
             params_prev_delta = new double[1];
             params[0] = Math.random();
+            gradientVal = 0.0;
+            activationVal = 0.0;
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
             params_delta = new double[3];
@@ -63,6 +69,8 @@ public class Activation {
             params[0] = Math.random();
             params[1] = Math.random();
             params[2] = Math.random();
+            gradientVal = 0.0;
+            activationVal = 0.0;
         }
     }
 
