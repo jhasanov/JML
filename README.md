@@ -27,6 +27,9 @@ Distributive of the library is located in **/dist** folder. Use this library to 
 
 To design a Sugeno-type Inference System in JML with 2 inputs, 4 activation nodes (with Bell and Sigmoid type Membership Functions for each input) and 4 “AND” rules with Java API will look like this:
 
+![alt text](images/anfis.png "Sugeno-type ANFIS with 2 inputs, 4 activation nodes and 4 AND rules")
+
+
 ```
 import jml.anfis.*;
 
@@ -111,10 +114,10 @@ Explanation of the XML tags:
 - OPERATION - type of operation is Rule layer (Only AND or OR is possible)
 
 ##### Optional tags:
-```
-<coef id> - index of the membership function’s coefficient (In Sigmoid, there’s only one parameters, in Bell function there’re 3 parameters)
-<coef val> - value of the corresponding membership function’s coefficient (in case if you want to provide initial parameters)
-```
+
+- coef id - index of the membership function’s coefficient (In Sigmoid, there’s only one parameters, in Bell function there’re 3 parameters)
+- coef val - value of the corresponding membership function’s coefficient (in case if you want to provide initial parameters)
+
 Example: Below XML snippet says that, 2nd node in Activation layer has Bell membership function and is connected to input #1. Coefficients of the Bell membership functions are a=0.05, b=1.69 and c=-1.73.
 ```
 <param id="2" MF="BELL">
@@ -162,6 +165,12 @@ error – stopping criterion
 A and B – input and desired output data
 bVisualize – if true, shows the training graph and each activation’s membership functions. 
 ```
+
+When visualization is required, in the end of the training, below graphs are shown:
+
+![alt text](images/train_curve.png "Graph shows the error rate for each iteration")
+
+![alt text](images/train_mf.png "This graph shows the parameters of the activation’s membership function. Graphs are drawn in [-10,10] range." )
 
 #### Testing 
 
