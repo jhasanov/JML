@@ -95,13 +95,13 @@ To build the same network with configuration file, create a XML file with below 
 ```
 
 The configuration file consist of below blocks:
-#####Structure
+##### Structure
 The XML file is started with the description of the ANFIS structure. In <structure> tag the number of inputs, activations and rules shall be given.
-#####Layers
+##### Layers
 In JML configuration, you only need to show the settings of the layer 1 and layer 2 (input layer is ignored). Layer 2 is an activation layer – here the below tags are possible:
 
 Explanation of the XML tags:
-#####Mandatory tags:
+##### Mandatory tags:
 
 - layer id -  ID of the layer (1 – ACTIVATION, 2- RULE)
 - layer desc -  description of the layer
@@ -110,7 +110,7 @@ Explanation of the XML tags:
 - input id – index of the received input node.
 - OPERATION - type of operation is Rule layer (Only AND or OR is possible)
 
-#####Optional tags:
+##### Optional tags:
 ```
 <coef id> - index of the membership function’s coefficient (In Sigmoid, there’s only one parameters, in Bell function there’re 3 parameters)
 <coef val> - value of the corresponding membership function’s coefficient (in case if you want to provide initial parameters)
