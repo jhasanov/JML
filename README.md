@@ -166,7 +166,7 @@ A and B – input and desired output data
 bVisualize – if true, shows the training graph and each activation’s membership functions. 
 ```
 
-When visualization is required, in the end of the training, below graphs are shown:
+When visualization is required, in the end of the training, below graphs are shown. First graph shows the error rate for each iteration. Second graph shows how parameters of the initial MF has been changed.
 
 ![alt text](images/train_curve.png "Graph shows the error rate for each iteration")
 

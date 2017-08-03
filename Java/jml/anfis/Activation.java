@@ -10,8 +10,9 @@ public class Activation {
 
     MembershipFunc mf;
     double[] params;
+    double[] params_prev; // previous value of the parameter
+    double[] temp_params;
     double[] params_delta; // sum of updates to the param
-    double[] params_prev_delta; // previous value of the delta (used with momentum)
     int inputNo; // index of the input
 
     double activationVal = 0.0;
@@ -28,18 +29,22 @@ public class Activation {
 
         if (mf == MembershipFunc.SIGMOID) {
             params = new double[1];
+            params_prev = new double[1];
             params_delta = new double[1];
-            params_prev_delta = new double[1];
             params[0] = Math.random();
+            params_prev[0] = params[0];
             gradientVal = 0.0;
             activationVal = 0.0;
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
+            params_prev = new double[3];
             params_delta = new double[3];
-            params_prev_delta = new double[3];
             params[0] = Math.random();
             params[1] = Math.random();
             params[2] = Math.random();
+            params_prev[0] = params[0];
+            params_prev[1] = params[1];
+            params_prev[2] = params[2];
             gradientVal = 0.0;
             activationVal = 0.0;
         }
@@ -57,18 +62,20 @@ public class Activation {
     public void setRandomParams() {
         if (mf == MembershipFunc.SIGMOID) {
             params = new double[1];
-            params_delta = new double[1];
-            params_prev_delta = new double[1];
+            params_prev = new double[1];
             params[0] = Math.random();
+            params_prev[0] = params[0];
             gradientVal = 0.0;
             activationVal = 0.0;
         } else if (mf == MembershipFunc.BELL) {
             params = new double[3];
-            params_delta = new double[3];
-            params_prev_delta = new double[3];
+            params_prev = new double[3];
             params[0] = Math.random();
             params[1] = Math.random();
             params[2] = Math.random();
+            params_prev[0] = params[0];
+            params_prev[1] = params[1];
+            params_prev[2] = params[2];
             gradientVal = 0.0;
             activationVal = 0.0;
         }
@@ -89,7 +96,12 @@ public class Activation {
      */
 
     public double sigmoidFuncDerivA(double x, double a) {
-        return -1*Math.pow(sigmoidFunc(x,a),2)*Math.exp(a*x)*x;
+        // add 0.001 to avoid zero derivative
+        double retval = -1*Math.pow(sigmoidFunc(x,a),2)*Math.exp(a*x)*x + 0.001;
+        if (Double.isNaN(retval)) {
+            System.out.println("sigmoidFuncDerivA("+x+","+a+") returned NaN");
+        }
+        return retval;
     }
 
     public double bellFunc(double x, double a, double b, double c) {
@@ -106,7 +118,13 @@ public class Activation {
         if (x != a)
          modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
-        return Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign;
+        // add 0.001 to avoid zero derivative
+        double retval = Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign + 0.001;
+        if (Double.isNaN(retval)) {
+            System.out.println("bellFuncDerivA("+x+","+a+","+b+","+c+") returned NaN");
+        }
+
+        return retval;
     }
 
     public double bellFuncDerivB(double x, double a, double b, double c) {
@@ -115,7 +133,14 @@ public class Activation {
         // Note: when (X==A), Math.log(Math.abs((x-a) /c)) term will return "Infinity"...
         if (x == a)
             x += 0.001;
-        return -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2;
+
+        // add 0.001 to avoid zero derivative
+        double retval =  -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2 + 0.001;
+
+        if (Double.isNaN(retval)) {
+            System.out.println("bellFuncDerivB("+x+","+a+","+b+","+c+") returned NaN");
+        }
+        return retval;
     }
 
     public double bellFuncDerivC(double x, double a, double b, double c) {
@@ -125,7 +150,13 @@ public class Activation {
         if (x!= a)
             modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
-        return Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign;
+        // add 0.001 to avoid zero derivative
+        double retval = Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign + 0.001;
+
+        if (Double.isNaN(retval)) {
+            System.out.println("bellFuncDerivC("+x+","+a+","+b+","+c+") returned NaN");
+        }
+        return retval;
     }
 
     // Left-to-right activation function
