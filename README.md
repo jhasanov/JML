@@ -8,7 +8,7 @@ JML is an open-source Java library created by Jamal Hasanov in 2017, provides AP
 - Saved trained ANFIS structure with parameters;
 - test ANFIS using Java code.
 
-Current version of the library is 2.1
+Current version of the library is 2.1.08.17
 
 ## Getting Started
 

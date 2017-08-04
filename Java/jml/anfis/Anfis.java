@@ -276,6 +276,12 @@ public class Anfis {
         //   normVals 	- Input of the defuzzification layer ( output of the corresponding normalization node)
         //   xi 		- ith input of the ANFIS
         //   ki         - linear parameters, where k0 is bias
+
+        // First reset values
+        for (int i = 0; i < defuzzVals.length; i++) {
+            defuzzVals[i] = 0.0;
+        }
+
         for (int i = 0; i < defuzzVals.length; i++) {
             for (int j = 0; j < inputs.length; j++) {
                 defuzzVals[i] += linearParams[i * (inputs.length + 1) + j] * inputs[j];
@@ -313,14 +319,14 @@ public class Anfis {
      * @param inputs   all training inputs
      * @param outputs  desired outputs
      */
-    void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize) {
+    void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize, boolean bDebug) {
         // variables of the "Golden section search" method
         double a = 0.0;
-        double b = 1.0;
+        double b = 10.0;
         double[] alpha = new double[2];
         double[] Err_GSS = new double[2];
         double[][][] weights = new double[2][activationCnt][3];
-        double eps = 0.0001;
+        double eps = 0.00000001;
 
         // used to reset parameters when value is NaN
         boolean bReset = false;
@@ -345,8 +351,18 @@ public class Anfis {
         // set to maximum to satisfy the (errors[0] > minError) check below (in "while")
         errors[0] = Double.MAX_VALUE;
 
-        // repeat until a)error is minimized, b)max epoch count is reached or c) alpha range is too small
-        while ((errors[iterCnt] > minError) && (iterCnt++ < epochCnt) && (Math.abs(b - a) > eps)) {
+        // measure initial Error
+        double initError = 0.0;
+        for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
+            // pass till the end and calculate output value
+            double[] outputValue = forwardPass(inputs[recIdx], -1, false);
+            initError += (outputs[recIdx] - outputValue[0]);
+        }
+        System.out.println("Error before training: "+initError);
+
+
+            // repeat until a)error is minimized, b)max epoch count is reached or c) alpha range is too small
+        while ((errors[iterCnt++] > minError) && (iterCnt < epochCnt) && (Math.abs(b - a) > eps)) {
             // This matrix stores input information for the LSE learning.
             // It stores the input of the defuzzification layer - output of the normalization layer and inputs to the ANFIS
             double[][] A = new double[inputs.length][linearParamCnt];
@@ -381,12 +397,13 @@ public class Anfis {
 
             // --- Run BACK PROPOGATION ---
 
-            printActivationParams("New epoch");
+            if (bDebug)
+                printActivationParams("New epoch");
+
             // ------------------------------------
             // one-dimentional minimization: calculate Error function for 2 values:
             weights = new double[2][activationCnt][3];
             for (int aidx = 0; aidx < alpha.length; aidx++) {
-
                 // Save current activation parameters for the next option as well
                 // Both functions shall be calculated with the same initial parameters
                 if (aidx == 0) {
@@ -396,19 +413,24 @@ public class Anfis {
                     }
                 }
 
-                System.out.println("____________________________________________");
+                if (bDebug) {
+                    // print delimeter
+                    System.out.println("____________________________________________");
+                }
                 // Iterate through all training samples
                 for (recIdx = 0; recIdx < inputs.length; recIdx++) {
                     // pass till the end and calculate output value
                     double[] outputValue = forwardPass(inputs[recIdx], -1, false);
                     double diff = (outputs[recIdx] - outputValue[0]);
 
+                    /* Used for debug : to see what are the outputs for the first 10 samples
                     if (recIdx < 10) {
                         System.out.println("recIdx=" + recIdx + "; diff = " + diff);
                         if (Double.isNaN(diff)) {
                             System.out.println("Diff is NaN because (" + outputs[recIdx] + "-" + outputValue + ")=NaN");
                         }
                     }
+                    */
 
                     // calculate Error->Output->Defuzz->Normalization gradients
                     for (int k = 0; k < defuzzVals.length; k++) {
@@ -505,10 +527,11 @@ public class Anfis {
                             weights[aidx][k][0] += (activationList[k]).params[0];
                             weights[aidx][k][1] += (activationList[k]).params[1];
                             weights[aidx][k][2] += (activationList[k]).params[2];
-                            System.out.println("New weight for Bell. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
-                            System.out.println("New weight for Bell. [" + aidx + "," + k + ",1]; weight=" + weights[aidx][k][1]);
-                            System.out.println("New weight for Bell. [" + aidx + "," + k + ",2]; weight=" + weights[aidx][k][2]);
-
+                            if (bDebug) {
+                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
+                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",1]; weight=" + weights[aidx][k][1]);
+                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",2]; weight=" + weights[aidx][k][2]);
+                            }
                             // resetting the weight adjustment
                             activationList[k].params_delta[0] = 0.0;
                             activationList[k].params_delta[1] = 0.0;
@@ -516,15 +539,13 @@ public class Anfis {
                         } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                             activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
                             weights[aidx][k][0] += (activationList[k]).params[0];
-                            System.out.println("New weight for Sigmoid. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
+                            if (bDebug) {
+                                System.out.println("New weight for Sigmoid. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
+                            }
                             // resetting the weight adjustment
                             activationList[k].params_delta[0] = 0.0;
                         }
                     }
-                } else {// if interrupted due to reset
-                    //TODO: remove this "else" - never reached
-                    System.out.println("is there anybody here?");
-                    continue;
                 }
 
                 // Calculate error for given parameters
@@ -567,7 +588,7 @@ public class Anfis {
 
             graphPanel.setData(maxError, errors);
             System.out.println("____________________________________________");
-            System.out.println("Epoch = " + iterCnt + "; alpha in ( " + alpha[0] + "," + alpha[1] + "); Error = " + errors[iterCnt - 1] + "; Err0=" + Err_GSS[0] + "; Err1=" + Err_GSS[1]);
+            System.out.println("Epoch = " + iterCnt + "; alpha in ( " + alpha[0] + "," + alpha[1] + "); Error = " + errors[iterCnt - 1] + "; (Err0=" + Err_GSS[0] + "; Err1=" + Err_GSS[1]+")");
         }
 
         // Print parameters of Membership Functions after learning
@@ -582,7 +603,7 @@ public class Anfis {
             int pad = 20; // space between adjacent windows
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
-                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -10, 10, -1, 1);
+                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -3, 3, -1, 1);
                 mfFrame[k] = new JFrame("Activation " + k);
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);

@@ -56,7 +56,7 @@ public class AnfisDemo {
         double error = 0.01;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        anfis.startHybridLearning(epochs, error, A, B[0], true);
+        anfis.startHybridLearning(epochs, error, A, B[0], true, false);
         // Save ANFIS config in a file
         anfis.saveAnfisToFile("ANFIS_conf_trained.xml");
     }
@@ -65,14 +65,20 @@ public class AnfisDemo {
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis() {
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_curr.xml");;
+        //Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_trained.xml");;
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_matlab.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
         int trueNeg = 0;
         int falseNeg = 0;
 
-        double [][] testData = FileOperations.readData("unit_test_data/test_ANFIS_1.csv",",");
+        /* When you need to test one value
+        double[] retval = anfis.forwardPass(new double[] {0.3,0.3},-1, false);
+        System.out.println("Retval="+retval[0]);
+        */
+
+        double [][] testData = FileOperations.readData("unit_test_data/test_ANFIS_2.csv",",");
 
         for (int i=0; i< testData.length; i++) {
             double [] inputs = new double[] {testData[i][0],testData[i][1]};
