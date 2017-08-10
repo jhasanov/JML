@@ -43,8 +43,8 @@ public class AnfisDemo {
         //Anfis anfis = setParameters();
         Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_initial.xml");;
 
-        double[][] A = FileOperations.readData("train_inputs.csv", ",");
-        double[][] B = FileOperations.readData("train_outputs.csv", ",");
+        double[][] A = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\PixelData\\anfis_brown_inputs.csv", ",");
+        double[][] B = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\PixelData\\anfis_brown_outputs.csv", ",");
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);

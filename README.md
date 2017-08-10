@@ -16,6 +16,8 @@ In current phase, JML supports only Sugeno-type ANFIS. It trains your network us
 - Only Bell / Sigmoid activation functions supported;
 - Only AND / OR rules supported.
 
+Network is trained with Hybrid training rule (LSE for Linear parameters and batch mode gradient descent for MF parameters). In batch mode to find the optimal learning rate the one-dimentional optimization algorithm is used. 
+
 ### Installing
 
 Distributive of the library is located in **/dist** folder. Use this library to design, train and test your network. There are two ways to configure the ANFIS network:
@@ -77,19 +79,19 @@ To build the same network with configuration file, create a XML file with below 
     </param>
   </layer>
   <layer id="2" desc="RULE">
-    <param id="1" OPERATION="AND">
+    <param id="1" ruleInputCnt="2" OPERATION="AND">
       <input id="1"></input>
       <input id="3"></input>
     </param>
-    <param id="2" OPERATION="AND">
+    <param id="2"  ruleInputCnt="2" OPERATION="AND">
       <input id="2"></input>
       <input id="4"></input>
     </param>
-    <param id="3" OPERATION="AND">
+    <param id="3"  ruleInputCnt="2" OPERATION="AND">
       <input id="1"></input>
       <input id="4"></input>
     </param>
-    <param id="4" OPERATION="AND">
+    <param id="4"  ruleInputCnt="2" OPERATION="AND">
       <input id="2"></input>
       <input id="3"></input>
     </param>
@@ -111,6 +113,7 @@ Explanation of the XML tags:
 - param id – index of the activation node (all index and numbering starts with 1);
 - param MF - membership function of the Activation layer’s node (Only BELL or SIGMOID is possible)
 - input id – index of the received input node.
+- ruleInputCnt - number of inputs of each rule
 - OPERATION - type of operation is Rule layer (Only AND or OR is possible)
 
 ##### Optional tags:

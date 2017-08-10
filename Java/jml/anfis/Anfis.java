@@ -196,6 +196,7 @@ public class Anfis {
             anfis.init();
         } catch (Exception ex) {
             System.out.println("Anfis.loadAnfisFromFile(): " + ex);
+            ex.printStackTrace();
         } finally {
             return anfis;
         }
@@ -604,7 +605,7 @@ public class Anfis {
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
                 MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -3, 3, -1, 1);
-                mfFrame[k] = new JFrame("Activation " + k);
+                mfFrame[k] = new JFrame("Activation " + (k+1));
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
                 mfFrame[k].add(mfg);
@@ -670,6 +671,7 @@ class AnfisXmlHandler extends DefaultHandler {
     int inputCnt = 0;
     int activationCnt = 0;
     int ruleCnt = 0;
+    int ruleInputCnt = 0; // how many inputs rule has
     int layerId = 1;
     int activationId = 0;
     int ruleIdx = 0;
@@ -684,7 +686,6 @@ class AnfisXmlHandler extends DefaultHandler {
             inputCnt = Integer.parseInt(attributes.getValue("inputs"));
             activationCnt = Integer.parseInt(attributes.getValue("activations"));
             ruleCnt = Integer.parseInt(attributes.getValue("rules"));
-            ruleArr = new int[ruleCnt];
             System.out.print("Input count: " + inputCnt + ", ");
             System.out.print("Activation count: " + activationCnt + ", ");
             System.out.println("Rule count: " + ruleCnt);
@@ -695,6 +696,10 @@ class AnfisXmlHandler extends DefaultHandler {
             activationId = Integer.parseInt(attributes.getValue("id"));
             activationMF = attributes.getValue("MF");
             ruleOperation = attributes.getValue("OPERATION");
+            if (layerId == 2) {
+                ruleInputCnt = Integer.parseInt(attributes.getValue("ruleInputCnt"));
+                ruleArr = new int[ruleInputCnt];
+            }
             System.out.println("   Params : (" + activationId + "," + activationMF + "," + ruleOperation + ")");
         } else if (qName.equalsIgnoreCase("input")) {
             int inputId = Integer.parseInt(attributes.getValue("id"));
