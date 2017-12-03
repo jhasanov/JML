@@ -65,19 +65,20 @@ public class AnfisDemo {
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis() {
-        //Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_trained.xml");;
-        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_matlab.xml");
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_brown.xml");;
+        //Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_conf_matlab.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
         int trueNeg = 0;
         int falseNeg = 0;
 
-        /* When you need to test one value
-        double[] retval = anfis.forwardPass(new double[] {0.3,0.3},-1, false);
+        // When you need to test one value
+        double[] retval = anfis.forwardPass(new double[] {6*1.0/180, 106*1.0/255, 12*1.0/255},-1, true);
         System.out.println("Retval="+retval[0]);
-        */
 
+
+        /*
         double [][] testData = FileOperations.readData("unit_test_data/test_ANFIS_2.csv",",");
 
         for (int i=0; i< testData.length; i++) {
@@ -104,6 +105,7 @@ public class AnfisDemo {
         System.out.println("Total samples: "+totalCnt);
         System.out.println("True Positives: "+truePos+"; True Negatives: "+trueNeg);
         System.out.println("False Positives: "+falsePos+"; False Negatives: "+falseNeg);
+        */
     }
 
     public static void main(String[] args) {

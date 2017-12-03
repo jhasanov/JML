@@ -138,6 +138,7 @@ public class Anfis {
             for (int i = 0; i < ruleList.length; i++) {
                 xmlWrite.writeStartElement("param");
                 xmlWrite.writeAttribute("id", "" + (i + 1));
+                xmlWrite.writeAttribute("ruleInputCnt", "" + ruleList[i].inputActivations.length);
                 xmlWrite.writeAttribute("OPERATION", ruleList[i].oper.toString());
 
                 // add inputs
@@ -323,11 +324,10 @@ public class Anfis {
     void startHybridLearning(int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize, boolean bDebug) {
         // variables of the "Golden section search" method
         double a = 0.0;
-        double b = 10.0;
+        double b = 0.0;
         double[] alpha = new double[2];
         double[] Err_GSS = new double[2];
-        double[][][] weights = new double[2][activationCnt][3];
-        double eps = 0.00000001;
+        double eps = 0.01;
 
         // used to reset parameters when value is NaN
         boolean bReset = false;
@@ -359,11 +359,11 @@ public class Anfis {
             double[] outputValue = forwardPass(inputs[recIdx], -1, false);
             initError += (outputs[recIdx] - outputValue[0]);
         }
-        System.out.println("Error before training: "+initError);
+        System.out.println("Error before training: " + initError);
 
 
-            // repeat until a)error is minimized, b)max epoch count is reached or c) alpha range is too small
-        while ((errors[iterCnt++] > minError) && (iterCnt < epochCnt) && (Math.abs(b - a) > eps)) {
+        // repeat until a)error is minimized, b)max epoch count is reached or c) alpha range is too small
+        while ((errors[iterCnt++] > minError) && (iterCnt < epochCnt)) {
             // This matrix stores input information for the LSE learning.
             // It stores the input of the defuzzification layer - output of the normalization layer and inputs to the ANFIS
             double[][] A = new double[inputs.length][linearParamCnt];
@@ -390,197 +390,185 @@ public class Anfis {
             double[] linearP = lse.findParameters(A, outputs);
             linearParams = linearP;
 
-            // --- Iterate over all input data and find Premise Parameters
-
-            // update variables for "Golden Section Search (GSS)"
-            alpha[0] = b - (b - a) / 1.618;
-            alpha[1] = a + (b - a) / 1.618;
 
             // --- Run BACK PROPOGATION ---
-
+            // Iterate over all input data and find Premise Parameters
             if (bDebug)
                 printActivationParams("New epoch");
 
-            // ------------------------------------
-            // one-dimentional minimization: calculate Error function for 2 values:
-            weights = new double[2][activationCnt][3];
-            for (int aidx = 0; aidx < alpha.length; aidx++) {
-                // Save current activation parameters for the next option as well
-                // Both functions shall be calculated with the same initial parameters
-                if (aidx == 0) {
-                    for (int k = 0; k < activationCnt; k++) {
-                        for (int n = 0; n < activationList[k].params.length; n++)
-                            activationList[k].params_prev[n] = activationList[k].params[n];
+            /*
+            1. store activation parameters in a temporary params_prev.
+            2. reset field for gradient
+             */
+            for (int k = 0; k < activationCnt; k++) {
+                for (int n = 0; n < activationList[k].params.length; n++) {
+                    activationList[k].params_prev[n] = activationList[k].params[n];
+                    activationList[k].params_delta[0] = 0.0;
+                }
+            }
+
+            if (bDebug) {
+                // print delimeter
+                System.out.println("____________________________________________");
+            }
+            // Iterate through all training samples
+            for (recIdx = 0; recIdx < inputs.length; recIdx++) {
+                // pass till the end and calculate output value
+                double[] outputValue = forwardPass(inputs[recIdx], -1, false);
+                double diff = (outputs[recIdx] - outputValue[0]);
+
+                // calculate Error->Output->Defuzz->Normalization gradients
+                for (int k = 0; k < defuzzVals.length; k++) {
+                    double f = 0.0;
+                    for (int m = 0; m < inputs[recIdx].length; m++) {
+                        f += linearParams[k * (inputs[recIdx].length + 1) + m] * inputs[recIdx][m];
+                    }
+                    // add bias parameter
+                    f += linearParams[k * (inputs[recIdx].length + 1) + inputs[recIdx].length];
+                    normalizedGrads[k] = diff * f * normalizedVals[k] * (1 - normalizedVals[k]);
+                }
+
+                // calculate Normalization->Rules gradients
+                for (int k = 0; k < ruleList.length; k++) {
+                    // Iterate over each "Rule<->Normalization" connection
+                    double sum = 0.0;
+                    ruleList[k].gradientVal = 0.0;
+                    for (int m = 0; m < normalizedGrads.length; m++) {
+                        ruleList[k].gradientVal += normalizedGrads[m] * (1 / ruleList[k].getRuleVal());
                     }
                 }
 
-                if (bDebug) {
-                    // print delimeter
-                    System.out.println("____________________________________________");
+                // calculate gradients for each membership function (Rules->Membership)
+                // first reset all values
+                for (int k = 0; k < activationCnt; k++) {
+                    activationList[k].gradientVal = 0.0;
                 }
-                // Iterate through all training samples
-                for (recIdx = 0; recIdx < inputs.length; recIdx++) {
-                    // pass till the end and calculate output value
-                    double[] outputValue = forwardPass(inputs[recIdx], -1, false);
-                    double diff = (outputs[recIdx] - outputValue[0]);
 
-                    /* Used for debug : to see what are the outputs for the first 10 samples
-                    if (recIdx < 10) {
-                        System.out.println("recIdx=" + recIdx + "; diff = " + diff);
-                        if (Double.isNaN(diff)) {
-                            System.out.println("Diff is NaN because (" + outputs[recIdx] + "-" + outputValue + ")=NaN");
-                        }
+                for (int k = 0; k < ruleList.length; k++) {
+                    // find all connected membership functions to each rule and summarize the value
+                    for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
+                        int idx = ruleList[k].inputActivations[m];
+
+                        activationList[idx].gradientVal += ruleList[k].gradientVal + 0.001; // add 0.001 to avoid zero
                     }
-                    */
+                }
 
-                    // calculate Error->Output->Defuzz->Normalization gradients
-                    for (int k = 0; k < defuzzVals.length; k++) {
-                        double f = 0.0;
-                        for (int m = 0; m < inputs[recIdx].length; m++) {
-                            f += linearParams[k * (inputs[recIdx].length + 1) + m] * inputs[recIdx][m];
-                        }
-                        // add bias parameter
-                        f += linearParams[k * (inputs[recIdx].length + 1) + inputs[recIdx].length];
-                        normalizedGrads[k] = alpha[aidx] * diff * f * normalizedVals[k] * (1 - normalizedVals[k]);
+                // Now, find final gradients!
+                for (int k = 0; k < activationCnt; k++) {
+                    if (bReset) {
+                        // if there's a need to reset, do not find final gradients, stop the for loop
+                        // and start with the first sample (recIdx = 0).
+                        bReset = false;
+                        recIdx = -1;
+                        break;
                     }
 
-                    // calculate Normalization->Rules gradients
-                    for (int k = 0; k < ruleList.length; k++) {
-                        // Iterate over each "Rule<->Normalization" connection
-                        double sum = 0.0;
-                        ruleList[k].gradientVal = 0.0;
-                        for (int m = 0; m < normalizedGrads.length; m++) {
-                            ruleList[k].gradientVal += normalizedGrads[m] * (1 / ruleList[k].getRuleVal());
+                    if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                        // derivatives A,B and C
+                        double ad, bd, cd;
+
+                        ad = activationList[k].calcDerivative(inputs[recIdx], 1);
+                        bd = activationList[k].calcDerivative(inputs[recIdx], 2);
+                        cd = activationList[k].calcDerivative(inputs[recIdx], 3);
+
+                        if ((Double.isNaN(ad)) || (Double.isNaN(bd)) || (Double.isNaN(cd))) {
+                            System.out.println("NaN - Bell - resetting");
+                            for (int l = 0; l < activationCnt; l++)
+                                activationList[l].setRandomParams();
+                            printActivationParams("Reset");
+                            bReset = true;
+                            continue;
+                        } else {
+                            activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
+                            activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
+                            activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
                         }
+                    } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                        // derivatives A
+                        double ad;
+
+                        ad = activationList[k].calcDerivative(inputs[recIdx], 1);
+                        if ((Double.isNaN(ad))) {
+                            System.out.println("NaN - Sigm - resetting.");
+                            for (int l = 0; l < activationCnt; l++)
+                                activationList[l].setRandomParams();
+                            printActivationParams("Reset");
+                            bReset = true;
+                            continue;
+                        } else
+                            activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
                     }
+                }
+            }
 
-                    // calculate gradients for each membership function (Rules->Membership)
-                    // first reset all values
-                    for (int k = 0; k < activationCnt; k++) {
-                        activationList[k].gradientVal = 0.0;
-                    }
+            int minErrorIdx = 0;
 
-                    for (int k = 0; k < ruleList.length; k++) {
-                        // find all connected membership functions to each rule and summarize the value
-                        for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
-                            int idx = ruleList[k].inputActivations[m];
+            // When iteration over all training data is done
+            if (recIdx == inputs.length) {
+                //calculate the norm of the gradient
+                double grad_norm = 0.0;
+                for (int k = 0; k < activationCnt; k++)
+                    for (int n = 0; n < activationList[k].params.length; n++)
+                        grad_norm += Math.pow(activationList[k].params_delta[n],2);
+                grad_norm = Math.sqrt(grad_norm);
 
-                            activationList[idx].gradientVal += ruleList[k].gradientVal + 0.001; // add 0.001 to avoid zero
-                        }
-                    }
 
-                    // Now, find final gradients!
-                    for (int k = 0; k < activationCnt; k++) {
-                        if (bReset) {
-                            // if there's a need to reset, do not find final gradients, stop the for loop
-                            // and start with the first sample (recIdx = 0).
-                            bReset = false;
-                            recIdx = -1;
-                            break;
-                        }
+                // Initial range for the "Golden section rule"
+                a = 0.0;
+                b = grad_norm;
 
-                        if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                            // derivatives A,B and C
-                            double ad, bd, cd;
+                System.out.println("Iteration: " + iterCnt+". Golden Section range: ["+a+","+b+"]");
 
-                            ad = activationList[k].calcDerivative(inputs[recIdx], 1);
-                            bd = activationList[k].calcDerivative(inputs[recIdx], 2);
-                            cd = activationList[k].calcDerivative(inputs[recIdx], 3);
+                while (Math.abs(b - a) > eps) {
+                    alpha[0] = b - (b - a) / 1.618;
+                    alpha[1] = a + (b - a) / 1.618;
 
-                            if ((Double.isNaN(ad)) || (Double.isNaN(bd)) || (Double.isNaN(cd))) {
-                                System.out.println("NaN - Bell - resetting");
-                                for (int l = 0; l < activationCnt; l++)
-                                    activationList[l].setRandomParams();
-                                printActivationParams("Reset");
-                                bReset = true;
-                                continue;
-                            } else {
-                                activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
-                                activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
-                                activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
+                    for (int aidx = 0; aidx < alpha.length; aidx++) {
+                        // adjust parameters
+                        for (int k = 0; k < activationCnt; k++) {
+                            if (activationList[k].mf == Activation.MembershipFunc.BELL) {
+                                activationList[k].params[0] = activationList[k].params_prev[0] + alpha[aidx] * activationList[k].params_delta[0] / inputs.length;
+                                activationList[k].params[1] = activationList[k].params_prev[1] + alpha[aidx] * activationList[k].params_delta[1] / inputs.length;
+                                activationList[k].params[2] = activationList[k].params_prev[2] + alpha[aidx] * activationList[k].params_delta[2] / inputs.length;
+                            } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
+                                activationList[k].params[0] = activationList[k].params_prev[0] + alpha[aidx] * activationList[k].params_delta[0] / inputs.length;
                             }
-                        } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                            // derivatives A
-                            double ad;
-
-                            ad = activationList[k].calcDerivative(inputs[recIdx], 1);
-                            if ((Double.isNaN(ad))) {
-                                System.out.println("NaN - Sigm - resetting.");
-                                for (int l = 0; l < activationCnt; l++)
-                                    activationList[l].setRandomParams();
-                                printActivationParams("Reset");
-                                bReset = true;
-                                continue;
-                            } else
-                                activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
                         }
+
+                        Err_GSS[aidx] = 0.0;
+                        for (recIdx = 0; recIdx < inputs.length; recIdx++) {
+                            double[] outputValue = forwardPass(inputs[recIdx], -1, false);
+                            Err_GSS[aidx] += Math.pow(outputs[recIdx] - outputValue[0], 2) / 2;
+                        }
+                        System.out.print("E[" + String.format("%.02f", alpha[aidx]) + "]=" + String.format("%.02f", Err_GSS[aidx]) + "; ");
+                    }
+
+                    if (Err_GSS[0] > Err_GSS[1]) {
+                        a = alpha[0];
+                        minErrorIdx = 1;
+                    } else {
+                        b = alpha[1];
+                        minErrorIdx = 0;
                     }
                 }
 
-                // Check if all inputs were trained (otherwise, RESET was requested)
-                if (recIdx == inputs.length) {
+                // Adjust weights according to the minimal error
+                for (int aidx = 0; aidx < alpha.length; aidx++) {
                     // adjust parameters
                     for (int k = 0; k < activationCnt; k++) {
                         if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                            activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
-                            activationList[k].params[1] += activationList[k].params_delta[1] / inputs.length;
-                            activationList[k].params[2] += activationList[k].params_delta[2] / inputs.length;
-                            weights[aidx][k][0] += (activationList[k]).params[0];
-                            weights[aidx][k][1] += (activationList[k]).params[1];
-                            weights[aidx][k][2] += (activationList[k]).params[2];
-                            if (bDebug) {
-                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
-                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",1]; weight=" + weights[aidx][k][1]);
-                                System.out.println("New weight for Bell. [" + aidx + "," + k + ",2]; weight=" + weights[aidx][k][2]);
-                            }
-                            // resetting the weight adjustment
-                            activationList[k].params_delta[0] = 0.0;
-                            activationList[k].params_delta[1] = 0.0;
-                            activationList[k].params_delta[2] = 0.0;
+                            activationList[k].params[0] = activationList[k].params_prev[0] + alpha[minErrorIdx] * activationList[k].params_delta[0] / inputs.length;
+                            activationList[k].params[1] = activationList[k].params_prev[1] + alpha[minErrorIdx] * activationList[k].params_delta[1] / inputs.length;
+                            activationList[k].params[2] = activationList[k].params_prev[2] + alpha[minErrorIdx] * activationList[k].params_delta[2] / inputs.length;
                         } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                            activationList[k].params[0] += activationList[k].params_delta[0] / inputs.length;
-                            weights[aidx][k][0] += (activationList[k]).params[0];
-                            if (bDebug) {
-                                System.out.println("New weight for Sigmoid. [" + aidx + "," + k + ",0]; weight=" + weights[aidx][k][0]);
-                            }
-                            // resetting the weight adjustment
-                            activationList[k].params_delta[0] = 0.0;
+                            activationList[k].params[0] = activationList[k].params_prev[0] + alpha[minErrorIdx] * activationList[k].params_delta[0] / inputs.length;
                         }
                     }
-                }
 
-                // Calculate error for given parameters
-                Err_GSS[aidx] = 0;
-                for (recIdx = 0; recIdx < inputs.length; recIdx++) {
-                    double[] outputValue = forwardPass(inputs[recIdx], -1, false);
-                    Err_GSS[aidx] += Math.pow(outputs[recIdx] - outputValue[0], 2) / 2;
-                }
-
-                // Reset activation params for the next option (when first part is done)
-                if (aidx == 0) {
-                    for (int k = 0; k < activationCnt; k++) {
-                        for (int n = 0; n < activationList[k].params.length; n++)
-                            activationList[k].params[n] = activationList[k].params_prev[n];
-                    }
                 }
             }
 
-            int winnerIdx = 1; // option that gave minimum error
-            if (Err_GSS[0] > Err_GSS[1]) {
-                a = alpha[0];
-            } else {
-                b = alpha[1];
-                winnerIdx = 0;
-            }
-
-            // Setting weight to the optimal options (with smaller Error)
-            for (int k = 0; k < activationCnt; k++) {
-                for (int n = 0; n < activationList[k].params.length; n++) {
-                    activationList[k].params[n] = weights[winnerIdx][k][n];
-                }
-            }
-
-            errors[iterCnt - 1] = Math.min(Err_GSS[0], Err_GSS[1]);
+            errors[iterCnt - 1] = Err_GSS[minErrorIdx];
             maxError = Math.max(maxError, errors[iterCnt - 1]);
 
             // will be used in WHILE check
@@ -588,10 +576,9 @@ public class Anfis {
                 errors[iterCnt] = Double.MAX_VALUE;
 
             graphPanel.setData(maxError, errors);
-            System.out.println("____________________________________________");
-            System.out.println("Epoch = " + iterCnt + "; alpha in ( " + alpha[0] + "," + alpha[1] + "); Error = " + errors[iterCnt - 1] + "; (Err0=" + Err_GSS[0] + "; Err1=" + Err_GSS[1]+")");
-        }
+            System.out.println("\nEpoch = " + iterCnt + "; Error = " + errors[iterCnt - 1]);
 
+        }
         // Print parameters of Membership Functions after learning
         printActivationParams("Final");
 
@@ -605,15 +592,15 @@ public class Anfis {
             for (int k = 0; k < activationCnt; k++) {
                 // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
                 MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -3, 3, -1, 1);
-                mfFrame[k] = new JFrame("Activation " + (k+1));
+                mfFrame[k] = new JFrame("Activation " + (k + 1));
                 mfFrame[k].setSize(frameWidth, framwHeight);
                 mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
                 mfFrame[k].add(mfg);
                 mfFrame[k].setVisible(true);
             }
         }
-    }
 
+    }
 }
 
 class Input {
