@@ -1,6 +1,9 @@
 package jml.anfis.tests;
 
 import jml.anfis.Activation;
+import jml.anfis.Anfis;
+import jml.utils.FileOperations;
+import jml.utils.MatrixOperations;
 import org.junit.Test;
 
 import java.io.*;
@@ -143,9 +146,56 @@ public class ActivationTest {
         double funcVal_d2 = activationFunc.sigmoidFunc(x, a-delta);
         double derivVal = activationFunc.sigmoidFuncDerivA(x,a);
         double stepVal = (funcVal_d1 - funcVal_d2)/(2*delta);
-        System.out.print("Derivative if Sigmoid... f'()="+derivVal+"; step val="+stepVal);
+        System.out.print("Derivative of Sigmoid... f'()="+derivVal+"; step val="+stepVal);
         assertTrue(Math.abs(derivVal - stepVal)<eps);
         System.out.println(" -> passed");
     }
+
+    @Test
+    public void testNetworkGrad() {
+        double eps = 0.0001;
+        double delta = 0.0000001;
+
+        double[][] A = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\PixelData\\anfis_brown_inputs.csv", ",");
+        double[][] B = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\PixelData\\anfis_brown_outputs.csv", ",");
+        //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
+        try {
+            B = MatrixOperations.transpose(B);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        double paramValue = 0.5;//Math.random();
+        int exampleNo = (int)(A.length * Math.random());
+
+
+        System.out.println("\n--- Testing whole network gradient calculation... ");
+        System.out.println("param="+paramValue+"; exampleNo="+exampleNo);
+
+        Anfis anfis = Anfis.loadAnfisFromFile("ANFIS_grad_test.xml");
+        anfis.setActivationParamVal(0,0,paramValue+delta);
+        System.out.println("param1="+anfis.getActivationParamVal(0,0));
+        double[] res1 = anfis.forwardPass(A[exampleNo], -1,true);
+        double func_val1 = Math.pow(B[0][exampleNo] - res1[0], 2) / 2;
+
+        anfis.setActivationParamVal(0,0,paramValue-delta);
+        System.out.println("param2="+anfis.getActivationParamVal(0,0));
+        double[] res2 = anfis.forwardPass(A[exampleNo], -1,true);
+        double func_val2 = Math.pow(B[0][exampleNo] - res2[0], 2) / 2;
+
+        double stepVal = (func_val1-func_val2)/(2*delta);
+        anfis.setActivationParamVal(0,0,paramValue);
+        System.out.println("param3="+anfis.getActivationParamVal(0,0));
+        Activation [] activationList = anfis.calculateGradient(A[exampleNo],B[0][exampleNo]);
+
+        System.out.println("Activations paramDelta="+activationList[0].getParamDelta()[0]);
+        System.out.println("Activations gradient="+activationList[0].getGradientVal());
+        System.out.println("Step val="+stepVal);
+
+        assertTrue(Math.abs(activationList[0].getParamDelta()[0] - stepVal)<eps);
+        System.out.println(" -> passed");
+
+    }
+
 
 }
