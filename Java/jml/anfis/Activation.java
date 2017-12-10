@@ -105,7 +105,7 @@ public class Activation {
 
     public double sigmoidFuncDerivA(double x, double a) {
         // add 0.001 to avoid zero derivative
-        double retval = -1*Math.pow(sigmoidFunc(x,a),2)*Math.exp(a*x)*x + 0.00000001;
+        double retval = -1*Math.pow(sigmoidFunc(x,a),2)*Math.exp(a*x)*x;// + 0.00000001;
         if (Double.isNaN(retval)) {
             System.out.println("sigmoidFuncDerivA("+x+","+a+") returned NaN");
         }
@@ -127,7 +127,7 @@ public class Activation {
          modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
         // add 0.001 to avoid zero derivative
-        double retval = Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign + 0.00000001;
+        double retval = Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign;// + 0.00000001;
         if (Double.isNaN(retval)) {
             System.out.println("bellFuncDerivA("+x+","+a+","+b+","+c+") returned NaN");
         }
@@ -143,7 +143,7 @@ public class Activation {
             x += 0.001;
 
         // add 0.001 to avoid zero derivative
-        double retval =  -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2 + 0.00000001;
+        double retval =  -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2;// + 0.00000001;
 
         if (Double.isNaN(retval)) {
             System.out.println("bellFuncDerivB("+x+","+a+","+b+","+c+") returned NaN");
@@ -159,7 +159,7 @@ public class Activation {
             modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
         // add 0.001 to avoid zero derivative
-        double retval = Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign + 0.00000001;
+        double retval = Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign;// + 0.00000001;
 
         if (Double.isNaN(retval)) {
             System.out.println("bellFuncDerivC("+x+","+a+","+b+","+c+") returned NaN");

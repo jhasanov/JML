@@ -23,6 +23,7 @@ public class Anfis {
     Rule[] ruleList;
 
     double[] normalizedVals;
+    double[] funcVals;
     double[] defuzzVals;
     double[] normalizedGrads;
     double[] defuzzGrads;
@@ -43,6 +44,7 @@ public class Anfis {
      */
     public void init() {
         normalizedVals = new double[ruleList.length];
+        funcVals = new double[ruleList.length];
         defuzzVals = new double[ruleList.length];
 
         // arrays to keep gradients of normalized and defuzzification layers
@@ -301,12 +303,14 @@ public class Anfis {
         }
 
         for (int i = 0; i < defuzzVals.length; i++) {
+            funcVals[i] = 0.0;
             for (int j = 0; j < inputs.length; j++) {
-                defuzzVals[i] += linearParams[i * (inputs.length + 1) + j] * inputs[j];
+                funcVals[i] += linearParams[i * (inputs.length + 1) + j] * inputs[j];
             }
             // add bias parameter
-            defuzzVals[i] += linearParams[i * (inputs.length + 1) + inputs.length];
-            defuzzVals[i] *= normalizedVals[i];
+            funcVals[i] += linearParams[i * (inputs.length + 1) + inputs.length];
+
+            defuzzVals[i] = funcVals[i]* normalizedVals[i];
             if (bVerbose)
                 System.out.print("" + defuzzVals[i] + " ");
         }
@@ -447,6 +451,7 @@ public class Anfis {
                 double step = 0.0;
                 a = 0.0;
                 b = -1.0; // b will be updated when a is found.
+                int n = 1;
 
                 double [] err = new double[2];
                 err[0] = Double.MAX_VALUE;
@@ -468,7 +473,8 @@ public class Anfis {
                     else if (err[1] >= err[0]) {
                         b = step;
                     }
-                    step += 0.01;
+                    step += n*0.1;
+                    n *= 2;
                 }
                 // --------------------------------------------------------------
 
@@ -549,22 +555,15 @@ public class Anfis {
 
         // calculate Error->Output->Defuzz->Normalization gradients
         for (int k = 0; k < defuzzVals.length; k++) {
-            double f = 0.0;
-            for (int m = 0; m < inputs.length; m++) {
-                f += linearParams[k * (inputs.length + 1) + m] * inputs[m];
-            }
-            // add bias parameter
-            f += linearParams[k * (inputs.length + 1) + inputs.length];
-            normalizedGrads[k] = diff * f * normalizedVals[k] * (1 - normalizedVals[k]);
+            normalizedGrads[k] = -1 * diff * funcVals[k] * normalizedVals[k] * (1 - normalizedVals[k]);
         }
 
         // calculate Normalization->Rules gradients
         for (int k = 0; k < ruleList.length; k++) {
             // Iterate over each "Rule<->Normalization" connection
-            double sum = 0.0;
             ruleList[k].gradientVal = 0.0;
             for (int m = 0; m < normalizedGrads.length; m++) {
-                ruleList[k].gradientVal += normalizedGrads[m] * (1 / ruleList[k].getRuleVal());
+                ruleList[k].gradientVal += normalizedGrads[m];// / ruleList[k].getRuleVal();
             }
         }
 
@@ -579,7 +578,7 @@ public class Anfis {
             for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
                 int idx = ruleList[k].inputActivations[m];
 
-                activationList[idx].gradientVal += ruleList[k].gradientVal + 0.001; // add 0.001 to avoid zero
+                activationList[idx].gradientVal += ruleList[k].gradientVal / activationList[idx].activationVal;// + 0.00000001; // add 0.001 to avoid zero
             }
         }
 
@@ -634,11 +633,11 @@ public class Anfis {
     void adjustMFweights(double alpha, double gradNorm, int sampleCnt) {
         for (int k = 0; k < activationCnt; k++) {
             if (activationList[k].mf == Activation.MembershipFunc.BELL) {
-                activationList[k].params[0] = activationList[k].params_prev[0] + alpha * activationList[k].params_delta[0] / (gradNorm*sampleCnt);
-                activationList[k].params[1] = activationList[k].params_prev[1] + alpha * activationList[k].params_delta[1] / (gradNorm*sampleCnt);
-                activationList[k].params[2] = activationList[k].params_prev[2] + alpha * activationList[k].params_delta[2] / (gradNorm*sampleCnt);
+                activationList[k].params[0] = activationList[k].params_prev[0] - alpha * activationList[k].params_delta[0] / (gradNorm*sampleCnt);
+                activationList[k].params[1] = activationList[k].params_prev[1] - alpha * activationList[k].params_delta[1] / (gradNorm*sampleCnt);
+                activationList[k].params[2] = activationList[k].params_prev[2] - alpha * activationList[k].params_delta[2] / (gradNorm*sampleCnt);
             } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
-                activationList[k].params[0] = activationList[k].params_prev[0] + alpha * activationList[k].params_delta[0] / (gradNorm*sampleCnt);
+                activationList[k].params[0] = activationList[k].params_prev[0] - alpha * activationList[k].params_delta[0] / (gradNorm*sampleCnt);
             }
         }
     }

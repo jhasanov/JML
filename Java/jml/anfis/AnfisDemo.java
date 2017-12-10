@@ -52,7 +52,7 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 100;
+        int epochs = 300;
         double error = 0.01;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
