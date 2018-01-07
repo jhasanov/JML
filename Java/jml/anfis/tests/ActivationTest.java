@@ -164,23 +164,20 @@ public class ActivationTest {
         double output = 0.0;
 
         System.out.print("Layer values: ");
-        for (int i = 0; i<layerVal.length; i++)
-            System.out.print(layerVal[i]+" ");
+        for (int i = 0; i < layerVal.length; i++)
+            System.out.print(layerVal[i] + " ");
         System.out.println();
 
         if (layerId == 1) {
             activations = layerVal;
 
-            rule[0] = activations[0]*activations[2]*activations[4];
-            rule[1] = activations[1]*activations[3]*activations[5];
-        }
-        else if (layerId == 2) {
+            rule[0] = activations[0] * activations[2] * activations[4];
+            rule[1] = activations[1] * activations[3] * activations[5];
+        } else if (layerId == 2) {
             rule = layerVal;
-        }
-        else if (layerId == 3) {
+        } else if (layerId == 3) {
             norm = layerVal;
-        }
-        else if (layerId == 4)
+        } else if (layerId == 4)
             defuzzVals = layerVal;
 
         if (layerId < 3) {
@@ -191,7 +188,7 @@ public class ActivationTest {
 
             for (int i = 0; i < norm.length; i++) {
                 norm[i] = rule[i] / ruleSum;
-                System.out.println("norm["+i+"]="+norm[i]);
+                System.out.println("norm[" + i + "]=" + norm[i]);
             }
         }
         if (layerId < 4) {
@@ -221,8 +218,8 @@ public class ActivationTest {
 
     @Test
     public void testNetworkGrad() {
-        int inputIdx = 3; // index of the input (membership function)
-        int paramIdx = 0; // index of the activation's parameter
+        int inputIdx = 1; // index of the input (membership function)
+        int paramIdx = 2; // index of the activation's parameter
         double eps = 0.0001;
         double delta = 0.1;
 
@@ -244,7 +241,7 @@ public class ActivationTest {
         double paramValue = anfis.getActivationParamVal(inputIdx, paramIdx);
 
         for (int exampleNo = 0; exampleNo < A.length; exampleNo++) {
-        //for (int exampleNo = 700; exampleNo < 701; exampleNo++) {
+            //for (int exampleNo = 700; exampleNo < 701; exampleNo++) {
             anfis.setActivationParamVal(inputIdx, paramIdx, paramValue + eps * paramValue);
             double[] res1 = anfis.forwardPass(A[exampleNo], -1, false);
             double func_val1 = Math.pow(B[0][exampleNo] - res1[0], 2) / 2.0;
@@ -259,7 +256,7 @@ public class ActivationTest {
 
             anfis.setActivationParamVal(inputIdx, paramIdx, paramValue);
             double[] res = anfis.forwardPass(A[exampleNo], -1, false);
-            Activation[] activationList = anfis.calculateGradient(A[exampleNo], B[0][exampleNo],false);
+            Activation[] activationList = anfis.calculateGradient(A[exampleNo], B[0][exampleNo], false);
 
             if (activationList[inputIdx].getParamDelta()[paramIdx] != 0) {
                 System.out.print("Inputs: ");
@@ -274,7 +271,6 @@ public class ActivationTest {
 
             // Reset gradient values. Otherwise they'll be summed.
             anfis.resetGradientValues();
-
 
             /*
             // This part is used to test the gradient of the special layer.
