@@ -1,19 +1,6 @@
 package jml.anfis;
 
-import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import javax.swing.*;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
 
 public class Anfis {
     int inputCnt = 0;
@@ -28,13 +15,13 @@ public class Anfis {
     double[] defuzzVals;
     double[] normalizedGrads;
     double[] defuzzGrads;
-    double outputVal;
 
-    double[] membershipParams;
     double[] linearParams;
     double[] linearParamsPrev;
     double[] linearParamGrads;
     int linearParamCnt;
+    int premiseParamCnt;
+    int consequtiveParamCnt;
 
     public Anfis(int inputCnt, int activationCnt) {
         this.inputCnt = inputCnt;
@@ -109,6 +96,8 @@ public class Anfis {
 
         // +1 bias parameter
         linearParamCnt = (inputCnt + 1) * ruleList.length;
+        //linearParamCnt = (activationCnt + 1) * ruleList.length; //MF to Defuzz
+
         // if not given in XML file
         if ((linearParams == null) || (linearParams.length == 0)) {
             linearParams = new double[linearParamCnt];
@@ -184,15 +173,19 @@ public class Anfis {
     }
 
     public void resetGradientValues() {
+        premiseParamCnt = 0;
+        consequtiveParamCnt = 0;
         for (int k = 0; k < activationCnt; k++) {
             for (int n = 0; n < activationList[k].params.length; n++) {
                 activationList[k].params_prev[n] = activationList[k].params[n];
                 activationList[k].params_delta[n] = 0.0;
+                premiseParamCnt++;
             }
         }
         for (int k = 0; k < linearParamCnt; k++) {
             linearParamsPrev[k] = linearParams[k];
             linearParamGrads[k] = 0.0;
+            consequtiveParamCnt++;
         }
     }
 
@@ -279,6 +272,15 @@ public class Anfis {
 
         for (int i = 0; i < defuzzVals.length; i++) {
             funcVals[i] = 0.0;
+            /*
+             //MF to Defuzz
+            for (int j = 0; j < activationList.length; j++) {
+                funcVals[i] += linearParams[i * (activationList.length + 1) + j] * activationList[j].getActivationVal();
+            }
+            // add bias parameter
+            funcVals[i] += linearParams[i * (activationList.length + 1) + activationList.length];
+             */
+
             for (int j = 0; j < inputs.length; j++) {
                 funcVals[i] += linearParams[i * (inputs.length + 1) + j] * inputs[j];
             }
@@ -310,6 +312,123 @@ public class Anfis {
         return layerOutput;
     }
 
+    void adamLearning(int batchSize, int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize, boolean bDebug) {
+        double alpha = 0.0001;
+        double beta1 = 0.9;
+        double beta2 = 0.999;
+        double eps = 10e-8;
+        double[] errors = new double[epochCnt];
+        double maxError = 0.0;
+        GraphPanel graphPanel = new GraphPanel();
+
+        // save old activation values for visualization
+        Activation[] oldActivations = activationList.clone();
+        for (int i = 0; i < activationCnt; i++)
+            oldActivations[i] = activationList[i].clone();
+
+        if (bVisualize) {
+            JFrame frame = new JFrame("ANFIS Adam Learning");
+            frame.setSize(600, 300);
+            frame.add(graphPanel);
+            frame.setVisible(true);
+        }
+
+        // Calculate the initial Error
+        double initError = 0.0;
+        for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
+            // pass till the end and calculate output value
+            double[] outputValue = forwardPass(inputs[recIdx], -1, false);
+            initError += Math.pow(outputs[recIdx] - outputValue[0], 2) / 2;
+        }
+        System.out.println("Error before training: " + initError);
+
+        // iteration count
+        int iterCnt = 1;
+        // set to maximum to satisfy the (errors[0] > minError) check below (in "while")
+        errors[0] = Double.MAX_VALUE;
+
+        double[] m = new double[premiseParamCnt + consequtiveParamCnt];
+        double[] v = new double[premiseParamCnt + consequtiveParamCnt];
+        int t = 0;
+
+        // repeat until a) error is minimized, b) max epoch count is reached or c) alpha range is too small
+        while (iterCnt < epochCnt) {
+            // Iterate through all training samples
+            for (int recIdx = 0; recIdx < inputs.length; recIdx+=batchSize) {
+
+                // 1. store activation parameters in a temporary params_prev.
+                // 2. reset field for gradient
+                resetGradientValues();
+
+                // Mini-batch procedure
+                for (int batchIdx = recIdx; batchIdx < Math.min(recIdx+batchSize,inputs.length); batchIdx++) {
+                    calculateGradient(inputs[batchIdx], outputs[batchIdx], bDebug);
+                }
+
+                t++;
+                int paramIdx = 0;
+                for (int k = 0; k < activationCnt; k++)
+                    for (int n = 0; n < activationList[k].params.length; n++) {
+                        double g = activationList[k].params_delta[n]/batchSize;
+                        m[paramIdx] = beta1 * m[paramIdx] + (1 - beta1) * g;
+                        v[paramIdx] = beta2 * v[paramIdx] + (1 - beta2) * Math.pow(g, 2);
+                        double m_hat = m[paramIdx] / (1 - Math.pow(beta1, t));
+                        double v_hat = v[paramIdx] / (1 - Math.pow(beta2, t));
+                        activationList[k].params[n] = activationList[k].params[n] - alpha * m_hat / (Math.sqrt(v_hat) + eps);
+                        paramIdx++;
+                    }
+                for (int n = 0; n < linearParamCnt; n++) {
+                    double g = linearParamGrads[n]/batchSize;
+                    m[paramIdx] = beta1 * m[premiseParamCnt + n] + (1 - beta1) * g;
+                    v[paramIdx] = beta2 * v[premiseParamCnt + n] + (1 - beta2) * Math.pow(g, 2);
+                    double m_hat = m[paramIdx] / (1 - Math.pow(beta1, t));
+                    double v_hat = v[paramIdx] / (1 - Math.pow(beta2, t));
+                    linearParams[n] = linearParams[n] - alpha * m_hat / (Math.sqrt(v_hat) + eps);
+                    paramIdx++;
+                }
+            }
+
+            errors[iterCnt] = 0.0;
+
+            for (int recIdx = 0; recIdx < inputs.length; recIdx++) {
+                // pass till the end and calculate output value
+                double[] outputValue = forwardPass(inputs[recIdx], -1, false);
+                errors[iterCnt] += Math.pow(outputs[recIdx] - outputValue[0], 2) / 2;
+            }
+
+            maxError = Math.max(maxError, errors[iterCnt]);
+
+            graphPanel.setData(maxError, errors);
+            System.out.println("\nEpoch = " + iterCnt + "; Error = " + errors[iterCnt]);
+            if (errors[iterCnt] / inputs.length < minError)
+                break;
+
+            iterCnt++;
+        }
+
+        // Print parameters of Membership Functions after learning
+        printActivationParams("Final");
+
+        // Visualize Membership functions (show initial and updated MFs)
+        if (bVisualize) {
+            JFrame[] mfFrame = new JFrame[activationCnt];
+            int frameWidth = 200;
+            int framwHeight = 150;
+            int horizWndCnt = 4; // count of windows in one horizontal line
+            int pad = 20; // space between adjacent windows
+            for (int k = 0; k < activationCnt; k++) {
+                // Draw graph in [-10,10] range (to see how it looks like) but outline behaviour in our [-1,1] range
+                MFGraph mfg = new MFGraph(activationList[k], oldActivations[k], -3, 3, -1, 1);
+                mfFrame[k] = new JFrame("Activation " + (k + 1));
+                mfFrame[k].setSize(frameWidth, framwHeight);
+                mfFrame[k].setLocation((k % horizWndCnt) * frameWidth + pad, (k / horizWndCnt) * framwHeight + pad);
+                mfFrame[k].add(mfg);
+                mfFrame[k].setVisible(true);
+            }
+        }
+
+    }
+
     /**
      * @param bHybrid    true if Hybrid Learning algorithm is needed, otherwise, just  backpropogation
      * @param epochCnt   count of maximum epochs (iterations over training set)
@@ -321,7 +440,6 @@ public class Anfis {
      */
     void startTraining(boolean bHybrid, int epochCnt, double minError, double[][] inputs, double[] outputs, boolean bVisualize, boolean bDebug) {
         // used to reset parameters when value is NaN
-        boolean bReset = false;
         double[] errors = new double[epochCnt];
         double maxError = 0.0;
         double alpha = 0.0;
@@ -361,7 +479,7 @@ public class Anfis {
         errors[0] = Double.MAX_VALUE;
 
         // repeat until a) error is minimized, b) max epoch count is reached or c) alpha range is too small
-        while ( iterCnt < epochCnt ) {
+        while (iterCnt < epochCnt) {
             if (bHybrid) {
                 System.out.println("Hybrid learning is on");
                 // This matrix stores input information for the LSE learning.
@@ -449,7 +567,7 @@ public class Anfis {
 
             graphPanel.setData(maxError, errors);
             System.out.println("\nEpoch = " + iterCnt + "; Error = " + errors[iterCnt]);
-            if(errors[iterCnt]/inputs.length < minError)
+            if (errors[iterCnt] / inputs.length < minError)
                 break;
 
             iterCnt++;
@@ -496,7 +614,7 @@ public class Anfis {
         while (globalB < 0) {
             adjustMFweights(step, grad_norm);
             if (!bHybrid) {
-                adjustConsequentWeights(step,grad_norm);
+                adjustConsequentWeights(step, grad_norm);
             }
 
             // calculate output error
@@ -517,17 +635,17 @@ public class Anfis {
                 globalB = step;
             }
 
-            step+=1;
+            step += 1;
         }
 
         if (bDebug)
             System.out.println("Golden Section range: [" + globalA + "," + globalB + "]");
 
-        double a = globalA-1;
+        double a = globalA - 1;
         double b = globalB;
         err = new double[2];
 
-        while (Math.abs(b - a) > eps)  {
+        while (Math.abs(b - a) > eps) {
             alpha[0] = b - (b - a) / 1.618;
             alpha[1] = a + (b - a) / 1.618;
 
@@ -535,7 +653,7 @@ public class Anfis {
                 // adjust parameters
                 adjustMFweights(alpha[aidx], grad_norm);
                 if (!bHybrid) {
-                    adjustConsequentWeights(alpha[aidx],grad_norm);
+                    adjustConsequentWeights(alpha[aidx], grad_norm);
                 }
 
                 // calculate output error
@@ -577,12 +695,17 @@ public class Anfis {
             System.out.println(String.format(" %76s ", "(Desired - Output) = " + diff));
         }
 
-
         // Calculate the derivatives of the CONSEQUENT parameters
         for (int k = 0; k < defuzzVals.length; k++) {
             for (int z = 0; z < inputCnt; z++)
-                linearParamGrads[k * (inputCnt+1) + z] += -1 * diff * (normalizedVals[k] * inputs[z]);
-            linearParamGrads[k * (inputCnt+1) + inputCnt] += -1 * diff * normalizedVals[k];
+                linearParamGrads[k * (inputCnt + 1) + z] += -1 * diff * (normalizedVals[k] * inputs[z]);
+            linearParamGrads[k * (inputCnt + 1) + inputCnt] += -1 * diff * normalizedVals[k];
+/*
+            // MF to Defuzz
+            for (int z = 0; z < activationCnt; z++)
+                linearParamGrads[k * (activationCnt+1) + z] += -1 * diff * (normalizedVals[k] * activationList[z].activationVal);
+            linearParamGrads[k * (activationCnt+1) + activationCnt] += -1 * diff * normalizedVals[k];
+*/
         }
 
         // calculate Error->Output->Defuzz->Normalization gradients
@@ -655,7 +778,7 @@ public class Anfis {
             for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
                 int idx = ruleList[k].inputActivations[m];
 
-                activationList[idx].gradientVal += ruleList[k].gradientVal * ruleList[k].getRuleVal() / activationList[idx].activationVal;// + 0.00000001; // add 0.001 to avoid zero
+                activationList[idx].gradientVal += ruleList[k].gradientVal * ruleList[k].getRuleVal() / activationList[idx].activationVal;
                 if (bVerbose)
                     System.out.print("A[" + idx + "]=" + String.format("%.6f", activationList[idx].gradientVal) + "; ");
             }

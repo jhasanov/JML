@@ -1,0 +1,1764 @@
+<?xml version="1.0" ?>
+<anfis>
+  <structure inputs="6" activations="18" rules="153"></structure>
+  <layer id="1" desc="ACTIVATION">
+    <param id="1" MF="SIGMOID">
+      <input id="1"></input>
+      <coef id="1" val="5.820220835566243"></coef>
+    </param>
+    <param id="2" MF="SIGMOID">
+      <input id="1"></input>
+      <coef id="1" val="-1.319956540640489"></coef>
+    </param>
+    <param id="3" MF="SIGMOID">
+      <input id="1"></input>
+      <coef id="1" val="0.7970121739362798"></coef>
+    </param>
+    <param id="4" MF="SIGMOID">
+      <input id="2"></input>
+      <coef id="1" val="5.136148085858654"></coef>
+    </param>
+    <param id="5" MF="SIGMOID">
+      <input id="2"></input>
+      <coef id="1" val="1.9852865886368631"></coef>
+    </param>
+    <param id="6" MF="SIGMOID">
+      <input id="2"></input>
+      <coef id="1" val="2.0751737088413176"></coef>
+    </param>
+    <param id="7" MF="SIGMOID">
+      <input id="3"></input>
+      <coef id="1" val="2.1906331034341218"></coef>
+    </param>
+    <param id="8" MF="SIGMOID">
+      <input id="3"></input>
+      <coef id="1" val="4.6439876806570535"></coef>
+    </param>
+    <param id="9" MF="SIGMOID">
+      <input id="3"></input>
+      <coef id="1" val="3.5637602450026233"></coef>
+    </param>
+    <param id="10" MF="SIGMOID">
+      <input id="4"></input>
+      <coef id="1" val="4.0368667541050325"></coef>
+    </param>
+    <param id="11" MF="SIGMOID">
+      <input id="4"></input>
+      <coef id="1" val="-1.4095943547898302"></coef>
+    </param>
+    <param id="12" MF="SIGMOID">
+      <input id="4"></input>
+      <coef id="1" val="0.8043890273808991"></coef>
+    </param>
+    <param id="13" MF="SIGMOID">
+      <input id="5"></input>
+      <coef id="1" val="4.603536073669679"></coef>
+    </param>
+    <param id="14" MF="SIGMOID">
+      <input id="5"></input>
+      <coef id="1" val="4.979966403290191"></coef>
+    </param>
+    <param id="15" MF="SIGMOID">
+      <input id="5"></input>
+      <coef id="1" val="2.4979837254037607"></coef>
+    </param>
+    <param id="16" MF="SIGMOID">
+      <input id="6"></input>
+      <coef id="1" val="-1.7668362346826225"></coef>
+    </param>
+    <param id="17" MF="SIGMOID">
+      <input id="6"></input>
+      <coef id="1" val="-1.8644018009470555"></coef>
+    </param>
+    <param id="18" MF="SIGMOID">
+      <input id="6"></input>
+      <coef id="1" val="4.311383588988038"></coef>
+    </param>
+  </layer>
+  <layer id="2" desc="RULE">
+    <param id="1" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="2"></input>
+    </param>
+    <param id="2" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="3"></input>
+    </param>
+    <param id="3" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="4"></input>
+    </param>
+    <param id="4" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="5"></input>
+    </param>
+    <param id="5" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="6"></input>
+    </param>
+    <param id="6" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="7"></input>
+    </param>
+    <param id="7" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="8"></input>
+    </param>
+    <param id="8" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="9"></input>
+    </param>
+    <param id="9" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="10"></input>
+    </param>
+    <param id="10" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="11"></input>
+    </param>
+    <param id="11" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="12"></input>
+    </param>
+    <param id="12" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="13"></input>
+    </param>
+    <param id="13" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="14"></input>
+    </param>
+    <param id="14" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="15"></input>
+    </param>
+    <param id="15" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="16"></input>
+    </param>
+    <param id="16" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="17"></input>
+    </param>
+    <param id="17" ruleInputCnt="2" OPERATION="AND">
+      <input id="1"></input>
+      <input id="18"></input>
+    </param>
+    <param id="18" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="3"></input>
+    </param>
+    <param id="19" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="4"></input>
+    </param>
+    <param id="20" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="5"></input>
+    </param>
+    <param id="21" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="6"></input>
+    </param>
+    <param id="22" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="7"></input>
+    </param>
+    <param id="23" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="8"></input>
+    </param>
+    <param id="24" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="9"></input>
+    </param>
+    <param id="25" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="10"></input>
+    </param>
+    <param id="26" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="11"></input>
+    </param>
+    <param id="27" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="12"></input>
+    </param>
+    <param id="28" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="13"></input>
+    </param>
+    <param id="29" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="14"></input>
+    </param>
+    <param id="30" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="15"></input>
+    </param>
+    <param id="31" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="16"></input>
+    </param>
+    <param id="32" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="17"></input>
+    </param>
+    <param id="33" ruleInputCnt="2" OPERATION="AND">
+      <input id="2"></input>
+      <input id="18"></input>
+    </param>
+    <param id="34" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="4"></input>
+    </param>
+    <param id="35" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="5"></input>
+    </param>
+    <param id="36" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="6"></input>
+    </param>
+    <param id="37" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="7"></input>
+    </param>
+    <param id="38" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="8"></input>
+    </param>
+    <param id="39" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="9"></input>
+    </param>
+    <param id="40" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="10"></input>
+    </param>
+    <param id="41" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="11"></input>
+    </param>
+    <param id="42" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="12"></input>
+    </param>
+    <param id="43" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="13"></input>
+    </param>
+    <param id="44" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="14"></input>
+    </param>
+    <param id="45" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="15"></input>
+    </param>
+    <param id="46" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="16"></input>
+    </param>
+    <param id="47" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="17"></input>
+    </param>
+    <param id="48" ruleInputCnt="2" OPERATION="AND">
+      <input id="3"></input>
+      <input id="18"></input>
+    </param>
+    <param id="49" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="5"></input>
+    </param>
+    <param id="50" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="6"></input>
+    </param>
+    <param id="51" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="7"></input>
+    </param>
+    <param id="52" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="8"></input>
+    </param>
+    <param id="53" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="9"></input>
+    </param>
+    <param id="54" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="10"></input>
+    </param>
+    <param id="55" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="11"></input>
+    </param>
+    <param id="56" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="12"></input>
+    </param>
+    <param id="57" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="13"></input>
+    </param>
+    <param id="58" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="14"></input>
+    </param>
+    <param id="59" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="15"></input>
+    </param>
+    <param id="60" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="16"></input>
+    </param>
+    <param id="61" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="17"></input>
+    </param>
+    <param id="62" ruleInputCnt="2" OPERATION="AND">
+      <input id="4"></input>
+      <input id="18"></input>
+    </param>
+    <param id="63" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="6"></input>
+    </param>
+    <param id="64" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="7"></input>
+    </param>
+    <param id="65" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="8"></input>
+    </param>
+    <param id="66" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="9"></input>
+    </param>
+    <param id="67" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="10"></input>
+    </param>
+    <param id="68" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="11"></input>
+    </param>
+    <param id="69" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="12"></input>
+    </param>
+    <param id="70" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="13"></input>
+    </param>
+    <param id="71" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="14"></input>
+    </param>
+    <param id="72" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="15"></input>
+    </param>
+    <param id="73" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="16"></input>
+    </param>
+    <param id="74" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="17"></input>
+    </param>
+    <param id="75" ruleInputCnt="2" OPERATION="AND">
+      <input id="5"></input>
+      <input id="18"></input>
+    </param>
+    <param id="76" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="7"></input>
+    </param>
+    <param id="77" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="8"></input>
+    </param>
+    <param id="78" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="9"></input>
+    </param>
+    <param id="79" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="10"></input>
+    </param>
+    <param id="80" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="11"></input>
+    </param>
+    <param id="81" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="12"></input>
+    </param>
+    <param id="82" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="13"></input>
+    </param>
+    <param id="83" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="14"></input>
+    </param>
+    <param id="84" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="15"></input>
+    </param>
+    <param id="85" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="16"></input>
+    </param>
+    <param id="86" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="17"></input>
+    </param>
+    <param id="87" ruleInputCnt="2" OPERATION="AND">
+      <input id="6"></input>
+      <input id="18"></input>
+    </param>
+    <param id="88" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="8"></input>
+    </param>
+    <param id="89" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="9"></input>
+    </param>
+    <param id="90" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="10"></input>
+    </param>
+    <param id="91" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="11"></input>
+    </param>
+    <param id="92" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="12"></input>
+    </param>
+    <param id="93" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="13"></input>
+    </param>
+    <param id="94" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="14"></input>
+    </param>
+    <param id="95" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="15"></input>
+    </param>
+    <param id="96" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="16"></input>
+    </param>
+    <param id="97" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="17"></input>
+    </param>
+    <param id="98" ruleInputCnt="2" OPERATION="AND">
+      <input id="7"></input>
+      <input id="18"></input>
+    </param>
+    <param id="99" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="9"></input>
+    </param>
+    <param id="100" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="10"></input>
+    </param>
+    <param id="101" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="11"></input>
+    </param>
+    <param id="102" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="12"></input>
+    </param>
+    <param id="103" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="13"></input>
+    </param>
+    <param id="104" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="14"></input>
+    </param>
+    <param id="105" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="15"></input>
+    </param>
+    <param id="106" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="16"></input>
+    </param>
+    <param id="107" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="17"></input>
+    </param>
+    <param id="108" ruleInputCnt="2" OPERATION="AND">
+      <input id="8"></input>
+      <input id="18"></input>
+    </param>
+    <param id="109" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="10"></input>
+    </param>
+    <param id="110" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="11"></input>
+    </param>
+    <param id="111" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="12"></input>
+    </param>
+    <param id="112" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="13"></input>
+    </param>
+    <param id="113" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="14"></input>
+    </param>
+    <param id="114" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="15"></input>
+    </param>
+    <param id="115" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="16"></input>
+    </param>
+    <param id="116" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="17"></input>
+    </param>
+    <param id="117" ruleInputCnt="2" OPERATION="AND">
+      <input id="9"></input>
+      <input id="18"></input>
+    </param>
+    <param id="118" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="11"></input>
+    </param>
+    <param id="119" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="12"></input>
+    </param>
+    <param id="120" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="13"></input>
+    </param>
+    <param id="121" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="14"></input>
+    </param>
+    <param id="122" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="15"></input>
+    </param>
+    <param id="123" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="16"></input>
+    </param>
+    <param id="124" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="17"></input>
+    </param>
+    <param id="125" ruleInputCnt="2" OPERATION="AND">
+      <input id="10"></input>
+      <input id="18"></input>
+    </param>
+    <param id="126" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="12"></input>
+    </param>
+    <param id="127" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="13"></input>
+    </param>
+    <param id="128" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="14"></input>
+    </param>
+    <param id="129" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="15"></input>
+    </param>
+    <param id="130" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="16"></input>
+    </param>
+    <param id="131" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="17"></input>
+    </param>
+    <param id="132" ruleInputCnt="2" OPERATION="AND">
+      <input id="11"></input>
+      <input id="18"></input>
+    </param>
+    <param id="133" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="13"></input>
+    </param>
+    <param id="134" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="14"></input>
+    </param>
+    <param id="135" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="15"></input>
+    </param>
+    <param id="136" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="16"></input>
+    </param>
+    <param id="137" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="17"></input>
+    </param>
+    <param id="138" ruleInputCnt="2" OPERATION="AND">
+      <input id="12"></input>
+      <input id="18"></input>
+    </param>
+    <param id="139" ruleInputCnt="2" OPERATION="AND">
+      <input id="13"></input>
+      <input id="14"></input>
+    </param>
+    <param id="140" ruleInputCnt="2" OPERATION="AND">
+      <input id="13"></input>
+      <input id="15"></input>
+    </param>
+    <param id="141" ruleInputCnt="2" OPERATION="AND">
+      <input id="13"></input>
+      <input id="16"></input>
+    </param>
+    <param id="142" ruleInputCnt="2" OPERATION="AND">
+      <input id="13"></input>
+      <input id="17"></input>
+    </param>
+    <param id="143" ruleInputCnt="2" OPERATION="AND">
+      <input id="13"></input>
+      <input id="18"></input>
+    </param>
+    <param id="144" ruleInputCnt="2" OPERATION="AND">
+      <input id="14"></input>
+      <input id="15"></input>
+    </param>
+    <param id="145" ruleInputCnt="2" OPERATION="AND">
+      <input id="14"></input>
+      <input id="16"></input>
+    </param>
+    <param id="146" ruleInputCnt="2" OPERATION="AND">
+      <input id="14"></input>
+      <input id="17"></input>
+    </param>
+    <param id="147" ruleInputCnt="2" OPERATION="AND">
+      <input id="14"></input>
+      <input id="18"></input>
+    </param>
+    <param id="148" ruleInputCnt="2" OPERATION="AND">
+      <input id="15"></input>
+      <input id="16"></input>
+    </param>
+    <param id="149" ruleInputCnt="2" OPERATION="AND">
+      <input id="15"></input>
+      <input id="17"></input>
+    </param>
+    <param id="150" ruleInputCnt="2" OPERATION="AND">
+      <input id="15"></input>
+      <input id="18"></input>
+    </param>
+    <param id="151" ruleInputCnt="2" OPERATION="AND">
+      <input id="16"></input>
+      <input id="17"></input>
+    </param>
+    <param id="152" ruleInputCnt="2" OPERATION="AND">
+      <input id="16"></input>
+      <input id="18"></input>
+    </param>
+    <param id="153" ruleInputCnt="2" OPERATION="AND">
+      <input id="17"></input>
+      <input id="18"></input>
+    </param>
+  </layer>
+  <consequent_coefs count="1071">
+    <consequent_coef idx="1" val="-1.6510300617362828"></consequent_coef>
+    <consequent_coef idx="2" val="2.2151513528494684"></consequent_coef>
+    <consequent_coef idx="3" val="6.938219336987313"></consequent_coef>
+    <consequent_coef idx="4" val="0.73972676121082"></consequent_coef>
+    <consequent_coef idx="5" val="0.3104101268628065"></consequent_coef>
+    <consequent_coef idx="6" val="-2.1548724531728647"></consequent_coef>
+    <consequent_coef idx="7" val="-0.8066805996667828"></consequent_coef>
+    <consequent_coef idx="8" val="-4.325089317288381"></consequent_coef>
+    <consequent_coef idx="9" val="-1.0456996908698108"></consequent_coef>
+    <consequent_coef idx="10" val="2.0330278138033617"></consequent_coef>
+    <consequent_coef idx="11" val="-4.175922327165725"></consequent_coef>
+    <consequent_coef idx="12" val="-0.9106791163586524"></consequent_coef>
+    <consequent_coef idx="13" val="-3.133747133811436"></consequent_coef>
+    <consequent_coef idx="14" val="-2.3350455225804465"></consequent_coef>
+    <consequent_coef idx="15" val="-0.09969373697829918"></consequent_coef>
+    <consequent_coef idx="16" val="3.2319182759971286"></consequent_coef>
+    <consequent_coef idx="17" val="-2.4986200165495696"></consequent_coef>
+    <consequent_coef idx="18" val="-11.71741686546565"></consequent_coef>
+    <consequent_coef idx="19" val="-0.051434631187727876"></consequent_coef>
+    <consequent_coef idx="20" val="-0.9548937036297328"></consequent_coef>
+    <consequent_coef idx="21" val="4.643141378342481"></consequent_coef>
+    <consequent_coef idx="22" val="0.5081810679424931"></consequent_coef>
+    <consequent_coef idx="23" val="-7.270724886019779"></consequent_coef>
+    <consequent_coef idx="24" val="0.8814759474669267"></consequent_coef>
+    <consequent_coef idx="25" val="4.988587597228397"></consequent_coef>
+    <consequent_coef idx="26" val="4.062178940113029"></consequent_coef>
+    <consequent_coef idx="27" val="0.969981349265806"></consequent_coef>
+    <consequent_coef idx="28" val="0.6272957902673768"></consequent_coef>
+    <consequent_coef idx="29" val="3.336316183251374"></consequent_coef>
+    <consequent_coef idx="30" val="-6.896766038698418"></consequent_coef>
+    <consequent_coef idx="31" val="1.2677431691675303"></consequent_coef>
+    <consequent_coef idx="32" val="3.169568829243512"></consequent_coef>
+    <consequent_coef idx="33" val="1.9432772393179851"></consequent_coef>
+    <consequent_coef idx="34" val="2.229013934158858"></consequent_coef>
+    <consequent_coef idx="35" val="2.1305881818036183"></consequent_coef>
+    <consequent_coef idx="36" val="1.9723568331192154"></consequent_coef>
+    <consequent_coef idx="37" val="4.406187213350782"></consequent_coef>
+    <consequent_coef idx="38" val="-8.485246908619102"></consequent_coef>
+    <consequent_coef idx="39" val="6.606577600930904"></consequent_coef>
+    <consequent_coef idx="40" val="-2.0415031752451385"></consequent_coef>
+    <consequent_coef idx="41" val="2.0405614318065934"></consequent_coef>
+    <consequent_coef idx="42" val="-0.25469805828742803"></consequent_coef>
+    <consequent_coef idx="43" val="-1.8645914745622951"></consequent_coef>
+    <consequent_coef idx="44" val="0.35063864861011157"></consequent_coef>
+    <consequent_coef idx="45" val="0.004497475713887554"></consequent_coef>
+    <consequent_coef idx="46" val="-7.186234463871404"></consequent_coef>
+    <consequent_coef idx="47" val="1.0245583626516535"></consequent_coef>
+    <consequent_coef idx="48" val="-10.040122855041083"></consequent_coef>
+    <consequent_coef idx="49" val="2.3080031579475624"></consequent_coef>
+    <consequent_coef idx="50" val="-0.7482019138160765"></consequent_coef>
+    <consequent_coef idx="51" val="-0.8396393195872731"></consequent_coef>
+    <consequent_coef idx="52" val="-3.847884933498829"></consequent_coef>
+    <consequent_coef idx="53" val="-3.2828045879252845"></consequent_coef>
+    <consequent_coef idx="54" val="0.6008684826084822"></consequent_coef>
+    <consequent_coef idx="55" val="1.5428170910385868"></consequent_coef>
+    <consequent_coef idx="56" val="2.7657783954914805"></consequent_coef>
+    <consequent_coef idx="57" val="-11.425100147843946"></consequent_coef>
+    <consequent_coef idx="58" val="0.778964908415854"></consequent_coef>
+    <consequent_coef idx="59" val="-0.3448610924876279"></consequent_coef>
+    <consequent_coef idx="60" val="-0.9259958055988893"></consequent_coef>
+    <consequent_coef idx="61" val="1.135165718768057"></consequent_coef>
+    <consequent_coef idx="62" val="0.7561563974599121"></consequent_coef>
+    <consequent_coef idx="63" val="-6.591407858977101"></consequent_coef>
+    <consequent_coef idx="64" val="3.4637811996126526"></consequent_coef>
+    <consequent_coef idx="65" val="-1.0642548543994932"></consequent_coef>
+    <consequent_coef idx="66" val="0.5331667020846564"></consequent_coef>
+    <consequent_coef idx="67" val="-3.5387405108856274"></consequent_coef>
+    <consequent_coef idx="68" val="-3.022127112853813"></consequent_coef>
+    <consequent_coef idx="69" val="-6.07225990039692"></consequent_coef>
+    <consequent_coef idx="70" val="-0.396453348458007"></consequent_coef>
+    <consequent_coef idx="71" val="1.4631625830458859"></consequent_coef>
+    <consequent_coef idx="72" val="5.117484273211159"></consequent_coef>
+    <consequent_coef idx="73" val="1.5671539149183444"></consequent_coef>
+    <consequent_coef idx="74" val="9.466259840743591"></consequent_coef>
+    <consequent_coef idx="75" val="6.053129283966916"></consequent_coef>
+    <consequent_coef idx="76" val="5.430998208504806"></consequent_coef>
+    <consequent_coef idx="77" val="0.5771780490119569"></consequent_coef>
+    <consequent_coef idx="78" val="-2.865043801226014"></consequent_coef>
+    <consequent_coef idx="79" val="-5.552454032242339"></consequent_coef>
+    <consequent_coef idx="80" val="0.7931728458188514"></consequent_coef>
+    <consequent_coef idx="81" val="-5.681918070825278"></consequent_coef>
+    <consequent_coef idx="82" val="-0.49534680776300205"></consequent_coef>
+    <consequent_coef idx="83" val="-0.6222580882564229"></consequent_coef>
+    <consequent_coef idx="84" val="10.194573713266953"></consequent_coef>
+    <consequent_coef idx="85" val="-4.504124340428005"></consequent_coef>
+    <consequent_coef idx="86" val="-12.295861660414548"></consequent_coef>
+    <consequent_coef idx="87" val="2.526780088946629"></consequent_coef>
+    <consequent_coef idx="88" val="-5.490701534672453"></consequent_coef>
+    <consequent_coef idx="89" val="4.292939764542965"></consequent_coef>
+    <consequent_coef idx="90" val="-0.782608123691044"></consequent_coef>
+    <consequent_coef idx="91" val="1.887713884982894"></consequent_coef>
+    <consequent_coef idx="92" val="9.412750271858215"></consequent_coef>
+    <consequent_coef idx="93" val="3.1637277056499533"></consequent_coef>
+    <consequent_coef idx="94" val="-0.8206024060838151"></consequent_coef>
+    <consequent_coef idx="95" val="4.039367870863873"></consequent_coef>
+    <consequent_coef idx="96" val="-3.355700322499789"></consequent_coef>
+    <consequent_coef idx="97" val="-1.4784696184098645"></consequent_coef>
+    <consequent_coef idx="98" val="6.090732723541323"></consequent_coef>
+    <consequent_coef idx="99" val="-1.901763856358135"></consequent_coef>
+    <consequent_coef idx="100" val="0.6457091279555166"></consequent_coef>
+    <consequent_coef idx="101" val="-1.5614985119973868"></consequent_coef>
+    <consequent_coef idx="102" val="-4.143453725111965"></consequent_coef>
+    <consequent_coef idx="103" val="-0.0386799037891777"></consequent_coef>
+    <consequent_coef idx="104" val="0.9942520434041829"></consequent_coef>
+    <consequent_coef idx="105" val="-0.17477959157398865"></consequent_coef>
+    <consequent_coef idx="106" val="-1.1422527199686368"></consequent_coef>
+    <consequent_coef idx="107" val="0.9760150298832562"></consequent_coef>
+    <consequent_coef idx="108" val="-1.9607784800427357"></consequent_coef>
+    <consequent_coef idx="109" val="4.6921867352162545"></consequent_coef>
+    <consequent_coef idx="110" val="1.809289262875269"></consequent_coef>
+    <consequent_coef idx="111" val="1.7591285725185202"></consequent_coef>
+    <consequent_coef idx="112" val="-0.16193352640857436"></consequent_coef>
+    <consequent_coef idx="113" val="-4.253718853639522"></consequent_coef>
+    <consequent_coef idx="114" val="-1.6098966885339467"></consequent_coef>
+    <consequent_coef idx="115" val="-5.821580298485715"></consequent_coef>
+    <consequent_coef idx="116" val="-5.758017060434211"></consequent_coef>
+    <consequent_coef idx="117" val="1.7634205144995336"></consequent_coef>
+    <consequent_coef idx="118" val="1.311782937039382"></consequent_coef>
+    <consequent_coef idx="119" val="3.911767247425496"></consequent_coef>
+    <consequent_coef idx="120" val="-1.1222732711541454"></consequent_coef>
+    <consequent_coef idx="121" val="1.6804106952118159"></consequent_coef>
+    <consequent_coef idx="122" val="6.658408756236033"></consequent_coef>
+    <consequent_coef idx="123" val="3.767392331565639"></consequent_coef>
+    <consequent_coef idx="124" val="-1.7876332892220625"></consequent_coef>
+    <consequent_coef idx="125" val="-4.663315993386477"></consequent_coef>
+    <consequent_coef idx="126" val="-3.066127024612244"></consequent_coef>
+    <consequent_coef idx="127" val="3.238347321778003"></consequent_coef>
+    <consequent_coef idx="128" val="-1.17646112338146"></consequent_coef>
+    <consequent_coef idx="129" val="0.8295777079235191"></consequent_coef>
+    <consequent_coef idx="130" val="0.2121679236313803"></consequent_coef>
+    <consequent_coef idx="131" val="-15.097672642478067"></consequent_coef>
+    <consequent_coef idx="132" val="-0.5179485901860924"></consequent_coef>
+    <consequent_coef idx="133" val="11.225478181075236"></consequent_coef>
+    <consequent_coef idx="134" val="1.0473836680606894"></consequent_coef>
+    <consequent_coef idx="135" val="-6.773408060489163"></consequent_coef>
+    <consequent_coef idx="136" val="3.8983183924904816"></consequent_coef>
+    <consequent_coef idx="137" val="-2.7910491965994013"></consequent_coef>
+    <consequent_coef idx="138" val="13.46638505777488"></consequent_coef>
+    <consequent_coef idx="139" val="-1.5629256773647482"></consequent_coef>
+    <consequent_coef idx="140" val="-0.5628980849522227"></consequent_coef>
+    <consequent_coef idx="141" val="1.3729799132502474"></consequent_coef>
+    <consequent_coef idx="142" val="-7.4757974512028325"></consequent_coef>
+    <consequent_coef idx="143" val="3.543575063336442"></consequent_coef>
+    <consequent_coef idx="144" val="-3.498290188843965"></consequent_coef>
+    <consequent_coef idx="145" val="5.133458161905814"></consequent_coef>
+    <consequent_coef idx="146" val="-2.712728001675089"></consequent_coef>
+    <consequent_coef idx="147" val="0.11417748130081563"></consequent_coef>
+    <consequent_coef idx="148" val="5.481265765289506"></consequent_coef>
+    <consequent_coef idx="149" val="4.20376335910038"></consequent_coef>
+    <consequent_coef idx="150" val="-4.920243481191664"></consequent_coef>
+    <consequent_coef idx="151" val="-5.622673125636312"></consequent_coef>
+    <consequent_coef idx="152" val="0.6440162157804272"></consequent_coef>
+    <consequent_coef idx="153" val="8.328481298257717"></consequent_coef>
+    <consequent_coef idx="154" val="-6.180425169521482"></consequent_coef>
+    <consequent_coef idx="155" val="1.6374027120024728"></consequent_coef>
+    <consequent_coef idx="156" val="3.6020541660597867"></consequent_coef>
+    <consequent_coef idx="157" val="-2.7991973264790357"></consequent_coef>
+    <consequent_coef idx="158" val="-0.635952647485294"></consequent_coef>
+    <consequent_coef idx="159" val="-0.2665001074051809"></consequent_coef>
+    <consequent_coef idx="160" val="-3.1981364527536837"></consequent_coef>
+    <consequent_coef idx="161" val="2.0475185037280164"></consequent_coef>
+    <consequent_coef idx="162" val="3.7044937639646935"></consequent_coef>
+    <consequent_coef idx="163" val="-0.8475814208817692"></consequent_coef>
+    <consequent_coef idx="164" val="-1.4924489856309417"></consequent_coef>
+    <consequent_coef idx="165" val="-1.5485329967652486"></consequent_coef>
+    <consequent_coef idx="166" val="0.2576878718155571"></consequent_coef>
+    <consequent_coef idx="167" val="0.02657025995938948"></consequent_coef>
+    <consequent_coef idx="168" val="-0.3536728136384308"></consequent_coef>
+    <consequent_coef idx="169" val="-1.3947076400378615"></consequent_coef>
+    <consequent_coef idx="170" val="0.7295264764138952"></consequent_coef>
+    <consequent_coef idx="171" val="-0.1319140280125666"></consequent_coef>
+    <consequent_coef idx="172" val="4.809349813690082"></consequent_coef>
+    <consequent_coef idx="173" val="-3.3707256942879478"></consequent_coef>
+    <consequent_coef idx="174" val="-4.830189182082144"></consequent_coef>
+    <consequent_coef idx="175" val="-0.8616813098542256"></consequent_coef>
+    <consequent_coef idx="176" val="-0.10249826189148657"></consequent_coef>
+    <consequent_coef idx="177" val="3.6416564115871966"></consequent_coef>
+    <consequent_coef idx="178" val="7.068015228974389"></consequent_coef>
+    <consequent_coef idx="179" val="-0.510522066400301"></consequent_coef>
+    <consequent_coef idx="180" val="1.3767798994610643"></consequent_coef>
+    <consequent_coef idx="181" val="0.3010359301344493"></consequent_coef>
+    <consequent_coef idx="182" val="-1.9958277787297876"></consequent_coef>
+    <consequent_coef idx="183" val="4.712490098479656"></consequent_coef>
+    <consequent_coef idx="184" val="1.0154808611730781"></consequent_coef>
+    <consequent_coef idx="185" val="3.091206625413416"></consequent_coef>
+    <consequent_coef idx="186" val="-4.761039485115957"></consequent_coef>
+    <consequent_coef idx="187" val="-2.4083765136257993"></consequent_coef>
+    <consequent_coef idx="188" val="-5.7039115388428785"></consequent_coef>
+    <consequent_coef idx="189" val="-3.198505979784695"></consequent_coef>
+    <consequent_coef idx="190" val="0.8025273249093365"></consequent_coef>
+    <consequent_coef idx="191" val="-7.796890307003239"></consequent_coef>
+    <consequent_coef idx="192" val="-4.1685597698337675"></consequent_coef>
+    <consequent_coef idx="193" val="-1.1057844633941403"></consequent_coef>
+    <consequent_coef idx="194" val="6.3905388103453795"></consequent_coef>
+    <consequent_coef idx="195" val="-1.1550542932722137"></consequent_coef>
+    <consequent_coef idx="196" val="3.231290315657403"></consequent_coef>
+    <consequent_coef idx="197" val="0.15438133282078728"></consequent_coef>
+    <consequent_coef idx="198" val="-7.607972145264828"></consequent_coef>
+    <consequent_coef idx="199" val="3.7864111224161756"></consequent_coef>
+    <consequent_coef idx="200" val="-2.7417098968446307"></consequent_coef>
+    <consequent_coef idx="201" val="11.940505984509645"></consequent_coef>
+    <consequent_coef idx="202" val="-3.6514111214132488"></consequent_coef>
+    <consequent_coef idx="203" val="-0.7798445478018416"></consequent_coef>
+    <consequent_coef idx="204" val="-0.19177161152102087"></consequent_coef>
+    <consequent_coef idx="205" val="15.085853523173347"></consequent_coef>
+    <consequent_coef idx="206" val="0.17786350897334322"></consequent_coef>
+    <consequent_coef idx="207" val="-5.651534006957432"></consequent_coef>
+    <consequent_coef idx="208" val="-4.175196111605476"></consequent_coef>
+    <consequent_coef idx="209" val="-3.2929505954340947"></consequent_coef>
+    <consequent_coef idx="210" val="2.2802008812301313"></consequent_coef>
+    <consequent_coef idx="211" val="1.5151985461376203"></consequent_coef>
+    <consequent_coef idx="212" val="-1.3824720246090063"></consequent_coef>
+    <consequent_coef idx="213" val="-1.497717305761953"></consequent_coef>
+    <consequent_coef idx="214" val="-2.662449121424617"></consequent_coef>
+    <consequent_coef idx="215" val="-1.9688967852606545"></consequent_coef>
+    <consequent_coef idx="216" val="-0.5328185433056731"></consequent_coef>
+    <consequent_coef idx="217" val="4.936611393511225"></consequent_coef>
+    <consequent_coef idx="218" val="2.697064750908645"></consequent_coef>
+    <consequent_coef idx="219" val="-0.04538911972178358"></consequent_coef>
+    <consequent_coef idx="220" val="-2.368165047559485"></consequent_coef>
+    <consequent_coef idx="221" val="-1.370819105379515"></consequent_coef>
+    <consequent_coef idx="222" val="-2.1920894627023726"></consequent_coef>
+    <consequent_coef idx="223" val="-0.8622452280463063"></consequent_coef>
+    <consequent_coef idx="224" val="-1.136411232705294"></consequent_coef>
+    <consequent_coef idx="225" val="-0.9699572756813777"></consequent_coef>
+    <consequent_coef idx="226" val="-2.268066366001939"></consequent_coef>
+    <consequent_coef idx="227" val="-6.98300265620194"></consequent_coef>
+    <consequent_coef idx="228" val="0.5047830747100417"></consequent_coef>
+    <consequent_coef idx="229" val="-0.38893784369844603"></consequent_coef>
+    <consequent_coef idx="230" val="-0.4148590563685227"></consequent_coef>
+    <consequent_coef idx="231" val="4.299975086303092"></consequent_coef>
+    <consequent_coef idx="232" val="4.426863050777716"></consequent_coef>
+    <consequent_coef idx="233" val="-0.9643523531073261"></consequent_coef>
+    <consequent_coef idx="234" val="0.1919143020257356"></consequent_coef>
+    <consequent_coef idx="235" val="1.985288382318357"></consequent_coef>
+    <consequent_coef idx="236" val="-9.533380614933726"></consequent_coef>
+    <consequent_coef idx="237" val="-0.6519044591026051"></consequent_coef>
+    <consequent_coef idx="238" val="8.613451128657154"></consequent_coef>
+    <consequent_coef idx="239" val="-5.7466964420435485"></consequent_coef>
+    <consequent_coef idx="240" val="-10.037079020164123"></consequent_coef>
+    <consequent_coef idx="241" val="4.214280847495043"></consequent_coef>
+    <consequent_coef idx="242" val="3.9792953421005057"></consequent_coef>
+    <consequent_coef idx="243" val="23.406336272086804"></consequent_coef>
+    <consequent_coef idx="244" val="-4.543921096064809"></consequent_coef>
+    <consequent_coef idx="245" val="-1.6648627292742693"></consequent_coef>
+    <consequent_coef idx="246" val="-4.114281693690725"></consequent_coef>
+    <consequent_coef idx="247" val="-9.533495030235843"></consequent_coef>
+    <consequent_coef idx="248" val="4.924149847911285"></consequent_coef>
+    <consequent_coef idx="249" val="2.8628493117896303"></consequent_coef>
+    <consequent_coef idx="250" val="23.841274500933622"></consequent_coef>
+    <consequent_coef idx="251" val="-4.582641220051863"></consequent_coef>
+    <consequent_coef idx="252" val="-0.062051274713144346"></consequent_coef>
+    <consequent_coef idx="253" val="-1.2121133195850795"></consequent_coef>
+    <consequent_coef idx="254" val="0.19933859419397598"></consequent_coef>
+    <consequent_coef idx="255" val="-5.690923648620194"></consequent_coef>
+    <consequent_coef idx="256" val="10.344837339112647"></consequent_coef>
+    <consequent_coef idx="257" val="0.34439005346695606"></consequent_coef>
+    <consequent_coef idx="258" val="19.107180570884825"></consequent_coef>
+    <consequent_coef idx="259" val="-7.733643474527299"></consequent_coef>
+    <consequent_coef idx="260" val="-3.1252000054939253"></consequent_coef>
+    <consequent_coef idx="261" val="3.274077060847561"></consequent_coef>
+    <consequent_coef idx="262" val="-3.772584134122943"></consequent_coef>
+    <consequent_coef idx="263" val="1.115241725348397"></consequent_coef>
+    <consequent_coef idx="264" val="3.9211329187193216"></consequent_coef>
+    <consequent_coef idx="265" val="1.601333511997518"></consequent_coef>
+    <consequent_coef idx="266" val="1.9974412867685525"></consequent_coef>
+    <consequent_coef idx="267" val="-4.129298536145033"></consequent_coef>
+    <consequent_coef idx="268" val="3.7285298724284064"></consequent_coef>
+    <consequent_coef idx="269" val="-4.094176028785277"></consequent_coef>
+    <consequent_coef idx="270" val="2.9549912485825707"></consequent_coef>
+    <consequent_coef idx="271" val="-0.8684485204719306"></consequent_coef>
+    <consequent_coef idx="272" val="7.280759573709106"></consequent_coef>
+    <consequent_coef idx="273" val="-0.7891387570001122"></consequent_coef>
+    <consequent_coef idx="274" val="6.677541837146258"></consequent_coef>
+    <consequent_coef idx="275" val="7.473661532187215"></consequent_coef>
+    <consequent_coef idx="276" val="7.909244249063138"></consequent_coef>
+    <consequent_coef idx="277" val="-10.90351072760506"></consequent_coef>
+    <consequent_coef idx="278" val="7.13585672844873"></consequent_coef>
+    <consequent_coef idx="279" val="6.062310209734565"></consequent_coef>
+    <consequent_coef idx="280" val="-1.677104072049181"></consequent_coef>
+    <consequent_coef idx="281" val="-6.2812767979774815"></consequent_coef>
+    <consequent_coef idx="282" val="0.1737392683469026"></consequent_coef>
+    <consequent_coef idx="283" val="2.202626139305714"></consequent_coef>
+    <consequent_coef idx="284" val="5.202108135721253"></consequent_coef>
+    <consequent_coef idx="285" val="-4.09943157765458"></consequent_coef>
+    <consequent_coef idx="286" val="-8.173005274855965"></consequent_coef>
+    <consequent_coef idx="287" val="-2.4014275910311107"></consequent_coef>
+    <consequent_coef idx="288" val="1.6190312505133864"></consequent_coef>
+    <consequent_coef idx="289" val="4.253339879861895"></consequent_coef>
+    <consequent_coef idx="290" val="9.664270096981515"></consequent_coef>
+    <consequent_coef idx="291" val="2.8782793985357373"></consequent_coef>
+    <consequent_coef idx="292" val="2.5308940611000676"></consequent_coef>
+    <consequent_coef idx="293" val="-0.88326359239124"></consequent_coef>
+    <consequent_coef idx="294" val="-3.575862278915246"></consequent_coef>
+    <consequent_coef idx="295" val="-2.0989701898756623"></consequent_coef>
+    <consequent_coef idx="296" val="5.7205749553727365"></consequent_coef>
+    <consequent_coef idx="297" val="-0.9728106820207966"></consequent_coef>
+    <consequent_coef idx="298" val="-3.199669712047099"></consequent_coef>
+    <consequent_coef idx="299" val="4.87178674082557"></consequent_coef>
+    <consequent_coef idx="300" val="-2.391735288950492"></consequent_coef>
+    <consequent_coef idx="301" val="7.014576832096645"></consequent_coef>
+    <consequent_coef idx="302" val="-3.720826113080923"></consequent_coef>
+    <consequent_coef idx="303" val="-2.85075222362096"></consequent_coef>
+    <consequent_coef idx="304" val="-0.16218637223866036"></consequent_coef>
+    <consequent_coef idx="305" val="-3.0791289043721424"></consequent_coef>
+    <consequent_coef idx="306" val="9.401144326391375"></consequent_coef>
+    <consequent_coef idx="307" val="-2.350912234619292"></consequent_coef>
+    <consequent_coef idx="308" val="5.015274667583822"></consequent_coef>
+    <consequent_coef idx="309" val="-2.4878778311039924"></consequent_coef>
+    <consequent_coef idx="310" val="25.391492388081407"></consequent_coef>
+    <consequent_coef idx="311" val="3.6945044813988868"></consequent_coef>
+    <consequent_coef idx="312" val="6.148739053567423"></consequent_coef>
+    <consequent_coef idx="313" val="-8.975274014813936"></consequent_coef>
+    <consequent_coef idx="314" val="-2.4080021025865914"></consequent_coef>
+    <consequent_coef idx="315" val="2.096416381223585"></consequent_coef>
+    <consequent_coef idx="316" val="-2.443495451265491"></consequent_coef>
+    <consequent_coef idx="317" val="1.8310237799864206"></consequent_coef>
+    <consequent_coef idx="318" val="1.052779434242518"></consequent_coef>
+    <consequent_coef idx="319" val="4.199282332445146"></consequent_coef>
+    <consequent_coef idx="320" val="-0.12713637136037373"></consequent_coef>
+    <consequent_coef idx="321" val="-1.3041603942853255"></consequent_coef>
+    <consequent_coef idx="322" val="-2.6725337490093386"></consequent_coef>
+    <consequent_coef idx="323" val="-1.9828724070112314"></consequent_coef>
+    <consequent_coef idx="324" val="0.8109427416124361"></consequent_coef>
+    <consequent_coef idx="325" val="-1.7012545129686696"></consequent_coef>
+    <consequent_coef idx="326" val="2.7317921585949576"></consequent_coef>
+    <consequent_coef idx="327" val="-1.5798758472563832"></consequent_coef>
+    <consequent_coef idx="328" val="-0.22121019957617133"></consequent_coef>
+    <consequent_coef idx="329" val="-3.0882687892939944"></consequent_coef>
+    <consequent_coef idx="330" val="-0.5599704001385355"></consequent_coef>
+    <consequent_coef idx="331" val="1.4107163152124853"></consequent_coef>
+    <consequent_coef idx="332" val="-3.3494286961541495"></consequent_coef>
+    <consequent_coef idx="333" val="-2.506310201778332"></consequent_coef>
+    <consequent_coef idx="334" val="-1.6127249659187461"></consequent_coef>
+    <consequent_coef idx="335" val="-4.105599253048711"></consequent_coef>
+    <consequent_coef idx="336" val="4.294414350082112"></consequent_coef>
+    <consequent_coef idx="337" val="-0.9287008776131892"></consequent_coef>
+    <consequent_coef idx="338" val="4.450544193183459"></consequent_coef>
+    <consequent_coef idx="339" val="-2.4023196394872226"></consequent_coef>
+    <consequent_coef idx="340" val="-0.9277301601543932"></consequent_coef>
+    <consequent_coef idx="341" val="-17.140517111463755"></consequent_coef>
+    <consequent_coef idx="342" val="1.3193420868578332"></consequent_coef>
+    <consequent_coef idx="343" val="10.193727331952166"></consequent_coef>
+    <consequent_coef idx="344" val="-1.5439735411111914"></consequent_coef>
+    <consequent_coef idx="345" val="4.973793004118336"></consequent_coef>
+    <consequent_coef idx="346" val="-1.924837005964935"></consequent_coef>
+    <consequent_coef idx="347" val="-2.110715659935257"></consequent_coef>
+    <consequent_coef idx="348" val="-16.180251938286965"></consequent_coef>
+    <consequent_coef idx="349" val="1.3136819633859271"></consequent_coef>
+    <consequent_coef idx="350" val="11.027239574048535"></consequent_coef>
+    <consequent_coef idx="351" val="4.371893912750637"></consequent_coef>
+    <consequent_coef idx="352" val="7.965235192181482"></consequent_coef>
+    <consequent_coef idx="353" val="5.9875733963483855"></consequent_coef>
+    <consequent_coef idx="354" val="3.7968456829150963"></consequent_coef>
+    <consequent_coef idx="355" val="0.9092727366547226"></consequent_coef>
+    <consequent_coef idx="356" val="-9.71912504400656"></consequent_coef>
+    <consequent_coef idx="357" val="10.33071791814029"></consequent_coef>
+    <consequent_coef idx="358" val="-1.8987462088504428"></consequent_coef>
+    <consequent_coef idx="359" val="3.030173690508668"></consequent_coef>
+    <consequent_coef idx="360" val="2.4573149039175517"></consequent_coef>
+    <consequent_coef idx="361" val="-2.8625200654548446"></consequent_coef>
+    <consequent_coef idx="362" val="-16.035865362331812"></consequent_coef>
+    <consequent_coef idx="363" val="-19.839100287925728"></consequent_coef>
+    <consequent_coef idx="364" val="7.093456964186507"></consequent_coef>
+    <consequent_coef idx="365" val="1.76004462941433"></consequent_coef>
+    <consequent_coef idx="366" val="5.224992291079237"></consequent_coef>
+    <consequent_coef idx="367" val="4.615247797994552"></consequent_coef>
+    <consequent_coef idx="368" val="1.2404910740582642"></consequent_coef>
+    <consequent_coef idx="369" val="-16.16620857095467"></consequent_coef>
+    <consequent_coef idx="370" val="-16.577060258287965"></consequent_coef>
+    <consequent_coef idx="371" val="6.432079164223639"></consequent_coef>
+    <consequent_coef idx="372" val="-12.952477663899494"></consequent_coef>
+    <consequent_coef idx="373" val="1.1565776724269803"></consequent_coef>
+    <consequent_coef idx="374" val="-3.804264229758984"></consequent_coef>
+    <consequent_coef idx="375" val="6.840865576048434"></consequent_coef>
+    <consequent_coef idx="376" val="-16.790783147638724"></consequent_coef>
+    <consequent_coef idx="377" val="0.16919144322141233"></consequent_coef>
+    <consequent_coef idx="378" val="9.484817946153854"></consequent_coef>
+    <consequent_coef idx="379" val="3.33509530339731"></consequent_coef>
+    <consequent_coef idx="380" val="0.048184964609547555"></consequent_coef>
+    <consequent_coef idx="381" val="2.978514128610111"></consequent_coef>
+    <consequent_coef idx="382" val="0.589719720526167"></consequent_coef>
+    <consequent_coef idx="383" val="-18.323346997143265"></consequent_coef>
+    <consequent_coef idx="384" val="-1.226475143108483"></consequent_coef>
+    <consequent_coef idx="385" val="10.492196001297446"></consequent_coef>
+    <consequent_coef idx="386" val="-3.105684492626942"></consequent_coef>
+    <consequent_coef idx="387" val="-1.4292443729242599"></consequent_coef>
+    <consequent_coef idx="388" val="1.5005707595946352"></consequent_coef>
+    <consequent_coef idx="389" val="-0.1741589854071315"></consequent_coef>
+    <consequent_coef idx="390" val="-8.398217076208299"></consequent_coef>
+    <consequent_coef idx="391" val="0.4464085618748049"></consequent_coef>
+    <consequent_coef idx="392" val="8.706746328097895"></consequent_coef>
+    <consequent_coef idx="393" val="-8.774908117922156"></consequent_coef>
+    <consequent_coef idx="394" val="-33.71288797771778"></consequent_coef>
+    <consequent_coef idx="395" val="-1.933619054397323"></consequent_coef>
+    <consequent_coef idx="396" val="-4.488020945942722"></consequent_coef>
+    <consequent_coef idx="397" val="-19.527385718198232"></consequent_coef>
+    <consequent_coef idx="398" val="-12.919052947132036"></consequent_coef>
+    <consequent_coef idx="399" val="-35.47973917630879"></consequent_coef>
+    <consequent_coef idx="400" val="-5.864134923191419"></consequent_coef>
+    <consequent_coef idx="401" val="-36.194834307080896"></consequent_coef>
+    <consequent_coef idx="402" val="0.44430462963566825"></consequent_coef>
+    <consequent_coef idx="403" val="-4.237396353764997"></consequent_coef>
+    <consequent_coef idx="404" val="-19.344412166964542"></consequent_coef>
+    <consequent_coef idx="405" val="-16.94350004127663"></consequent_coef>
+    <consequent_coef idx="406" val="-31.188022839288088"></consequent_coef>
+    <consequent_coef idx="407" val="-1.5708563323429725"></consequent_coef>
+    <consequent_coef idx="408" val="-26.113095039830743"></consequent_coef>
+    <consequent_coef idx="409" val="8.777974613225284"></consequent_coef>
+    <consequent_coef idx="410" val="6.98087919367712"></consequent_coef>
+    <consequent_coef idx="411" val="40.95725124084791"></consequent_coef>
+    <consequent_coef idx="412" val="14.392929293741737"></consequent_coef>
+    <consequent_coef idx="413" val="-24.203973100858295"></consequent_coef>
+    <consequent_coef idx="414" val="-1.579608788695954"></consequent_coef>
+    <consequent_coef idx="415" val="-1.8661537430679975"></consequent_coef>
+    <consequent_coef idx="416" val="0.10978053008572258"></consequent_coef>
+    <consequent_coef idx="417" val="-1.260341557285387"></consequent_coef>
+    <consequent_coef idx="418" val="-18.076159678672028"></consequent_coef>
+    <consequent_coef idx="419" val="1.575203640582089"></consequent_coef>
+    <consequent_coef idx="420" val="9.691767558645962"></consequent_coef>
+    <consequent_coef idx="421" val="-0.5900513386015135"></consequent_coef>
+    <consequent_coef idx="422" val="-0.583965043262045"></consequent_coef>
+    <consequent_coef idx="423" val="1.1499001348727156"></consequent_coef>
+    <consequent_coef idx="424" val="-0.5387899479333511"></consequent_coef>
+    <consequent_coef idx="425" val="-18.01822054199118"></consequent_coef>
+    <consequent_coef idx="426" val="1.4175643037471084"></consequent_coef>
+    <consequent_coef idx="427" val="10.715637185563622"></consequent_coef>
+    <consequent_coef idx="428" val="-1.9354724946573454"></consequent_coef>
+    <consequent_coef idx="429" val="-0.33958136296157504"></consequent_coef>
+    <consequent_coef idx="430" val="-15.593186795133391"></consequent_coef>
+    <consequent_coef idx="431" val="-1.6860643990231767"></consequent_coef>
+    <consequent_coef idx="432" val="-13.035623563864615"></consequent_coef>
+    <consequent_coef idx="433" val="4.744950575057915"></consequent_coef>
+    <consequent_coef idx="434" val="14.087878336050814"></consequent_coef>
+    <consequent_coef idx="435" val="-5.379329607287582"></consequent_coef>
+    <consequent_coef idx="436" val="-14.537511373674816"></consequent_coef>
+    <consequent_coef idx="437" val="-5.216602148845199"></consequent_coef>
+    <consequent_coef idx="438" val="-3.0217297900740054"></consequent_coef>
+    <consequent_coef idx="439" val="-17.762900345318695"></consequent_coef>
+    <consequent_coef idx="440" val="-4.881690886266411"></consequent_coef>
+    <consequent_coef idx="441" val="-0.07057867274607331"></consequent_coef>
+    <consequent_coef idx="442" val="-0.1677725955213814"></consequent_coef>
+    <consequent_coef idx="443" val="-20.707865661565965"></consequent_coef>
+    <consequent_coef idx="444" val="-5.013773439747402"></consequent_coef>
+    <consequent_coef idx="445" val="-0.6509187857253299"></consequent_coef>
+    <consequent_coef idx="446" val="29.507703434125734"></consequent_coef>
+    <consequent_coef idx="447" val="23.605618518904617"></consequent_coef>
+    <consequent_coef idx="448" val="-5.33070190938561"></consequent_coef>
+    <consequent_coef idx="449" val="0.036296295767988596"></consequent_coef>
+    <consequent_coef idx="450" val="-7.088188687435169"></consequent_coef>
+    <consequent_coef idx="451" val="-0.36350224634828376"></consequent_coef>
+    <consequent_coef idx="452" val="3.2061183350656584"></consequent_coef>
+    <consequent_coef idx="453" val="7.967788908402975"></consequent_coef>
+    <consequent_coef idx="454" val="4.9862243686262"></consequent_coef>
+    <consequent_coef idx="455" val="3.4565147991984806"></consequent_coef>
+    <consequent_coef idx="456" val="-0.709266447207417"></consequent_coef>
+    <consequent_coef idx="457" val="-10.867266436339028"></consequent_coef>
+    <consequent_coef idx="458" val="1.1407797358335263"></consequent_coef>
+    <consequent_coef idx="459" val="1.8735611604163007"></consequent_coef>
+    <consequent_coef idx="460" val="11.806379829578239"></consequent_coef>
+    <consequent_coef idx="461" val="12.355021409103207"></consequent_coef>
+    <consequent_coef idx="462" val="0.31563119498479153"></consequent_coef>
+    <consequent_coef idx="463" val="5.838470752436589"></consequent_coef>
+    <consequent_coef idx="464" val="-10.303970839726071"></consequent_coef>
+    <consequent_coef idx="465" val="1.3101502123343514"></consequent_coef>
+    <consequent_coef idx="466" val="-2.595583893240437"></consequent_coef>
+    <consequent_coef idx="467" val="9.143717156214672"></consequent_coef>
+    <consequent_coef idx="468" val="1.1395462496939386"></consequent_coef>
+    <consequent_coef idx="469" val="2.8190317989861295"></consequent_coef>
+    <consequent_coef idx="470" val="-4.596247417659653"></consequent_coef>
+    <consequent_coef idx="471" val="-7.427811340391048"></consequent_coef>
+    <consequent_coef idx="472" val="4.308334313802793"></consequent_coef>
+    <consequent_coef idx="473" val="0.8676131551503657"></consequent_coef>
+    <consequent_coef idx="474" val="9.82904199291873"></consequent_coef>
+    <consequent_coef idx="475" val="-3.3273708375828344"></consequent_coef>
+    <consequent_coef idx="476" val="-1.1668507609229803"></consequent_coef>
+    <consequent_coef idx="477" val="3.696766430263928"></consequent_coef>
+    <consequent_coef idx="478" val="-10.380361166182528"></consequent_coef>
+    <consequent_coef idx="479" val="7.102492314231159"></consequent_coef>
+    <consequent_coef idx="480" val="-3.3170013921915618"></consequent_coef>
+    <consequent_coef idx="481" val="22.06763917572971"></consequent_coef>
+    <consequent_coef idx="482" val="-4.580330433403434"></consequent_coef>
+    <consequent_coef idx="483" val="-1.5405337496508162"></consequent_coef>
+    <consequent_coef idx="484" val="6.223720048309351"></consequent_coef>
+    <consequent_coef idx="485" val="33.76602877261207"></consequent_coef>
+    <consequent_coef idx="486" val="10.250160468789375"></consequent_coef>
+    <consequent_coef idx="487" val="4.4979310350287545"></consequent_coef>
+    <consequent_coef idx="488" val="-21.431039437418406"></consequent_coef>
+    <consequent_coef idx="489" val="5.163762698360549"></consequent_coef>
+    <consequent_coef idx="490" val="-19.144570742291684"></consequent_coef>
+    <consequent_coef idx="491" val="7.021052759949073"></consequent_coef>
+    <consequent_coef idx="492" val="34.27366781694437"></consequent_coef>
+    <consequent_coef idx="493" val="9.71775794685217"></consequent_coef>
+    <consequent_coef idx="494" val="9.134090832864437"></consequent_coef>
+    <consequent_coef idx="495" val="-8.459071520296057"></consequent_coef>
+    <consequent_coef idx="496" val="13.835139868587168"></consequent_coef>
+    <consequent_coef idx="497" val="-11.780450006237471"></consequent_coef>
+    <consequent_coef idx="498" val="1.928426719145034"></consequent_coef>
+    <consequent_coef idx="499" val="18.572035272775953"></consequent_coef>
+    <consequent_coef idx="500" val="19.916634072922218"></consequent_coef>
+    <consequent_coef idx="501" val="2.3028664366650053"></consequent_coef>
+    <consequent_coef idx="502" val="-12.97911082901621"></consequent_coef>
+    <consequent_coef idx="503" val="2.5028554588667125"></consequent_coef>
+    <consequent_coef idx="504" val="-28.74592496110309"></consequent_coef>
+    <consequent_coef idx="505" val="0.03333103630053338"></consequent_coef>
+    <consequent_coef idx="506" val="-9.237219581910937"></consequent_coef>
+    <consequent_coef idx="507" val="-2.1229390980864253"></consequent_coef>
+    <consequent_coef idx="508" val="1.4068849269019414"></consequent_coef>
+    <consequent_coef idx="509" val="12.192466091558439"></consequent_coef>
+    <consequent_coef idx="510" val="-0.8039350528234637"></consequent_coef>
+    <consequent_coef idx="511" val="-1.8862474138101735"></consequent_coef>
+    <consequent_coef idx="512" val="0.9023918093838268"></consequent_coef>
+    <consequent_coef idx="513" val="-9.251625670315397"></consequent_coef>
+    <consequent_coef idx="514" val="-4.076287234619102"></consequent_coef>
+    <consequent_coef idx="515" val="0.13872693443220094"></consequent_coef>
+    <consequent_coef idx="516" val="12.678720341935803"></consequent_coef>
+    <consequent_coef idx="517" val="0.5957208240794166"></consequent_coef>
+    <consequent_coef idx="518" val="-3.1388319918252647"></consequent_coef>
+    <consequent_coef idx="519" val="2.3196495987288848"></consequent_coef>
+    <consequent_coef idx="520" val="-0.5746444147496726"></consequent_coef>
+    <consequent_coef idx="521" val="-0.15349438023355766"></consequent_coef>
+    <consequent_coef idx="522" val="1.189978687109917"></consequent_coef>
+    <consequent_coef idx="523" val="-6.8767964185351005"></consequent_coef>
+    <consequent_coef idx="524" val="1.790448153635708"></consequent_coef>
+    <consequent_coef idx="525" val="6.531162764901646"></consequent_coef>
+    <consequent_coef idx="526" val="0.23516459869982229"></consequent_coef>
+    <consequent_coef idx="527" val="-20.31111009747507"></consequent_coef>
+    <consequent_coef idx="528" val="-5.163229239810703"></consequent_coef>
+    <consequent_coef idx="529" val="-0.38902395189172795"></consequent_coef>
+    <consequent_coef idx="530" val="30.213230311889486"></consequent_coef>
+    <consequent_coef idx="531" val="22.746751171503096"></consequent_coef>
+    <consequent_coef idx="532" val="-4.630529936784797"></consequent_coef>
+    <consequent_coef idx="533" val="-0.06921236617995384"></consequent_coef>
+    <consequent_coef idx="534" val="-6.994157872773988"></consequent_coef>
+    <consequent_coef idx="535" val="2.719122200684155"></consequent_coef>
+    <consequent_coef idx="536" val="2.426280267767539"></consequent_coef>
+    <consequent_coef idx="537" val="7.129889277323649"></consequent_coef>
+    <consequent_coef idx="538" val="2.6606541705835745"></consequent_coef>
+    <consequent_coef idx="539" val="4.3653074954381035"></consequent_coef>
+    <consequent_coef idx="540" val="0.30113735165958067"></consequent_coef>
+    <consequent_coef idx="541" val="-10.019300484605774"></consequent_coef>
+    <consequent_coef idx="542" val="3.316928138196482"></consequent_coef>
+    <consequent_coef idx="543" val="0.4551722964021451"></consequent_coef>
+    <consequent_coef idx="544" val="11.656647772505762"></consequent_coef>
+    <consequent_coef idx="545" val="9.91019945434852"></consequent_coef>
+    <consequent_coef idx="546" val="1.1882273561977768"></consequent_coef>
+    <consequent_coef idx="547" val="5.07195440264498"></consequent_coef>
+    <consequent_coef idx="548" val="-10.028563196402015"></consequent_coef>
+    <consequent_coef idx="549" val="1.3304939205882278"></consequent_coef>
+    <consequent_coef idx="550" val="-0.0025827352550704874"></consequent_coef>
+    <consequent_coef idx="551" val="8.529612976908783"></consequent_coef>
+    <consequent_coef idx="552" val="1.836088046907811"></consequent_coef>
+    <consequent_coef idx="553" val="3.552160550036555"></consequent_coef>
+    <consequent_coef idx="554" val="-4.584857402529775"></consequent_coef>
+    <consequent_coef idx="555" val="-6.690473137511096"></consequent_coef>
+    <consequent_coef idx="556" val="3.963809113068907"></consequent_coef>
+    <consequent_coef idx="557" val="1.8637992281228544"></consequent_coef>
+    <consequent_coef idx="558" val="7.974431384174883"></consequent_coef>
+    <consequent_coef idx="559" val="-3.62761869912067"></consequent_coef>
+    <consequent_coef idx="560" val="0.10342586067990069"></consequent_coef>
+    <consequent_coef idx="561" val="3.092290624631549"></consequent_coef>
+    <consequent_coef idx="562" val="-9.313802803553259"></consequent_coef>
+    <consequent_coef idx="563" val="6.59291683990592"></consequent_coef>
+    <consequent_coef idx="564" val="-1.7406174223905213"></consequent_coef>
+    <consequent_coef idx="565" val="20.934025632204115"></consequent_coef>
+    <consequent_coef idx="566" val="-4.802219816154871"></consequent_coef>
+    <consequent_coef idx="567" val="-1.0371211383512302"></consequent_coef>
+    <consequent_coef idx="568" val="3.772285813825366"></consequent_coef>
+    <consequent_coef idx="569" val="30.898010072906416"></consequent_coef>
+    <consequent_coef idx="570" val="8.35900481843676"></consequent_coef>
+    <consequent_coef idx="571" val="2.7227388257258207"></consequent_coef>
+    <consequent_coef idx="572" val="-21.260282187349734"></consequent_coef>
+    <consequent_coef idx="573" val="2.1105647759219983"></consequent_coef>
+    <consequent_coef idx="574" val="-22.449286707714204"></consequent_coef>
+    <consequent_coef idx="575" val="5.887136363914204"></consequent_coef>
+    <consequent_coef idx="576" val="32.622575279812295"></consequent_coef>
+    <consequent_coef idx="577" val="8.696963789331022"></consequent_coef>
+    <consequent_coef idx="578" val="7.096943911115419"></consequent_coef>
+    <consequent_coef idx="579" val="-11.844499821995562"></consequent_coef>
+    <consequent_coef idx="580" val="10.043671859540897"></consequent_coef>
+    <consequent_coef idx="581" val="-15.402514580045434"></consequent_coef>
+    <consequent_coef idx="582" val="0.11872770158891054"></consequent_coef>
+    <consequent_coef idx="583" val="11.156399608610418"></consequent_coef>
+    <consequent_coef idx="584" val="18.621512402659235"></consequent_coef>
+    <consequent_coef idx="585" val="2.431083162367999"></consequent_coef>
+    <consequent_coef idx="586" val="-2.8485802793614003"></consequent_coef>
+    <consequent_coef idx="587" val="1.5272491005609996"></consequent_coef>
+    <consequent_coef idx="588" val="-31.098835814759305"></consequent_coef>
+    <consequent_coef idx="589" val="1.3322793432185411"></consequent_coef>
+    <consequent_coef idx="590" val="-9.092190514321572"></consequent_coef>
+    <consequent_coef idx="591" val="-0.1840880892593835"></consequent_coef>
+    <consequent_coef idx="592" val="2.2994100063309637"></consequent_coef>
+    <consequent_coef idx="593" val="10.98992982375117"></consequent_coef>
+    <consequent_coef idx="594" val="-0.7568116289979098"></consequent_coef>
+    <consequent_coef idx="595" val="-0.06337018440308052"></consequent_coef>
+    <consequent_coef idx="596" val="2.3714065599319643"></consequent_coef>
+    <consequent_coef idx="597" val="-8.645213418572965"></consequent_coef>
+    <consequent_coef idx="598" val="-3.6352635039037793"></consequent_coef>
+    <consequent_coef idx="599" val="0.8552732749374624"></consequent_coef>
+    <consequent_coef idx="600" val="10.349126860617075"></consequent_coef>
+    <consequent_coef idx="601" val="1.5655468769519982"></consequent_coef>
+    <consequent_coef idx="602" val="-0.9192955876438016"></consequent_coef>
+    <consequent_coef idx="603" val="0.6638185609182361"></consequent_coef>
+    <consequent_coef idx="604" val="-2.7053324081832852"></consequent_coef>
+    <consequent_coef idx="605" val="-1.4255893708189955"></consequent_coef>
+    <consequent_coef idx="606" val="0.2529179056373927"></consequent_coef>
+    <consequent_coef idx="607" val="-7.078062836337806"></consequent_coef>
+    <consequent_coef idx="608" val="4.980757399244612"></consequent_coef>
+    <consequent_coef idx="609" val="7.084518322479312"></consequent_coef>
+    <consequent_coef idx="610" val="-0.6687538674496367"></consequent_coef>
+    <consequent_coef idx="611" val="-2.6090164897406316"></consequent_coef>
+    <consequent_coef idx="612" val="-8.89092122218457"></consequent_coef>
+    <consequent_coef idx="613" val="-1.229195191780486"></consequent_coef>
+    <consequent_coef idx="614" val="-0.9812731291200968"></consequent_coef>
+    <consequent_coef idx="615" val="-9.726792835804092"></consequent_coef>
+    <consequent_coef idx="616" val="0.8613421356604561"></consequent_coef>
+    <consequent_coef idx="617" val="-1.6187175547139823"></consequent_coef>
+    <consequent_coef idx="618" val="-2.511351850697927"></consequent_coef>
+    <consequent_coef idx="619" val="-9.24418872396832"></consequent_coef>
+    <consequent_coef idx="620" val="-2.8475735174495216"></consequent_coef>
+    <consequent_coef idx="621" val="-1.291003077182305"></consequent_coef>
+    <consequent_coef idx="622" val="-10.467388081885757"></consequent_coef>
+    <consequent_coef idx="623" val="-3.806983193576927"></consequent_coef>
+    <consequent_coef idx="624" val="9.257051768274899"></consequent_coef>
+    <consequent_coef idx="625" val="0.6268162293016943"></consequent_coef>
+    <consequent_coef idx="626" val="-7.00952040243082"></consequent_coef>
+    <consequent_coef idx="627" val="-7.434053330424507"></consequent_coef>
+    <consequent_coef idx="628" val="-1.1558219521933732"></consequent_coef>
+    <consequent_coef idx="629" val="5.411945516163204"></consequent_coef>
+    <consequent_coef idx="630" val="1.181325398667224"></consequent_coef>
+    <consequent_coef idx="631" val="-5.424021751218508"></consequent_coef>
+    <consequent_coef idx="632" val="4.2197932147276225"></consequent_coef>
+    <consequent_coef idx="633" val="-4.638511990800827"></consequent_coef>
+    <consequent_coef idx="634" val="3.5192308440716213"></consequent_coef>
+    <consequent_coef idx="635" val="2.2767324305226384"></consequent_coef>
+    <consequent_coef idx="636" val="7.487009425462419"></consequent_coef>
+    <consequent_coef idx="637" val="-6.858103784180094"></consequent_coef>
+    <consequent_coef idx="638" val="7.933794968396803"></consequent_coef>
+    <consequent_coef idx="639" val="2.760343574801805"></consequent_coef>
+    <consequent_coef idx="640" val="-8.416628106781959"></consequent_coef>
+    <consequent_coef idx="641" val="-7.178756714598901"></consequent_coef>
+    <consequent_coef idx="642" val="1.1658629823439746"></consequent_coef>
+    <consequent_coef idx="643" val="15.494158990824854"></consequent_coef>
+    <consequent_coef idx="644" val="-8.216381855494655"></consequent_coef>
+    <consequent_coef idx="645" val="-1.4186016254236544"></consequent_coef>
+    <consequent_coef idx="646" val="7.698580585195142"></consequent_coef>
+    <consequent_coef idx="647" val="2.6319385475207575"></consequent_coef>
+    <consequent_coef idx="648" val="2.3891805452480823"></consequent_coef>
+    <consequent_coef idx="649" val="-1.1432138254543582"></consequent_coef>
+    <consequent_coef idx="650" val="3.016605780373718"></consequent_coef>
+    <consequent_coef idx="651" val="8.725767173823314"></consequent_coef>
+    <consequent_coef idx="652" val="-0.9757513297657101"></consequent_coef>
+    <consequent_coef idx="653" val="-5.937588476870465"></consequent_coef>
+    <consequent_coef idx="654" val="1.548885231894371"></consequent_coef>
+    <consequent_coef idx="655" val="3.6488295106743673"></consequent_coef>
+    <consequent_coef idx="656" val="9.412159110180845"></consequent_coef>
+    <consequent_coef idx="657" val="1.687409250978013"></consequent_coef>
+    <consequent_coef idx="658" val="8.299680033956289"></consequent_coef>
+    <consequent_coef idx="659" val="-2.4699674733720762"></consequent_coef>
+    <consequent_coef idx="660" val="27.473887444051876"></consequent_coef>
+    <consequent_coef idx="661" val="-3.7320232763662733"></consequent_coef>
+    <consequent_coef idx="662" val="0.6809166264146835"></consequent_coef>
+    <consequent_coef idx="663" val="-23.20316113948532"></consequent_coef>
+    <consequent_coef idx="664" val="23.963677231763267"></consequent_coef>
+    <consequent_coef idx="665" val="0.7144073405985827"></consequent_coef>
+    <consequent_coef idx="666" val="-1.5042469253906365"></consequent_coef>
+    <consequent_coef idx="667" val="-3.920963827477171"></consequent_coef>
+    <consequent_coef idx="668" val="-6.800212168496978"></consequent_coef>
+    <consequent_coef idx="669" val="-1.2278371289219738"></consequent_coef>
+    <consequent_coef idx="670" val="-5.612518998166292"></consequent_coef>
+    <consequent_coef idx="671" val="16.183218809160845"></consequent_coef>
+    <consequent_coef idx="672" val="-2.511251298802152"></consequent_coef>
+    <consequent_coef idx="673" val="-3.112321760412543"></consequent_coef>
+    <consequent_coef idx="674" val="-6.673413942292197"></consequent_coef>
+    <consequent_coef idx="675" val="-7.9587990882659945"></consequent_coef>
+    <consequent_coef idx="676" val="-3.604755774907348"></consequent_coef>
+    <consequent_coef idx="677" val="-8.20007266980609"></consequent_coef>
+    <consequent_coef idx="678" val="18.210050348956752"></consequent_coef>
+    <consequent_coef idx="679" val="-1.6537270675793878"></consequent_coef>
+    <consequent_coef idx="680" val="7.1693681101993905"></consequent_coef>
+    <consequent_coef idx="681" val="14.748800930863299"></consequent_coef>
+    <consequent_coef idx="682" val="30.61781374844945"></consequent_coef>
+    <consequent_coef idx="683" val="9.321020726578418"></consequent_coef>
+    <consequent_coef idx="684" val="9.743164340918575"></consequent_coef>
+    <consequent_coef idx="685" val="-29.527592261906033"></consequent_coef>
+    <consequent_coef idx="686" val="-0.25976486950042815"></consequent_coef>
+    <consequent_coef idx="687" val="1.0038284580383554"></consequent_coef>
+    <consequent_coef idx="688" val="-4.341895378727374"></consequent_coef>
+    <consequent_coef idx="689" val="-6.820400443530833"></consequent_coef>
+    <consequent_coef idx="690" val="0.1272401209332027"></consequent_coef>
+    <consequent_coef idx="691" val="-1.9970574892038497"></consequent_coef>
+    <consequent_coef idx="692" val="-5.553492800300628"></consequent_coef>
+    <consequent_coef idx="693" val="3.478278019348335"></consequent_coef>
+    <consequent_coef idx="694" val="-8.571751952977081"></consequent_coef>
+    <consequent_coef idx="695" val="0.7848707465305016"></consequent_coef>
+    <consequent_coef idx="696" val="-0.2812047575050086"></consequent_coef>
+    <consequent_coef idx="697" val="6.117914060600635"></consequent_coef>
+    <consequent_coef idx="698" val="2.5677393924573955"></consequent_coef>
+    <consequent_coef idx="699" val="-7.379850376930959"></consequent_coef>
+    <consequent_coef idx="700" val="3.1446059591414928"></consequent_coef>
+    <consequent_coef idx="701" val="-0.0022158633820235914"></consequent_coef>
+    <consequent_coef idx="702" val="5.656826863750494"></consequent_coef>
+    <consequent_coef idx="703" val="-1.7007958249422235"></consequent_coef>
+    <consequent_coef idx="704" val="6.133728429676809"></consequent_coef>
+    <consequent_coef idx="705" val="2.420200302195069"></consequent_coef>
+    <consequent_coef idx="706" val="-4.66124145848805"></consequent_coef>
+    <consequent_coef idx="707" val="1.104195298233599"></consequent_coef>
+    <consequent_coef idx="708" val="2.186115386343605"></consequent_coef>
+    <consequent_coef idx="709" val="5.507690032575057"></consequent_coef>
+    <consequent_coef idx="710" val="-6.161514358272131"></consequent_coef>
+    <consequent_coef idx="711" val="-1.1231477630094653"></consequent_coef>
+    <consequent_coef idx="712" val="5.651161678408242"></consequent_coef>
+    <consequent_coef idx="713" val="4.921032801963611"></consequent_coef>
+    <consequent_coef idx="714" val="1.0095696148128739"></consequent_coef>
+    <consequent_coef idx="715" val="0.1721261355985096"></consequent_coef>
+    <consequent_coef idx="716" val="-9.733629677123904"></consequent_coef>
+    <consequent_coef idx="717" val="1.0877649884214564"></consequent_coef>
+    <consequent_coef idx="718" val="-1.1205377519548978"></consequent_coef>
+    <consequent_coef idx="719" val="-3.7494170371337834"></consequent_coef>
+    <consequent_coef idx="720" val="-10.658809723250739"></consequent_coef>
+    <consequent_coef idx="721" val="10.937443429249146"></consequent_coef>
+    <consequent_coef idx="722" val="0.4677515494534006"></consequent_coef>
+    <consequent_coef idx="723" val="-16.46964224189684"></consequent_coef>
+    <consequent_coef idx="724" val="1.6408495832470176"></consequent_coef>
+    <consequent_coef idx="725" val="-3.3153246580733065"></consequent_coef>
+    <consequent_coef idx="726" val="5.791523184424531"></consequent_coef>
+    <consequent_coef idx="727" val="-10.418879626577851"></consequent_coef>
+    <consequent_coef idx="728" val="7.645964894743701"></consequent_coef>
+    <consequent_coef idx="729" val="3.326406719622726"></consequent_coef>
+    <consequent_coef idx="730" val="3.659964778270981"></consequent_coef>
+    <consequent_coef idx="731" val="-2.4685464331037092"></consequent_coef>
+    <consequent_coef idx="732" val="0.7808545468280995"></consequent_coef>
+    <consequent_coef idx="733" val="-13.986195415696294"></consequent_coef>
+    <consequent_coef idx="734" val="10.02725009660679"></consequent_coef>
+    <consequent_coef idx="735" val="9.21049208116966"></consequent_coef>
+    <consequent_coef idx="736" val="-2.4261806593226605"></consequent_coef>
+    <consequent_coef idx="737" val="-1.3235663589257483"></consequent_coef>
+    <consequent_coef idx="738" val="2.443749027603361"></consequent_coef>
+    <consequent_coef idx="739" val="1.42179622828937"></consequent_coef>
+    <consequent_coef idx="740" val="-1.9253884409863975"></consequent_coef>
+    <consequent_coef idx="741" val="-8.373318888017112"></consequent_coef>
+    <consequent_coef idx="742" val="5.22075037587008"></consequent_coef>
+    <consequent_coef idx="743" val="-1.9939085070530196"></consequent_coef>
+    <consequent_coef idx="744" val="-1.4794818232302362"></consequent_coef>
+    <consequent_coef idx="745" val="1.150557700414444"></consequent_coef>
+    <consequent_coef idx="746" val="0.0026460515927340268"></consequent_coef>
+    <consequent_coef idx="747" val="-2.274059172868713"></consequent_coef>
+    <consequent_coef idx="748" val="-9.606360326214645"></consequent_coef>
+    <consequent_coef idx="749" val="7.227663713022864"></consequent_coef>
+    <consequent_coef idx="750" val="-3.487521631184934"></consequent_coef>
+    <consequent_coef idx="751" val="-3.3222338119530637"></consequent_coef>
+    <consequent_coef idx="752" val="-1.047604262166931"></consequent_coef>
+    <consequent_coef idx="753" val="-4.7978195871995055"></consequent_coef>
+    <consequent_coef idx="754" val="-2.2186558852952882"></consequent_coef>
+    <consequent_coef idx="755" val="-15.48866531844145"></consequent_coef>
+    <consequent_coef idx="756" val="-21.40196704902751"></consequent_coef>
+    <consequent_coef idx="757" val="-2.2964469266191125"></consequent_coef>
+    <consequent_coef idx="758" val="0.922741329760693"></consequent_coef>
+    <consequent_coef idx="759" val="-0.737538065636824"></consequent_coef>
+    <consequent_coef idx="760" val="3.35053618285951"></consequent_coef>
+    <consequent_coef idx="761" val="1.120099574034286"></consequent_coef>
+    <consequent_coef idx="762" val="-3.436110620253409"></consequent_coef>
+    <consequent_coef idx="763" val="1.9039738434953746"></consequent_coef>
+    <consequent_coef idx="764" val="-0.08970951833425787"></consequent_coef>
+    <consequent_coef idx="765" val="5.949836206635436"></consequent_coef>
+    <consequent_coef idx="766" val="-0.4850626827081888"></consequent_coef>
+    <consequent_coef idx="767" val="5.29429771931676"></consequent_coef>
+    <consequent_coef idx="768" val="4.221152885582742"></consequent_coef>
+    <consequent_coef idx="769" val="-0.9476049478715646"></consequent_coef>
+    <consequent_coef idx="770" val="-1.3881710627310127"></consequent_coef>
+    <consequent_coef idx="771" val="5.8295300405959605"></consequent_coef>
+    <consequent_coef idx="772" val="6.149617148256965"></consequent_coef>
+    <consequent_coef idx="773" val="-6.3273677707451546"></consequent_coef>
+    <consequent_coef idx="774" val="-3.1279642051203216"></consequent_coef>
+    <consequent_coef idx="775" val="5.135495064964073"></consequent_coef>
+    <consequent_coef idx="776" val="8.868406947192893"></consequent_coef>
+    <consequent_coef idx="777" val="-1.8065159504904822"></consequent_coef>
+    <consequent_coef idx="778" val="-1.2872583145781105"></consequent_coef>
+    <consequent_coef idx="779" val="-6.8344035314769185"></consequent_coef>
+    <consequent_coef idx="780" val="1.8050735804805613"></consequent_coef>
+    <consequent_coef idx="781" val="0.4742538727037647"></consequent_coef>
+    <consequent_coef idx="782" val="-3.1461530579284966"></consequent_coef>
+    <consequent_coef idx="783" val="-7.455079230439711"></consequent_coef>
+    <consequent_coef idx="784" val="10.828777283924001"></consequent_coef>
+    <consequent_coef idx="785" val="-1.6504778950018326"></consequent_coef>
+    <consequent_coef idx="786" val="-15.780263155291353"></consequent_coef>
+    <consequent_coef idx="787" val="2.224519549318589"></consequent_coef>
+    <consequent_coef idx="788" val="-1.3727115825631384"></consequent_coef>
+    <consequent_coef idx="789" val="6.64603620183533"></consequent_coef>
+    <consequent_coef idx="790" val="-8.70554759301767"></consequent_coef>
+    <consequent_coef idx="791" val="7.8096861580658885"></consequent_coef>
+    <consequent_coef idx="792" val="1.4612278225030453"></consequent_coef>
+    <consequent_coef idx="793" val="10.759718046655111"></consequent_coef>
+    <consequent_coef idx="794" val="-1.9778324463837882"></consequent_coef>
+    <consequent_coef idx="795" val="0.22713901416978793"></consequent_coef>
+    <consequent_coef idx="796" val="-16.11782689295864"></consequent_coef>
+    <consequent_coef idx="797" val="13.411881933219062"></consequent_coef>
+    <consequent_coef idx="798" val="7.643868132010683"></consequent_coef>
+    <consequent_coef idx="799" val="-0.4778802639071969"></consequent_coef>
+    <consequent_coef idx="800" val="-1.515458694933683"></consequent_coef>
+    <consequent_coef idx="801" val="0.8457654235078303"></consequent_coef>
+    <consequent_coef idx="802" val="-0.28728225469867874"></consequent_coef>
+    <consequent_coef idx="803" val="-3.0997330085335033"></consequent_coef>
+    <consequent_coef idx="804" val="-3.531341375631114"></consequent_coef>
+    <consequent_coef idx="805" val="3.488395668538603"></consequent_coef>
+    <consequent_coef idx="806" val="-0.20740967582330835"></consequent_coef>
+    <consequent_coef idx="807" val="-2.7330872752027213"></consequent_coef>
+    <consequent_coef idx="808" val="0.2280679041955362"></consequent_coef>
+    <consequent_coef idx="809" val="-2.124364393910352"></consequent_coef>
+    <consequent_coef idx="810" val="-4.447600474318868"></consequent_coef>
+    <consequent_coef idx="811" val="-3.7934200530239175"></consequent_coef>
+    <consequent_coef idx="812" val="5.213095601087486"></consequent_coef>
+    <consequent_coef idx="813" val="-1.762754807506174"></consequent_coef>
+    <consequent_coef idx="814" val="1.1014085100520594"></consequent_coef>
+    <consequent_coef idx="815" val="10.576235428209666"></consequent_coef>
+    <consequent_coef idx="816" val="-2.1549717805651896"></consequent_coef>
+    <consequent_coef idx="817" val="1.2631242543450263"></consequent_coef>
+    <consequent_coef idx="818" val="-18.63659667952793"></consequent_coef>
+    <consequent_coef idx="819" val="-19.00629718486962"></consequent_coef>
+    <consequent_coef idx="820" val="7.44038019397796"></consequent_coef>
+    <consequent_coef idx="821" val="3.4554391734311944"></consequent_coef>
+    <consequent_coef idx="822" val="6.098428931301127"></consequent_coef>
+    <consequent_coef idx="823" val="0.8281515812358684"></consequent_coef>
+    <consequent_coef idx="824" val="2.1956943346581608"></consequent_coef>
+    <consequent_coef idx="825" val="-4.459865333966186"></consequent_coef>
+    <consequent_coef idx="826" val="-1.2325977879205121"></consequent_coef>
+    <consequent_coef idx="827" val="-4.47710691998571"></consequent_coef>
+    <consequent_coef idx="828" val="-2.652628421207781"></consequent_coef>
+    <consequent_coef idx="829" val="1.686404619252264"></consequent_coef>
+    <consequent_coef idx="830" val="-3.1403865450590085"></consequent_coef>
+    <consequent_coef idx="831" val="-2.840512616761547"></consequent_coef>
+    <consequent_coef idx="832" val="-2.536366010354535"></consequent_coef>
+    <consequent_coef idx="833" val="-2.7811550865700383"></consequent_coef>
+    <consequent_coef idx="834" val="-4.290047984912119"></consequent_coef>
+    <consequent_coef idx="835" val="-7.59530944193162"></consequent_coef>
+    <consequent_coef idx="836" val="-2.229540020499202"></consequent_coef>
+    <consequent_coef idx="837" val="1.6618674767571058"></consequent_coef>
+    <consequent_coef idx="838" val="-2.0214089042464494"></consequent_coef>
+    <consequent_coef idx="839" val="-0.5615439011253981"></consequent_coef>
+    <consequent_coef idx="840" val="8.773953257275066"></consequent_coef>
+    <consequent_coef idx="841" val="-5.285741108192538"></consequent_coef>
+    <consequent_coef idx="842" val="-14.372326849046708"></consequent_coef>
+    <consequent_coef idx="843" val="0.16754024774987153"></consequent_coef>
+    <consequent_coef idx="844" val="1.8572335633417578"></consequent_coef>
+    <consequent_coef idx="845" val="2.9062255773408356"></consequent_coef>
+    <consequent_coef idx="846" val="-2.4368865930368186"></consequent_coef>
+    <consequent_coef idx="847" val="6.107866206726558"></consequent_coef>
+    <consequent_coef idx="848" val="4.602185102522536"></consequent_coef>
+    <consequent_coef idx="849" val="7.319885116451197"></consequent_coef>
+    <consequent_coef idx="850" val="-0.9782644212331041"></consequent_coef>
+    <consequent_coef idx="851" val="-2.0548464853578667"></consequent_coef>
+    <consequent_coef idx="852" val="-12.195656070651896"></consequent_coef>
+    <consequent_coef idx="853" val="-1.4999394932212482"></consequent_coef>
+    <consequent_coef idx="854" val="5.924180428922619"></consequent_coef>
+    <consequent_coef idx="855" val="-1.5411602248230347"></consequent_coef>
+    <consequent_coef idx="856" val="1.5022707137751468"></consequent_coef>
+    <consequent_coef idx="857" val="-0.10297569208270756"></consequent_coef>
+    <consequent_coef idx="858" val="-0.8432663432762789"></consequent_coef>
+    <consequent_coef idx="859" val="-1.4067402644405107"></consequent_coef>
+    <consequent_coef idx="860" val="1.2161739788683044"></consequent_coef>
+    <consequent_coef idx="861" val="-1.1553537922488326"></consequent_coef>
+    <consequent_coef idx="862" val="-0.7241678496475191"></consequent_coef>
+    <consequent_coef idx="863" val="2.4976699862189977"></consequent_coef>
+    <consequent_coef idx="864" val="-3.2912919814692128"></consequent_coef>
+    <consequent_coef idx="865" val="-1.0364886863761387"></consequent_coef>
+    <consequent_coef idx="866" val="-1.3630154627323752"></consequent_coef>
+    <consequent_coef idx="867" val="2.2790348393971636"></consequent_coef>
+    <consequent_coef idx="868" val="-1.1863739080117162"></consequent_coef>
+    <consequent_coef idx="869" val="-7.2117406401833755"></consequent_coef>
+    <consequent_coef idx="870" val="-0.7080640652284873"></consequent_coef>
+    <consequent_coef idx="871" val="-8.608729165250681"></consequent_coef>
+    <consequent_coef idx="872" val="-1.1944386815907546"></consequent_coef>
+    <consequent_coef idx="873" val="0.4727497047836114"></consequent_coef>
+    <consequent_coef idx="874" val="-4.075323165284734"></consequent_coef>
+    <consequent_coef idx="875" val="6.093183125231672"></consequent_coef>
+    <consequent_coef idx="876" val="1.8854901651982168"></consequent_coef>
+    <consequent_coef idx="877" val="2.5590104686930117"></consequent_coef>
+    <consequent_coef idx="878" val="8.410316747519149"></consequent_coef>
+    <consequent_coef idx="879" val="-1.0676585737672402"></consequent_coef>
+    <consequent_coef idx="880" val="-0.011408328992602154"></consequent_coef>
+    <consequent_coef idx="881" val="-5.394183647324496"></consequent_coef>
+    <consequent_coef idx="882" val="-3.0330605440843446"></consequent_coef>
+    <consequent_coef idx="883" val="0.7613637329747555"></consequent_coef>
+    <consequent_coef idx="884" val="-6.789053642945526"></consequent_coef>
+    <consequent_coef idx="885" val="-1.7442555270006033"></consequent_coef>
+    <consequent_coef idx="886" val="0.6268351553132155"></consequent_coef>
+    <consequent_coef idx="887" val="2.4277482636285317"></consequent_coef>
+    <consequent_coef idx="888" val="-1.3066980284445469"></consequent_coef>
+    <consequent_coef idx="889" val="4.711463861767427"></consequent_coef>
+    <consequent_coef idx="890" val="1.3526466176762693"></consequent_coef>
+    <consequent_coef idx="891" val="-8.336395877397482"></consequent_coef>
+    <consequent_coef idx="892" val="-0.4261975509661133"></consequent_coef>
+    <consequent_coef idx="893" val="4.028298404562892"></consequent_coef>
+    <consequent_coef idx="894" val="5.566924277786135"></consequent_coef>
+    <consequent_coef idx="895" val="-2.8107027075714166"></consequent_coef>
+    <consequent_coef idx="896" val="3.074095582475643"></consequent_coef>
+    <consequent_coef idx="897" val="-4.3479151312728535"></consequent_coef>
+    <consequent_coef idx="898" val="14.874547255660305"></consequent_coef>
+    <consequent_coef idx="899" val="2.4637746592666074"></consequent_coef>
+    <consequent_coef idx="900" val="0.6151966394444816"></consequent_coef>
+    <consequent_coef idx="901" val="-7.730492113841361"></consequent_coef>
+    <consequent_coef idx="902" val="-3.9907296535118886"></consequent_coef>
+    <consequent_coef idx="903" val="3.1596414043381924"></consequent_coef>
+    <consequent_coef idx="904" val="-2.128445204030726"></consequent_coef>
+    <consequent_coef idx="905" val="0.523857132037969"></consequent_coef>
+    <consequent_coef idx="906" val="-0.7977144144538393"></consequent_coef>
+    <consequent_coef idx="907" val="0.6969266335773955"></consequent_coef>
+    <consequent_coef idx="908" val="-1.2591973156179426"></consequent_coef>
+    <consequent_coef idx="909" val="-0.15063420033556532"></consequent_coef>
+    <consequent_coef idx="910" val="-1.78417682847606"></consequent_coef>
+    <consequent_coef idx="911" val="-0.882473712355556"></consequent_coef>
+    <consequent_coef idx="912" val="1.0501616827168418"></consequent_coef>
+    <consequent_coef idx="913" val="1.7937100147619474"></consequent_coef>
+    <consequent_coef idx="914" val="0.9144089869051715"></consequent_coef>
+    <consequent_coef idx="915" val="1.6382600433748076"></consequent_coef>
+    <consequent_coef idx="916" val="0.11284745295349746"></consequent_coef>
+    <consequent_coef idx="917" val="-0.39647509760507377"></consequent_coef>
+    <consequent_coef idx="918" val="1.18740407350401"></consequent_coef>
+    <consequent_coef idx="919" val="-2.6836433783878366"></consequent_coef>
+    <consequent_coef idx="920" val="-9.749611829263522"></consequent_coef>
+    <consequent_coef idx="921" val="-0.5860591073370602"></consequent_coef>
+    <consequent_coef idx="922" val="0.6890513519152418"></consequent_coef>
+    <consequent_coef idx="923" val="-0.7887260065280369"></consequent_coef>
+    <consequent_coef idx="924" val="4.8590743107005885"></consequent_coef>
+    <consequent_coef idx="925" val="2.3816431029192637"></consequent_coef>
+    <consequent_coef idx="926" val="-1.5983290857995687"></consequent_coef>
+    <consequent_coef idx="927" val="-2.5551834604366475"></consequent_coef>
+    <consequent_coef idx="928" val="-1.4131099962456548"></consequent_coef>
+    <consequent_coef idx="929" val="1.2603414128325603"></consequent_coef>
+    <consequent_coef idx="930" val="-3.16835031052958"></consequent_coef>
+    <consequent_coef idx="931" val="7.350323222791114"></consequent_coef>
+    <consequent_coef idx="932" val="1.9204273238935436"></consequent_coef>
+    <consequent_coef idx="933" val="-6.060080380150381"></consequent_coef>
+    <consequent_coef idx="934" val="-1.3369730216728053"></consequent_coef>
+    <consequent_coef idx="935" val="-2.495358589064467"></consequent_coef>
+    <consequent_coef idx="936" val="6.587425056518045"></consequent_coef>
+    <consequent_coef idx="937" val="-4.686312621119595"></consequent_coef>
+    <consequent_coef idx="938" val="4.415666402922556"></consequent_coef>
+    <consequent_coef idx="939" val="4.09575879003814"></consequent_coef>
+    <consequent_coef idx="940" val="23.036023182690602"></consequent_coef>
+    <consequent_coef idx="941" val="2.442733443287704"></consequent_coef>
+    <consequent_coef idx="942" val="-3.9997667741912046"></consequent_coef>
+    <consequent_coef idx="943" val="-11.833716521871397"></consequent_coef>
+    <consequent_coef idx="944" val="-4.504896559297565"></consequent_coef>
+    <consequent_coef idx="945" val="1.6329501794503944"></consequent_coef>
+    <consequent_coef idx="946" val="3.1218241108310725"></consequent_coef>
+    <consequent_coef idx="947" val="0.8342561507091902"></consequent_coef>
+    <consequent_coef idx="948" val="-1.0225360099289396"></consequent_coef>
+    <consequent_coef idx="949" val="-1.148711398749254"></consequent_coef>
+    <consequent_coef idx="950" val="0.8280278769750087"></consequent_coef>
+    <consequent_coef idx="951" val="1.0967086824159413"></consequent_coef>
+    <consequent_coef idx="952" val="-3.4957699064531216"></consequent_coef>
+    <consequent_coef idx="953" val="2.440625061598401"></consequent_coef>
+    <consequent_coef idx="954" val="1.1209552103448788"></consequent_coef>
+    <consequent_coef idx="955" val="-2.720302140101932"></consequent_coef>
+    <consequent_coef idx="956" val="-0.8643006592415999"></consequent_coef>
+    <consequent_coef idx="957" val="0.7153153391772135"></consequent_coef>
+    <consequent_coef idx="958" val="0.7291502494146453"></consequent_coef>
+    <consequent_coef idx="959" val="-3.2129463461773446"></consequent_coef>
+    <consequent_coef idx="960" val="-3.951224582311482"></consequent_coef>
+    <consequent_coef idx="961" val="-0.8878824159120952"></consequent_coef>
+    <consequent_coef idx="962" val="-6.527592936680633"></consequent_coef>
+    <consequent_coef idx="963" val="-2.795485952814626"></consequent_coef>
+    <consequent_coef idx="964" val="-2.4785291966577994"></consequent_coef>
+    <consequent_coef idx="965" val="0.3169072556281501"></consequent_coef>
+    <consequent_coef idx="966" val="4.039035985677757"></consequent_coef>
+    <consequent_coef idx="967" val="0.5231994444992205"></consequent_coef>
+    <consequent_coef idx="968" val="12.952507913370706"></consequent_coef>
+    <consequent_coef idx="969" val="2.755551724924693"></consequent_coef>
+    <consequent_coef idx="970" val="2.2160351876713955"></consequent_coef>
+    <consequent_coef idx="971" val="-0.9049250943428714"></consequent_coef>
+    <consequent_coef idx="972" val="3.207320546864503"></consequent_coef>
+    <consequent_coef idx="973" val="9.436776970388658"></consequent_coef>
+    <consequent_coef idx="974" val="-1.9379293519366945"></consequent_coef>
+    <consequent_coef idx="975" val="-16.935411371110877"></consequent_coef>
+    <consequent_coef idx="976" val="-7.167591156836927"></consequent_coef>
+    <consequent_coef idx="977" val="-2.1416730665619053"></consequent_coef>
+    <consequent_coef idx="978" val="-5.583593922062114"></consequent_coef>
+    <consequent_coef idx="979" val="-5.694317106372765"></consequent_coef>
+    <consequent_coef idx="980" val="3.754970881235316"></consequent_coef>
+    <consequent_coef idx="981" val="0.31770501312313826"></consequent_coef>
+    <consequent_coef idx="982" val="-6.06943447536583"></consequent_coef>
+    <consequent_coef idx="983" val="0.34860574549192197"></consequent_coef>
+    <consequent_coef idx="984" val="-0.5315042717690857"></consequent_coef>
+    <consequent_coef idx="985" val="-0.7750156418025319"></consequent_coef>
+    <consequent_coef idx="986" val="2.3358702230158648"></consequent_coef>
+    <consequent_coef idx="987" val="5.4692241858746256"></consequent_coef>
+    <consequent_coef idx="988" val="-0.6782810758702676"></consequent_coef>
+    <consequent_coef idx="989" val="-6.926703849951661"></consequent_coef>
+    <consequent_coef idx="990" val="-0.02546085898223689"></consequent_coef>
+    <consequent_coef idx="991" val="-1.3344319794221826"></consequent_coef>
+    <consequent_coef idx="992" val="-0.18269072119949664"></consequent_coef>
+    <consequent_coef idx="993" val="2.2379121896162832"></consequent_coef>
+    <consequent_coef idx="994" val="4.103333220346072"></consequent_coef>
+    <consequent_coef idx="995" val="0.9452837991850976"></consequent_coef>
+    <consequent_coef idx="996" val="-8.782413240709007"></consequent_coef>
+    <consequent_coef idx="997" val="-5.066070602707527"></consequent_coef>
+    <consequent_coef idx="998" val="0.12697555062897087"></consequent_coef>
+    <consequent_coef idx="999" val="3.821547191106212"></consequent_coef>
+    <consequent_coef idx="1000" val="1.4764421406006756"></consequent_coef>
+    <consequent_coef idx="1001" val="8.527822477053311"></consequent_coef>
+    <consequent_coef idx="1002" val="0.1373409200417102"></consequent_coef>
+    <consequent_coef idx="1003" val="-5.9052684167897755"></consequent_coef>
+    <consequent_coef idx="1004" val="-2.6037610184293043"></consequent_coef>
+    <consequent_coef idx="1005" val="1.0781341907742172"></consequent_coef>
+    <consequent_coef idx="1006" val="-9.13842341944637"></consequent_coef>
+    <consequent_coef idx="1007" val="-0.11619138323263091"></consequent_coef>
+    <consequent_coef idx="1008" val="5.750785322486724"></consequent_coef>
+    <consequent_coef idx="1009" val="-2.708153563009528"></consequent_coef>
+    <consequent_coef idx="1010" val="-13.725764421448313"></consequent_coef>
+    <consequent_coef idx="1011" val="-0.11611034317936622"></consequent_coef>
+    <consequent_coef idx="1012" val="-1.6229725861219435"></consequent_coef>
+    <consequent_coef idx="1013" val="2.81675314441764"></consequent_coef>
+    <consequent_coef idx="1014" val="3.360364174805999"></consequent_coef>
+    <consequent_coef idx="1015" val="3.420285274243479"></consequent_coef>
+    <consequent_coef idx="1016" val="-2.1015845945619533"></consequent_coef>
+    <consequent_coef idx="1017" val="-13.88143110087257"></consequent_coef>
+    <consequent_coef idx="1018" val="2.2404059763096513"></consequent_coef>
+    <consequent_coef idx="1019" val="-1.5795159128037475"></consequent_coef>
+    <consequent_coef idx="1020" val="3.3206341937029826"></consequent_coef>
+    <consequent_coef idx="1021" val="3.8370801996142685"></consequent_coef>
+    <consequent_coef idx="1022" val="3.8110988044864724"></consequent_coef>
+    <consequent_coef idx="1023" val="-2.245536075187496"></consequent_coef>
+    <consequent_coef idx="1024" val="-15.996038491339927"></consequent_coef>
+    <consequent_coef idx="1025" val="-8.797642659262667"></consequent_coef>
+    <consequent_coef idx="1026" val="-0.21363129396407737"></consequent_coef>
+    <consequent_coef idx="1027" val="5.126538392014622"></consequent_coef>
+    <consequent_coef idx="1028" val="0.6937618694203206"></consequent_coef>
+    <consequent_coef idx="1029" val="9.597696598004038"></consequent_coef>
+    <consequent_coef idx="1030" val="1.5339890843001633"></consequent_coef>
+    <consequent_coef idx="1031" val="16.148148694614054"></consequent_coef>
+    <consequent_coef idx="1032" val="-3.389996247295955"></consequent_coef>
+    <consequent_coef idx="1033" val="-0.5957661956766015"></consequent_coef>
+    <consequent_coef idx="1034" val="-10.647891171508032"></consequent_coef>
+    <consequent_coef idx="1035" val="1.2540629671046337"></consequent_coef>
+    <consequent_coef idx="1036" val="3.28734585662156"></consequent_coef>
+    <consequent_coef idx="1037" val="1.3695103770997241"></consequent_coef>
+    <consequent_coef idx="1038" val="15.697412270257669"></consequent_coef>
+    <consequent_coef idx="1039" val="-4.791115685229029"></consequent_coef>
+    <consequent_coef idx="1040" val="-1.0334815937148167"></consequent_coef>
+    <consequent_coef idx="1041" val="-10.635019617848807"></consequent_coef>
+    <consequent_coef idx="1042" val="2.6772243821364756"></consequent_coef>
+    <consequent_coef idx="1043" val="2.004068842044915"></consequent_coef>
+    <consequent_coef idx="1044" val="-1.1678214954109642"></consequent_coef>
+    <consequent_coef idx="1045" val="-9.07537045404298"></consequent_coef>
+    <consequent_coef idx="1046" val="2.557969213910254"></consequent_coef>
+    <consequent_coef idx="1047" val="0.33470080826180976"></consequent_coef>
+    <consequent_coef idx="1048" val="-0.9251691625575212"></consequent_coef>
+    <consequent_coef idx="1049" val="4.975245319329721"></consequent_coef>
+    <consequent_coef idx="1050" val="9.18608861920046"></consequent_coef>
+    <consequent_coef idx="1051" val="0.46324785359126097"></consequent_coef>
+    <consequent_coef idx="1052" val="-0.2005515744283638"></consequent_coef>
+    <consequent_coef idx="1053" val="-6.584205919242777"></consequent_coef>
+    <consequent_coef idx="1054" val="1.1269397962440375"></consequent_coef>
+    <consequent_coef idx="1055" val="0.7952996782455325"></consequent_coef>
+    <consequent_coef idx="1056" val="8.210039120245106"></consequent_coef>
+    <consequent_coef idx="1057" val="-2.3611948452417373"></consequent_coef>
+    <consequent_coef idx="1058" val="1.1050412169522839"></consequent_coef>
+    <consequent_coef idx="1059" val="0.2114239147816711"></consequent_coef>
+    <consequent_coef idx="1060" val="0.5320833860848051"></consequent_coef>
+    <consequent_coef idx="1061" val="-1.0106661544741868"></consequent_coef>
+    <consequent_coef idx="1062" val="-2.329852034680525"></consequent_coef>
+    <consequent_coef idx="1063" val="9.458730359831787"></consequent_coef>
+    <consequent_coef idx="1064" val="4.24703967807759"></consequent_coef>
+    <consequent_coef idx="1065" val="1.908651866999253"></consequent_coef>
+    <consequent_coef idx="1066" val="1.1800969854636039"></consequent_coef>
+    <consequent_coef idx="1067" val="5.186473349812047"></consequent_coef>
+    <consequent_coef idx="1068" val="-0.5963708620298269"></consequent_coef>
+    <consequent_coef idx="1069" val="-0.44081285283392224"></consequent_coef>
+    <consequent_coef idx="1070" val="8.724312439822526"></consequent_coef>
+    <consequent_coef idx="1071" val="4.379023440868471"></consequent_coef>
+  </consequent_coefs></anfis>
