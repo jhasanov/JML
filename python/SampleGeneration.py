@@ -2,7 +2,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import random
-from skimage import color
+#from skimage import color
 
 def generateRandomPixels():
     """
@@ -10,9 +10,9 @@ def generateRandomPixels():
     """
     #rgbArr = np.zeros((32,32,32,3), dtype=float)
     rgbArr = np.zeros((32,32,32,3))
-    for i in range(0,31):
-        for j in range(0,31):
-            for k in range(0,31):
+    for i in range(0,32):
+        for j in range(0,32):
+            for k in range(0,32):
                 #rgbArr[i,j,k,:] = np.random.uniform(i*8,(i+1)*8,3)
                 rgbArr[i,j,k,0] = np.random.randint(i*8,(i+1)*8)
                 rgbArr[i,j,k,1] = np.random.randint(j*8,(j+1)*8)
@@ -29,70 +29,75 @@ def generatePairs():
 
     global rgbs
 
-    sampleData = []
+    sampleData = np.array([])
     
-    for i in range(20,23):
-        for j in range(20,23):
-            for k in range(20,23):
+    for i in range(0,32):
+        for j in range(0,32):
+            for k in range(0,32):
                 # 2, 6 and 31 cubes for close, min and far, correspondingly 
                 dist_arr = [0,2,6,31]
                 for distIdx in range(1,4):
+                    # The range can be on a negative of positive side:
+                    #
+                    #  _(i-6)________(i-2)___i___(i+2)________(i+6)_
+                    #   maxIneg     minIneg      minIpos     maxIpos
+                    #
+                    minIneg = max(0,i - dist_arr[distIdx-1])
+                    minIpos = min(31,i + dist_arr[distIdx-1])
+                    maxIneg = max(0,i - dist_arr[distIdx-1] - dist_arr[distIdx])
+                    maxIpos = min(31,i + dist_arr[distIdx-1] + dist_arr[distIdx])
+
+                    minJneg = max(0,j - dist_arr[distIdx-1])
+                    minJpos = min(31,j + dist_arr[distIdx-1])
+                    maxJneg = max(0,j - dist_arr[distIdx-1] - dist_arr[distIdx])
+                    maxJpos = min(31,j + dist_arr[distIdx-1] + dist_arr[distIdx])
+
+                    minKneg = max(0,k - dist_arr[distIdx-1])
+                    minKpos = min(31,k + dist_arr[distIdx-1])
+                    maxKneg = max(0,k - dist_arr[distIdx-1] - dist_arr[distIdx])
+                    maxKpos = min(31,k + dist_arr[distIdx-1] + dist_arr[distIdx])
+
                     # 3 points per close, mid and far
-                    print (distIdx)
                     for x in range (0,3):
-                        # The range can be on a negative of positive side:
-                        #
-                        #  _(i-6)________(i-2)___i___(i+2)________(i+6)_
-                        #   maxIneg     minIneg      minIpos     maxIpos
-                        #
-                        minIneg = max(0,i - dist_arr[distIdx-1])
-                        minIpos = min(31,i + dist_arr[distIdx-1])
-                        maxIneg = max(0,i - dist_arr[distIdx-1] - dist_arr[distIdx])
-                        maxIpos = min(31,i + dist_arr[distIdx-1] + dist_arr[distIdx])
-
-                        minJneg = max(0,j - dist_arr[distIdx-1])
-                        minJpos = min(31,j + dist_arr[distIdx-1])
-                        maxJneg = max(0,j - dist_arr[distIdx-1] - dist_arr[distIdx])
-                        maxJpos = min(31,j + dist_arr[distIdx-1] + dist_arr[distIdx])
-
-                        minKneg = max(0,k - dist_arr[distIdx-1])
-                        minKpos = min(31,k + dist_arr[distIdx-1])
-                        maxKneg = max(0,k - dist_arr[distIdx-1] - dist_arr[distIdx])
-                        maxKpos = min(31,k + dist_arr[distIdx-1] + dist_arr[distIdx])
-
-                        if (maxIneg > 0) and (maxIpos > 0): # get randomly negative or positive part
+                        if (minIneg > 0) and (minIpos > 0): # get randomly negative or positive part
                             if (random.random() > 0.5):
                                 xi = random.randint(maxIneg,minIneg)
                             else:
                                 xi = random.randint(minIpos,maxIpos)
-                        elif maxIneg > 0: # get from negative part
+                        elif minIneg > 0: # get from negative part
                             xi = random.randint(maxIneg,minIneg)
                         else: # get from positive part
                             xi = random.randint(minIpos,maxIpos)
 
-                        if (maxJneg > 0) and (maxJpos > 0): # get randomly negative or positive part
+                        if (minJneg > 0) and (minJpos > 0): # get randomly negative or positive part
                             if (random.random() > 0.5):
                                 xj = random.randint(maxJneg,minJneg)
                             else:
                                 xj = random.randint(minJpos,maxJpos)
-                        elif maxJneg > 0: # get from negative part
+                        elif minJneg > 0: # get from negative part
                             xj = random.randint(maxJneg, minJneg)
                         else: # get from positive part
                             xj = random.randint(minJpos,maxJpos)
 
-                        if (maxKneg > 0) and (maxKpos > 0): # get randomly negative or positive part
+                        if (minKneg > 0) and (minKpos > 0): # get randomly negative or positive part
                             if (random.random() > 0.5):
                                 xk = random.randint(maxKneg,minKneg)
                             else:
                                 xk = random.randint(minKpos,maxKpos)
-                        elif maxKneg > 0: # get from negative part
+                        elif minKneg > 0: # get from negative part
                             xk = random.randint(maxKneg,minKneg)
                         else: # get from positive part
                             xk = random.randint(minKpos,maxKpos)
 
-                        print (i,j,k,xi,xj,xk)
-                        sampleData.append(rgbs[i,j,k].tolist() + rgbs[xi,xj,xk].tolist())
+                        if (sampleData.size < 6): # for the first time
+                            sampleData = np.hstack((rgbs[i,j,k],rgbs[xi,xj,xk]))
+                        else:
+                            x = np.hstack((rgbs[i,j,k],rgbs[xi,xj,xk]))
+                            sampleData = np.vstack((sampleData,x))
 
+
+    np.savetxt('sampleData.csv', sampleData, delimiter=',',fmt="%s")
+    print('Done')
 
 rgbs = generateRandomPixels()
 generatePairs()
