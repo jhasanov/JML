@@ -28,7 +28,7 @@ public class FileOperations {
         }
     }
 
-    public static double [][] readData(String inputDataFile, String delimeter,int startColInclusive, int endColExclusive) {
+    public static double [][] readData(String inputDataFile, String delimeter,int startColInclusive, int endColExclusive,boolean bIgnoreFirstLine) {
         double [][] inputs = new double[0][0];
         int sampleCnt, varCnt;
 
@@ -41,6 +41,10 @@ public class FileOperations {
             String line = "";
             StringTokenizer st;
             double [] elems = new double[0]; // formally initializing it to use after "while" loop
+
+            if (bIgnoreFirstLine) {
+                br.readLine();
+            }
 
             while ((line = br.readLine())!= null) {
                 st = new StringTokenizer(line,delimeter);

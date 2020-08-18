@@ -59,8 +59,8 @@ public class AnfisDemo {
 
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
-        double[][] A = FileOperations.readData("trainingData.csv", ",",0,6);
-        double[][] B = FileOperations.readData("trainingData.csv", ",",6,7);
+        double[][] A = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",0,6,true);
+        double[][] B = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",6,7,true);
 
         // Dithering parameters by %5
         if (bDither) {
@@ -128,8 +128,8 @@ public class AnfisDemo {
         //double[] retval = anfis.forwardPass(new double[] {6*1.0/180, 106*1.0/255, 12*1.0/255},-1, true);
         //System.out.println("Retval="+retval[0]);
 
-        double[][] A = FileOperations.readData("testData.csv", ",",0,6);
-        double[][] B = FileOperations.readData("testData.csv", ",",6,7);
+        double[][] A = FileOperations.readData("testData.csv", ",",0,6,true);
+        double[][] B = FileOperations.readData("testData.csv", ",",6,7,true);
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
 

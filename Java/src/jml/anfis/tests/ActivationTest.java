@@ -229,8 +229,8 @@ public class ActivationTest {
         double eps = 0.000001;
         double delta = 0.001;
 
-        double[][] A = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_inputs.csv", ",",-1,-1);
-        double[][] B = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_outputs.csv", ",",-1,-1);
+        double[][] A = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_inputs.csv", ",",-1,-1,false);
+        double[][] B = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_outputs.csv", ",",-1,-1,false);
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);
@@ -281,8 +281,8 @@ public class ActivationTest {
         double eps = 0.000001;
         double delta = 0.001;
 
-        double[][] A = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_inputs.csv", ",",-1,-1);
-        double[][] B = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_outputs.csv", ",",-1,-1);
+        double[][] A = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_inputs.csv", ",",-1,-1,false);
+        double[][] B = FileOperations.readData("E:\\Aeroimages\\Codes\\Matlab\\PixelData\\anfis_data_outputs.csv", ",",-1,-1,false);
         //Convert [P][1] to [1][P] and then keep only first row (converting 2D array into 1D)
         try {
             B = MatrixOperations.transpose(B);
