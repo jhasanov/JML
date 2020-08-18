@@ -23,11 +23,10 @@ public class AnfisDemo {
         anfis.activationList = new Activation[INPUTS * MF_PER_INPUT];
         for (int inputIdx = 0; inputIdx < INPUTS; inputIdx++) {
             for (int mfIdx = 0; mfIdx < MF_PER_INPUT; mfIdx++) {
-                //if (inputIdx <3)
-                //if ((mfIdx % 2) == 0)
+                if (mfIdx < 3)
                     anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID);
-                //else
-                //    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.BELL);
+                else
+                    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.BELL);
             }
 
         }
@@ -55,14 +54,13 @@ public class AnfisDemo {
      */
     public void trainAnfis() {
         boolean bDither = false;
-        //Anfis anfis = setParameters();
-        //FileOperations.saveAnfisToFile(anfis,"ANFIS_initial.xml");
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_initial.xml");
+        Anfis anfis = setParameters();
+        FileOperations.saveAnfisToFile(anfis,"ANFIS_config_v1.xml");
 
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
-        double[][] A = FileOperations.readData("celab2000_sample_input-10k.csv", ",");
-        double[][] B = FileOperations.readData("celab2000_sample_output-10k.csv", ",");
+        double[][] A = FileOperations.readData("trainingData.csv", ",",0,6);
+        double[][] B = FileOperations.readData("trainingData.csv", ",",6,7);
 
         // Dithering parameters by %5
         if (bDither) {
@@ -90,14 +88,14 @@ public class AnfisDemo {
         //anfis.startTraining(false, epochs, error, A, B[0], true, false);
         anfis.adamLearning(3,epochs, error, A, B[0], true, false);
         // Save ANFIS config in a file
-        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained.xml");
+        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_v2.xml");
     }
 
     /**
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis(double premiseParamDev, double conseqParamDev, double inputDev) {
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_v2.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
@@ -130,8 +128,8 @@ public class AnfisDemo {
         //double[] retval = anfis.forwardPass(new double[] {6*1.0/180, 106*1.0/255, 12*1.0/255},-1, true);
         //System.out.println("Retval="+retval[0]);
 
-        double[][] A = FileOperations.readData("celab2000_sample_input-1k.csv", ",");
-        double[][] B = FileOperations.readData("celab2000_sample_output-1k.csv", ",");
+        double[][] A = FileOperations.readData("testData.csv", ",",0,6);
+        double[][] B = FileOperations.readData("testData.csv", ",",6,7);
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
 

@@ -13,7 +13,7 @@ public class UtilTests {
 
     @Test
     public void testFileOperations() {
-        double [][] fileData = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\ANFIS\\HS_inputs.csv",",");
+        double [][] fileData = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\ANFIS\\HS_inputs.csv",",",-1,-1);
 
         System.out.print("\nTesting input data...");
         assertTrue(fileData.length == 6518);
@@ -21,7 +21,7 @@ public class UtilTests {
         System.out.println(" passed");
 
         System.out.print("Testing output data...");
-        fileData = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\ANFIS\\HS_outputs.csv",",");
+        fileData = FileOperations.readData("D:\\Aeroimages\\baku\\Jamal\\Codes\\Matlab\\ANFIS\\HS_outputs.csv",",",-1,-1);
 
         assertTrue(fileData.length == 6518);
         assertTrue(fileData[0].length == 1);

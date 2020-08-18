@@ -28,7 +28,7 @@ public class FileOperations {
         }
     }
 
-    public static double [][] readData(String inputDataFile, String delimeter) {
+    public static double [][] readData(String inputDataFile, String delimeter,int startColInclusive, int endColExclusive) {
         double [][] inputs = new double[0][0];
         int sampleCnt, varCnt;
 
@@ -44,10 +44,24 @@ public class FileOperations {
 
             while ((line = br.readLine())!= null) {
                 st = new StringTokenizer(line,delimeter);
-                elems = new double[st.countTokens()];
+                if ((startColInclusive == -1) && (endColExclusive == -1))
+                    elems = new double[st.countTokens()];
+                else {
+                    int statCol = (startColInclusive == -1) ? 0 : startColInclusive;
+                    int endCol = (endColExclusive == -1) ? st.countTokens() : endColExclusive;
+                    elems = new double[endCol-statCol];
+                }
                 int i = 0;
+                int colNum = 0;
                 while (st.hasMoreTokens()) {
-                    elems[i++] = Double.parseDouble(st.nextToken());
+                    if (((startColInclusive == -1) || (colNum >= startColInclusive)) &&
+                            ((endColExclusive == -1) || (colNum < endColExclusive)) ) {
+                        elems[i++] = Double.parseDouble(st.nextToken());
+                    }
+                    else {
+                        st.nextToken();
+                    }
+                    colNum++;
                 }
                 list.add(elems);
             }
