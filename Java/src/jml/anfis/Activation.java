@@ -5,8 +5,7 @@ package jml.anfis;
  * Created by Jamal Hasanov on 6/8/2017.
  */
 public class Activation {
-    public enum MembershipFunc {SIGMOID, BELL}
-    ;
+    public enum MembershipFunc {SIGMOID, BELL, CENTERED_BELL};
 
     MembershipFunc mf;
     double[] params;
@@ -79,6 +78,17 @@ public class Activation {
             gradientVal = 0.0;
             activationVal = 0.0;
         }
+        else if (mf == MembershipFunc.CENTERED_BELL) {
+            params = new double[2];
+            params_prev = new double[2];
+            params_delta = new double[2];
+            params[0] = Math.random();
+            params[1] = Math.random();
+            params_prev[0] = params[0];
+            params_prev[1] = params[1];
+            gradientVal = 0.0;
+            activationVal = 0.0;
+        }
     }
 
     @Override
@@ -107,6 +117,16 @@ public class Activation {
             params_prev[0] = params[0];
             params_prev[1] = params[1];
             params_prev[2] = params[2];
+            gradientVal = 0.0;
+            activationVal = 0.0;
+        }
+        else if (mf == MembershipFunc.CENTERED_BELL) {
+            params = new double[2];
+            params_prev = new double[2];
+            params[0] = Math.random();
+            params[1] = Math.random();
+            params_prev[0] = params[0];
+            params_prev[1] = params[1];
             gradientVal = 0.0;
             activationVal = 0.0;
         }
@@ -149,6 +169,10 @@ public class Activation {
 
     public double bellFunc(double x) {
         return (1/(1+Math.pow(Math.abs((x-params[0])/params[2]),2*params[1])));
+    }
+
+    public double centeredBellFunc(double x) {
+        return (1/(1+Math.pow(Math.abs((x)/params[1]),2*params[0])));
     }
 
     public double bellFuncDerivA(double x, double a, double b, double c) {
@@ -231,6 +255,9 @@ public class Activation {
         else if (mf == MembershipFunc.BELL) {
             activationVal = bellFunc(inputs[inputNo], params[0], params[1], params[2]);
         }
+        else if (mf == MembershipFunc.CENTERED_BELL) {
+            activationVal = bellFunc(inputs[inputNo], 0, params[0], params[1]);
+        }
         else
             activationVal = -1.0;
 
@@ -251,6 +278,12 @@ public class Activation {
                 deriv = bellFuncDerivB(inputs[inputNo], params[0], params[1], params[2]);
             if (paramIdx == 3)
                 deriv = bellFuncDerivC(inputs[inputNo], params[0], params[1], params[2]);
+        }
+        else if (mf == MembershipFunc.CENTERED_BELL) {
+            if (paramIdx == 1)
+                deriv = bellFuncDerivB(inputs[inputNo], 0, params[0], params[1]);
+            if (paramIdx == 2)
+                deriv = bellFuncDerivC(inputs[inputNo], 0, params[0], params[1]);
         }
         else
             deriv = 0;

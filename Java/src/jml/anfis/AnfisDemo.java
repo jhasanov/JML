@@ -23,10 +23,10 @@ public class AnfisDemo {
         anfis.activationList = new Activation[INPUTS * MF_PER_INPUT];
         for (int inputIdx = 0; inputIdx < INPUTS; inputIdx++) {
             for (int mfIdx = 0; mfIdx < MF_PER_INPUT; mfIdx++) {
-                if (mfIdx < 3)
+                if (inputIdx < 3)
                     anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID);
                 else
-                    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.BELL);
+                    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.CENTERED_BELL);
             }
 
         }
@@ -81,7 +81,7 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 50;
+        int epochs = 20;
         double error = 0.0001;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
@@ -128,8 +128,8 @@ public class AnfisDemo {
         //double[] retval = anfis.forwardPass(new double[] {6*1.0/180, 106*1.0/255, 12*1.0/255},-1, true);
         //System.out.println("Retval="+retval[0]);
 
-        double[][] A = FileOperations.readData("testData.csv", ",",0,6,true);
-        double[][] B = FileOperations.readData("testData.csv", ",",6,7,true);
+        double[][] A = FileOperations.readData("../../ColorCloseness/python/testData.csv", ",",0,6,true);
+        double[][] B = FileOperations.readData("../../ColorCloseness/python/testData.csv", ",",6,7,true);
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
 
@@ -225,10 +225,10 @@ public class AnfisDemo {
 
     public static void main(String[] args) {
         /* Run this to train ANFIS network */
-        new AnfisDemo().trainAnfis();
+        //new AnfisDemo().trainAnfis();
 
         /* Run this to test ANFIS network */
-        //new AnfisDemo().testAnfis(0, 0, 0);
+        new AnfisDemo().testAnfis(0, 0, 0);
 
         /* Generate data with ANFIS */
         //Anfis anfis = new AnfisDemo().setParameters();

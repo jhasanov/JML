@@ -46,6 +46,8 @@ public class MFGraph extends JPanel {
             gr2.drawString("SIGMOID",horizPad,20);
         else if (mfFunc.mf == Activation.MembershipFunc.BELL)
             gr2.drawString("BELL",horizPad,20);
+        else if (mfFunc.mf == Activation.MembershipFunc.CENTERED_BELL)
+            gr2.drawString("CENTERED BELL",horizPad,20);
         gr2.setColor(Color.DARK_GRAY);
         gr2.drawString("Initial activationMF",horizPad,40);
         gr2.setColor(Color.BLUE);
@@ -88,6 +90,10 @@ public class MFGraph extends JPanel {
                     sigValInit = (int) (mfBefore.bellFunc(xMin + i / horizSteps) * vertSteps);
                     sigValCurr = (int) (mfFunc.bellFunc(xMin + i / horizSteps) * vertSteps);
                     }
+                else if (mfFunc.mf == Activation.MembershipFunc.CENTERED_BELL) {
+                    sigValInit = (int) (mfBefore.centeredBellFunc(xMin + i / horizSteps) * vertSteps);
+                    sigValCurr = (int) (mfFunc.centeredBellFunc(xMin + i / horizSteps) * vertSteps);
+                }
                 int x = horizPad + i;
                 int y = dim.height - (vertPad + sigValInit);
 

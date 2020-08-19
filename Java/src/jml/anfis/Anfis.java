@@ -165,6 +165,10 @@ public class Anfis {
             if (activationList[k].mf == Activation.MembershipFunc.BELL) {
                 System.out.println(prefix + " Bell params: (" + activationList[k].params[0] + "," + activationList[k].params[1] + "," + activationList[k].params[2] + ")");
                 //System.out.println("Prev Bell params: (" + activationList[k].params_prev[0] + "," + activationList[k].params_prev[1] + "," + activationList[k].params_prev[2] + ")");
+            }
+            else if (activationList[k].mf == Activation.MembershipFunc.CENTERED_BELL) {
+                    System.out.println(prefix + " Centered Bell params: (" + activationList[k].params[0] + "," + activationList[k].params[1] + ")");
+                    //System.out.println("Prev Bell params: (" + activationList[k].params_prev[0] + "," + activationList[k].params_prev[1] + "," + activationList[k].params_prev[2] + ")");
             } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                 System.out.println(prefix + " Sigmoid params: (" + activationList[k].params[0] + ")");
                 //System.out.println("Prev Sigmoid params: (" + activationList[k].params_prev[0] + ")");
@@ -802,6 +806,16 @@ public class Anfis {
                 activationList[k].params_delta[0] += ad * activationList[k].gradientVal;
                 activationList[k].params_delta[1] += bd * activationList[k].gradientVal;
                 activationList[k].params_delta[2] += cd * activationList[k].gradientVal;
+            }
+            else if (activationList[k].mf == Activation.MembershipFunc.CENTERED_BELL) {
+                    // derivatives A,B and C
+                    double bd, cd;
+
+                    bd = activationList[k].calcDerivative(inputs, 1);
+                    cd = activationList[k].calcDerivative(inputs, 2);
+
+                    activationList[k].params_delta[0] += bd * activationList[k].gradientVal;
+                    activationList[k].params_delta[1] += cd * activationList[k].gradientVal;
             } else if (activationList[k].mf == Activation.MembershipFunc.SIGMOID) {
                 // derivatives A
                 double ad;
