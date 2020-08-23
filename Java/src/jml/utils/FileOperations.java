@@ -257,7 +257,7 @@ class AnfisXmlHandler extends DefaultHandler {
             System.out.println("      Input: " + inputId);
             // In case of Activation Layer
             if (layerId == 1) {
-                activation = new Activation(inputId - 1, Activation.MembershipFunc.valueOf(activationMF));
+                activation = new Activation(inputId - 1, Activation.MembershipFunc.valueOf(activationMF),null);
             } else if (layerId == 2) {
                 ruleArr[ruleIdx++] = inputId - 1; // because of Java array index
             }

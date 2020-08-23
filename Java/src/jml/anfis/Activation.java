@@ -53,7 +53,7 @@ public class Activation {
         this.gradientVal = gradientVal;
     }
 
-    public Activation(int inputNo, MembershipFunc mf) {
+    public Activation(int inputNo, MembershipFunc mf, double [] initParams) {
         this.inputNo = inputNo;
         this.mf = mf;
 
@@ -61,7 +61,10 @@ public class Activation {
             params = new double[1];
             params_prev = new double[1];
             params_delta = new double[1];
-            params[0] = Math.random();
+            if (initParams != null)
+                params[0] = initParams[0];
+            else
+                params[0] = Math.random();
             params_prev[0] = params[0];
             gradientVal = 0.0;
             activationVal = 0.0;
@@ -69,9 +72,16 @@ public class Activation {
             params = new double[3];
             params_prev = new double[3];
             params_delta = new double[3];
-            params[0] = Math.random();
-            params[1] = Math.random();
-            params[2] = Math.random();
+            if (initParams != null) {
+                params[0] = initParams[0];
+                params[1] = initParams[1];
+                params[2] = initParams[2];
+            }
+            else {
+                params[0] = Math.random()*2 - 1;
+                params[1] = Math.random()*2 - 1;
+                params[2] = Math.random()*2 - 1;
+            }
             params_prev[0] = params[0];
             params_prev[1] = params[1];
             params_prev[2] = params[2];
@@ -82,8 +92,14 @@ public class Activation {
             params = new double[2];
             params_prev = new double[2];
             params_delta = new double[2];
-            params[0] = Math.random();
-            params[1] = Math.random();
+            if (initParams != null) {
+                params[0] = initParams[0];
+                params[1] = initParams[1];
+            }
+            else {
+                params[0] = Math.random()*2 - 1;
+                params[1] = Math.random()*2 - 1;
+            }
             params_prev[0] = params[0];
             params_prev[1] = params[1];
             gradientVal = 0.0;
@@ -93,7 +109,7 @@ public class Activation {
 
     @Override
     public Activation clone() {
-        Activation newObj = new Activation(inputNo,mf);
+        Activation newObj = new Activation(inputNo,mf,null);
         newObj.mf = mf;
         newObj.params = params.clone();
 
@@ -181,7 +197,12 @@ public class Activation {
         if (x != a)
          modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
 
-        // add 0.001 to avoid zero derivative
+
+        // To avoid division by zero
+        if ((x==a) && (2*b < 1)) {
+            x += 0.001;
+        }
+
         double retval = Math.pow(bellVal,2) * (2*b /c) * Math.pow(Math.abs((x-a)/c),2*b-1)*modulusSign;// + 0.00000001;
         if (Double.isNaN(retval)) {
             System.out.println("bellFuncDerivA("+x+","+a+","+b+","+c+") returned NaN");
@@ -197,7 +218,11 @@ public class Activation {
         if (x == a)
             x += 0.001;
 
-        // add 0.001 to avoid zero derivative
+        // To avoid division by zero
+        if ((x==a) && (b < 1)) {
+            x += 0.001;
+        }
+
         double retval =  -1*Math.pow(bellVal,2) * Math.log(Math.abs((x-a) /c)) * Math.pow(Math.abs((x-a)/c),2*b)*2;// + 0.00000001;
 
         if (Double.isNaN(retval)) {
@@ -212,6 +237,11 @@ public class Activation {
 
         if (x!= a)
             modulusSign = (Math.abs((x-a)/c)/((x-a)/c));
+
+        // To avoid division by zero
+        if ((x==a) && (2*b < 1)) {
+            x += 0.001;
+        }
 
         // add 0.001 to avoid zero derivative
         double retval = Math.pow(bellVal,2) * (2*b /(c*c)) * Math.pow(Math.abs((x-a)/c),2*b-1)*(x-a)*modulusSign;// + 0.00000001;
@@ -257,6 +287,8 @@ public class Activation {
         }
         else if (mf == MembershipFunc.CENTERED_BELL) {
             activationVal = bellFunc(inputs[inputNo], 0, params[0], params[1]);
+            if (Double.isNaN(activationVal))
+                System.out.println("Here I am");
         }
         else
             activationVal = -1.0;

@@ -23,6 +23,8 @@ public class Anfis {
     int premiseParamCnt;
     int consequtiveParamCnt;
 
+    final double preventNan = 0.00001;
+
     public Anfis(int inputCnt, int activationCnt) {
         this.inputCnt = inputCnt;
         this.activationCnt = activationCnt;
@@ -212,6 +214,8 @@ public class Anfis {
         // calculate Activation values
         layerOutput = new double[activationCnt];
         for (int i = 0; i < activationList.length; i++) {
+            if (Double.isNaN(activationList[i].params[0]))
+                System.out.println("Here I am");
             activationList[i].activate(inputs);
             layerOutput[i] = activationList[i].activationVal;
             if (bVerbose)
@@ -247,7 +251,12 @@ public class Anfis {
 
         // Normalize - iterate through rules and calculate normalized value
         for (int i = 0; i < normalizedVals.length; i++) {
+            // avoid division by zero
+            if (ruleSum==0)
+                ruleSum = preventNan;
             normalizedVals[i] = ruleList[i].getRuleVal() / ruleSum;
+            if (Double.isNaN(normalizedVals[i]))
+                System.out.println("Here I am");
             if (bVerbose)
                 System.out.print("" + normalizedVals[i] + " ");
         }
@@ -313,6 +322,7 @@ public class Anfis {
         }
         if (bVerbose)
             System.out.println("" + layerOutput[0]);
+
         return layerOutput;
     }
 
@@ -379,6 +389,8 @@ public class Anfis {
                         double m_hat = m[paramIdx] / (1 - Math.pow(beta1, t));
                         double v_hat = v[paramIdx] / (1 - Math.pow(beta2, t));
                         activationList[k].params[n] = activationList[k].params[n] - alpha * m_hat / (Math.sqrt(v_hat) + eps);
+                        if (Double.isNaN(activationList[k].params[n]))
+                            System.out.println("Here I am");
                         paramIdx++;
                     }
                 for (int n = 0; n < linearParamCnt; n++) {
@@ -750,6 +762,13 @@ public class Anfis {
             for (int m = 0; m < normalizedVals.length; m++) {
                 double ruleGrad = 0.0;
 
+                if (ruleVals[k] == 0) {
+                    ruleVals[k] = preventNan;
+                }
+                if (ruleVals[m] == 0) {
+                    ruleVals[m] = preventNan;
+                }
+
                 if (k == m)
                     ruleGrad = normalizedVals[m] * (1 - normalizedVals[m]) / ruleVals[k];
                 else
@@ -782,7 +801,13 @@ public class Anfis {
             for (int m = 0; m < ruleList[k].inputActivations.length; m++) {
                 int idx = ruleList[k].inputActivations[m];
 
+                if (activationList[idx].activationVal == 0)
+                    activationList[idx].activationVal = preventNan;
+
                 activationList[idx].gradientVal += ruleList[k].gradientVal * ruleList[k].getRuleVal() / activationList[idx].activationVal;
+                if (Double.isNaN(activationList[idx].gradientVal))
+                    System.out.println("Here I am");
+
                 if (bVerbose)
                     System.out.print("A[" + idx + "]=" + String.format("%.6f", activationList[idx].gradientVal) + "; ");
             }
@@ -810,7 +835,6 @@ public class Anfis {
             else if (activationList[k].mf == Activation.MembershipFunc.CENTERED_BELL) {
                     // derivatives A,B and C
                     double bd, cd;
-
                     bd = activationList[k].calcDerivative(inputs, 1);
                     cd = activationList[k].calcDerivative(inputs, 2);
 
