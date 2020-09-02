@@ -35,13 +35,15 @@ public class MFGraph extends JPanel {
 
     @Override
     protected void paintComponent(Graphics gr) {
+        super.setBackground(Color.white);
         super.paintComponent(gr);
         Graphics2D gr2 = (Graphics2D)gr;
         gr2.setColor(Color.BLUE);
         Dimension dim = getSize();
 
-        gr2.setColor(Color.BLUE);
+        gr2.setColor(Color.BLACK);
 
+        /*
         if (mfFunc.mf == Activation.MembershipFunc.SIGMOID)
             gr2.drawString("SIGMOID",horizPad,20);
         else if (mfFunc.mf == Activation.MembershipFunc.BELL)
@@ -54,20 +56,26 @@ public class MFGraph extends JPanel {
         gr2.drawString("Updated activationMF",horizPad,60);
         gr2.setColor(Color.MAGENTA);
         gr2.drawString("Intput data range",horizPad,80);
+        */
+        //gr2.setColor(Color.BLUE);
 
-        gr2.setColor(Color.BLUE);
-
-        gr2.drawString(""+xMin,horizPad,dim.height-vertPad);
-        gr2.drawString(""+xMax,dim.width-horizPad,dim.height-vertPad);
+        //gr2.drawString(""+xMin,horizPad,dim.height-vertPad);
+        //gr2.drawString(""+xMax,dim.width-horizPad,dim.height-vertPad);
+        // Draw X and Y axis
+        gr2.drawLine(0, dim.height-1, dim.width, dim.height-1);
+        gr2.drawLine(dim.width/2, 0, dim.width/2,dim.height);
 
         double horizSteps, vertSteps;
         horizSteps = (dim.width - horizPad * 2) / (xMax - xMin);
         vertSteps = (dim.height - vertPad * 2);
-
+        int prevX=-1;
+        int prevY=-1;
+        int prevCurrY = -1;
 
         if (mfFunc != null) {
             for (int i = 0; i < dim.width - 2 * horizPad; i++) {
 
+                /*
                 // draw input data range:
                 int leftInputRange = (int) (horizPad+(valueMin-xMin)*horizSteps);
                 int rightInputRange = (int) (horizPad+(valueMax-xMin)*horizSteps);
@@ -78,6 +86,7 @@ public class MFGraph extends JPanel {
                 gr2.setStroke(dashedStroke);
                 gr2.drawLine(leftInputRange,vertPad,leftInputRange,(int)(dim.getHeight()-vertPad));
                 gr2.drawLine(rightInputRange,vertPad,rightInputRange,(int)(dim.getHeight()-vertPad));
+                */
 
                 gr2.setStroke(new BasicStroke(1.0f));
                 int sigValCurr = 0;
@@ -95,19 +104,27 @@ public class MFGraph extends JPanel {
                     sigValCurr = (int) (mfFunc.centeredBellFunc(xMin + i / horizSteps) * vertSteps);
                 }
                 int x = horizPad + i;
-                int y = dim.height - (vertPad + sigValInit);
+                int origY = dim.height - (vertPad + sigValInit);
+                int currY = dim.height - (vertPad + sigValCurr);
 
                 // draw activation function with initial parameters
-                gr2.setColor(Color.DARK_GRAY);
-                gr2.drawRect(x, y, 1, 1);
+                if (prevX != -1) {
+                    gr2.setColor(Color.LIGHT_GRAY);
+                    //gr2.drawRect(x, y, 1, 1);
+                    gr2.setStroke(new BasicStroke(2.0f));
+                    gr2.drawLine(prevX,prevY,x,origY);
 
-                // draw current activation function
-                y = dim.height - (vertPad + sigValCurr);
-                if (( i > (valueMin-xMin)*horizSteps) && ( i < (valueMax-xMin)*horizSteps) )
-                    gr2.setColor(Color.MAGENTA);
-                else
-                    gr2.setColor(Color.BLUE);
-                gr2.drawRect(x, y, 1, 1);
+                    // draw current activation function
+                    //if (( i > (valueMin-xMin)*horizSteps) && ( i < (valueMax-xMin)*horizSteps) )
+                    //    gr2.setColor(Color.MAGENTA);
+                    //else
+                    gr2.setStroke(new BasicStroke(1.0f));
+                    gr2.setColor(Color.BLACK);
+                    //gr2.setStroke(new BasicStroke(1.0f));
+                    gr2.drawLine(prevX,prevCurrY,x,currY);
+                    //gr2.drawRect(x, y, 1, 1);
+                }
+                prevX = x; prevY = origY; prevCurrY = currY;
             }
         }
 

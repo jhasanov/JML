@@ -582,7 +582,7 @@ public class Anfis {
             maxError = Math.max(maxError, errors[iterCnt]);
 
             graphPanel.setData(maxError, errors);
-            System.out.println("\nEpoch = " + iterCnt + "; Error = " + errors[iterCnt]);
+            System.out.println("\nEpoch = " + iterCnt + "; Error = " + errors[iterCnt]/ inputs.length);
             if (errors[iterCnt] / inputs.length < minError)
                 break;
 

@@ -59,34 +59,21 @@ public class AnfisDemo {
      */
     public Anfis setParameters() {
         // setup activations
-        byte INPUTS = 6;
-//        byte MF_PER_INPUT = 3;
+        byte INPUTS = 1;
+        byte MF_PER_INPUT = 8;
 
-//        Anfis anfis = new Anfis(INPUTS, INPUTS * MF_PER_INPUT);
-        Anfis anfis = new Anfis(INPUTS, 3*2 + 3*3);
+        Anfis anfis = new Anfis(INPUTS, INPUTS * MF_PER_INPUT);
 
-//        anfis.activationList = new Activation[INPUTS * MF_PER_INPUT];
-/*        for (int inputIdx = 0; inputIdx < INPUTS; inputIdx++) {
+        anfis.activationList = new Activation[INPUTS * MF_PER_INPUT];
+        for (int inputIdx = 0; inputIdx < INPUTS; inputIdx++) {
             for (int mfIdx = 0; mfIdx < MF_PER_INPUT; mfIdx++) {
-                if (inputIdx < 3)
+                if ((mfIdx % 2) == 0)
                     anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID,null);
                 else
-                    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.CENTERED_BELL,null);
+                    anfis.activationList[inputIdx * MF_PER_INPUT + mfIdx] = new Activation(inputIdx, Activation.MembershipFunc.BELL,null);
             }
         }
- */
-        anfis.activationList = new Activation[3*2 + 3*3];
-        for (int inputIdx = 0; inputIdx < INPUTS; inputIdx++) {
-            if (inputIdx < 3) {
-                anfis.activationList[inputIdx * 2] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID, (new double[]{-0.5}));
-                anfis.activationList[inputIdx * 2 + 1] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID, (new double[]{0.5}));
-            }
-            else {
-                anfis.activationList[5+(inputIdx-3) * 3] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID, (new double[]{-0.5}));
-                anfis.activationList[5+(inputIdx-3) * 3 + 1] = new Activation(inputIdx, Activation.MembershipFunc.SIGMOID, (new double[]{0.5}));
-                anfis.activationList[5+(inputIdx-3) * 3 + 2] = new Activation(inputIdx, Activation.MembershipFunc.CENTERED_BELL, null);
-            }
-        }
+
 
         // setup rules
         // auto-generate the combination of the rules:
@@ -112,13 +99,16 @@ public class AnfisDemo {
     public void trainAnfis() {
         boolean bDither = false;
         //Anfis anfis = setParameters();
-        Anfis anfis = configCustomAnfis();
-        FileOperations.saveAnfisToFile(anfis,"ANFIS_config_v4.xml");
+        //Anfis anfis = configCustomAnfis();
+        //FileOperations.saveAnfisToFile(anfis,"ANFIS_config_sincos.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_sincos.xml");
 
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
-        double[][] A = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",0,6,true);
-        double[][] B = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",6,7,true);
+        double[][] A = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",0,1,false);
+        double[][] B = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",1,2,false);
+//        double[][] A = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",0,6,true);
+//        double[][] B = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",6,7,true);
 
         // Dithering parameters by %5
         if (bDither) {
@@ -139,21 +129,21 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 100;
-        double error = 0.0001;
+        int epochs = 150;
+        double error = 0.001;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        //anfis.startTraining(false, epochs, error, A, B[0], true, false);
-        anfis.adamLearning(3,epochs, error, A, B[0], true, false);
+        anfis.startTraining(false, epochs, error, A, B[0], true, false);
+        //anfis.adamLearning(4,epochs, error, A, B[0], true, false);
         // Save ANFIS config in a file
-        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_v1.xml");
+        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_sincos_dump.xml");
     }
 
     /**
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis(double premiseParamDev, double conseqParamDev, double inputDev) {
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_v1.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_sincos.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
@@ -257,6 +247,20 @@ public class AnfisDemo {
         //System.out.println("False Positives: "+falsePos+"; False Negatives: "+falseNeg);
     }
 
+    public void testIteratedAnfis() {
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_sincos_hybrid.xml");
+        int totalCnt = 0;
+
+        // calculate M.S.E. and output range
+        double mse = 0.0;
+        for (double x = -2; x <=2; x+=0.001) {
+            double[] returnVal = anfis.forwardPass(new double[]{x}, -1, false);
+            //double y = Math.cos(x*x)*Math.sin(x*x*x);
+            System.out.println(x+","+returnVal[0]);
+        }
+
+    }
+
     public void generateAnfisData(String anfisConfigFile, String outputFile, int sampleCount) {
         Anfis anfis = FileOperations.loadAnfisFromFile(anfisConfigFile);
 
@@ -286,6 +290,7 @@ public class AnfisDemo {
 
         /* Run this to test ANFIS network */
         //new AnfisDemo().testAnfis(0, 0, 0);
+        //new AnfisDemo().testIteratedAnfis();
 
         /* Generate data with ANFIS */
         //Anfis anfis = new AnfisDemo().setParameters();
