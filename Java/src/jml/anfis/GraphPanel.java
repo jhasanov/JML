@@ -44,7 +44,7 @@ public class GraphPanel extends JPanel {
                 int x = (int) (horizPad + i * horizSteps);
                 int y = (int) (dim.height - (vertPad + dataValues[i] * vertSteps));
                 gr.fillRect(x - 2, y - 2, 4, 4);
-                if ((i % 50) == 0) {
+                if ((i % 500) == 0) {
                     // show maximum first 5 digits
                     String text = "";
                     if (dataValues[i] != 0) {

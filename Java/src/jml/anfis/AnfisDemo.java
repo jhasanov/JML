@@ -13,14 +13,14 @@ public class AnfisDemo {
     public Anfis configCustomAnfis() {
         Anfis anfis = new Anfis(6, 18);
         anfis.activationList = new Activation[18];
-        anfis.activationList[0] = new Activation(0, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[1] = new Activation(0, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[0] = new Activation(0, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
+        anfis.activationList[1] = new Activation(0, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
         anfis.activationList[2] = new Activation(0, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[3] = new Activation(1, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[4] = new Activation(1, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[3] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
+        anfis.activationList[4] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
         anfis.activationList[5] = new Activation(1, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[6] = new Activation(2, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[7] = new Activation(2, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[6] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
+        anfis.activationList[7] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
         anfis.activationList[8] = new Activation(2, Activation.MembershipFunc.SIGMOID,null);
 
         anfis.activationList[9] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
@@ -34,7 +34,7 @@ public class AnfisDemo {
         anfis.activationList[17] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
 
         // setup rules
-        anfis.ruleList = new Rule[12];
+        anfis.ruleList = new Rule[14];
         anfis.ruleList[0] = new Rule((new int[]{0,3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
         anfis.ruleList[1] = new Rule((new int[]{1,4, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
         anfis.ruleList[2] = new Rule((new int[]{2,5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
@@ -47,6 +47,8 @@ public class AnfisDemo {
         anfis.ruleList[9] = new Rule((new int[]{0, 1, 2, 9, 10 ,11 }), Rule.RuleOperation.AND);
         anfis.ruleList[10] = new Rule((new int[]{3, 4, 5, 12, 13, 14,}), Rule.RuleOperation.AND);
         anfis.ruleList[11] = new Rule((new int[]{6, 7, 8, 15, 16, 17}), Rule.RuleOperation.AND);
+        anfis.ruleList[12] = new Rule((new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8 }), Rule.RuleOperation.AND);
+        anfis.ruleList[13] = new Rule((new int[]{9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
 
         // here anfis generates the remaining nodes
         anfis.init();
@@ -99,16 +101,17 @@ public class AnfisDemo {
     public void trainAnfis() {
         boolean bDither = false;
         //Anfis anfis = setParameters();
-        //Anfis anfis = configCustomAnfis();
-        //FileOperations.saveAnfisToFile(anfis,"ANFIS_config_sincos.xml");
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_sincos.xml");
+        Anfis anfis = configCustomAnfis();
+        FileOperations.saveAnfisToFile(anfis,"ANFIS_config_v2.xml");
+//        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_sincos.xml");
+//        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_v2.xml");
 
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
-        double[][] A = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",0,1,false);
-        double[][] B = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",1,2,false);
-//        double[][] A = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",0,6,true);
-//        double[][] B = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",6,7,true);
+//        double[][] A = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",0,1,false);
+//        double[][] B = FileOperations.readData("../../ColorCloseness/Matlab/sample_data/cos_sin_func.csv", ",",1,2,false);
+        double[][] A = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",0,6,true);
+        double[][] B = FileOperations.readData("../../ColorCloseness/python/trainingData.csv", ",",6,7,true);
 
         // Dithering parameters by %5
         if (bDither) {
@@ -130,20 +133,20 @@ public class AnfisDemo {
         }
 
         int epochs = 150;
-        double error = 0.001;
+        double error = 0.0001;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        anfis.startTraining(false, epochs, error, A, B[0], true, false);
-        //anfis.adamLearning(4,epochs, error, A, B[0], true, false);
+        //anfis.startTraining(false, epochs, error, A, B[0], true, false);
+        anfis.adamLearning(20,epochs, error, A, B[0], true, false);
         // Save ANFIS config in a file
-        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_sincos_dump.xml");
+        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_adam.xml");
     }
 
     /**
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis(double premiseParamDev, double conseqParamDev, double inputDev) {
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_sincos.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_bp.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
