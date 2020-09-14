@@ -562,9 +562,8 @@ public class Anfis {
             System.out.println("Gradient norm: " + grad_norm);
 
             // find the range for Golden Section Rule each Nth iteration.
-            alpha = calculateAlpha(bHybrid, grad_norm, inputs, outputs, false);
-            //alpha = 0.01;
-            System.out.println("Alpha is : " + alpha);
+            alpha = 0.01;//calculateAlpha(bHybrid, grad_norm, inputs, outputs, false);
+            //System.out.println("Alpha is : " + alpha);
 
             // Adjust weights according to the minimal error
             adjustMFweights(alpha, grad_norm);

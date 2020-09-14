@@ -11,44 +11,63 @@ import javax.swing.*;
 public class AnfisDemo {
 
     public Anfis configCustomAnfis() {
-        Anfis anfis = new Anfis(6, 18);
-        anfis.activationList = new Activation[18];
+        Anfis anfis = new Anfis(6, 30);
+        anfis.activationList = new Activation[30];
         anfis.activationList[0] = new Activation(0, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
         anfis.activationList[1] = new Activation(0, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
-        anfis.activationList[2] = new Activation(0, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[3] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
-        anfis.activationList[4] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
-        anfis.activationList[5] = new Activation(1, Activation.MembershipFunc.SIGMOID,null);
-        anfis.activationList[6] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
-        anfis.activationList[7] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
-        anfis.activationList[8] = new Activation(2, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[2] = new Activation(0, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[3] = new Activation(0, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[4] = new Activation(0, Activation.MembershipFunc.SIGMOID,null);
 
-        anfis.activationList[9] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[10] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[11] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[12] = new Activation(4, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[13] = new Activation(4, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[14] = new Activation(4, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[15] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[16] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
-        anfis.activationList[17] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[5] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
+        anfis.activationList[6] = new Activation(1, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
+        anfis.activationList[7] = new Activation(1, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[8] = new Activation(1, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[9] = new Activation(1, Activation.MembershipFunc.SIGMOID,null);
+
+        anfis.activationList[10] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{-0.5});
+        anfis.activationList[11] = new Activation(2, Activation.MembershipFunc.SIGMOID,new double[]{0.5});
+        anfis.activationList[12] = new Activation(2, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[13] = new Activation(2, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[14] = new Activation(2, Activation.MembershipFunc.SIGMOID,null);
+
+        anfis.activationList[15] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[16] = new Activation(3, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[17] = new Activation(3, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[18] = new Activation(3, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[19] = new Activation(3, Activation.MembershipFunc.CENTERED_BELL,null);
+
+        anfis.activationList[20] = new Activation(4, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[21] = new Activation(4, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[22] = new Activation(4, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[23] = new Activation(4, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[24] = new Activation(4, Activation.MembershipFunc.CENTERED_BELL,null);
+
+        anfis.activationList[25] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
+        anfis.activationList[26] = new Activation(5, Activation.MembershipFunc.BELL,null);
+        anfis.activationList[27] = new Activation(5, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[28] = new Activation(5, Activation.MembershipFunc.SIGMOID,null);
+        anfis.activationList[29] = new Activation(5, Activation.MembershipFunc.CENTERED_BELL,null);
 
         // setup rules
-        anfis.ruleList = new Rule[14];
-        anfis.ruleList[0] = new Rule((new int[]{0,3, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[1] = new Rule((new int[]{1,4, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[2] = new Rule((new int[]{2,5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[3] = new Rule((new int[]{0,1, 2, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[4] = new Rule((new int[]{3,4, 5, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[5] = new Rule((new int[]{6,7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[6] = new Rule((new int[]{0, 1, 2, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[7] = new Rule((new int[]{3, 4, 5, 9, 10, 11, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[8] = new Rule((new int[]{6, 7, 8, 9, 10, 11, 12, 13, 14}), Rule.RuleOperation.AND);
-        anfis.ruleList[9] = new Rule((new int[]{0, 1, 2, 9, 10 ,11 }), Rule.RuleOperation.AND);
-        anfis.ruleList[10] = new Rule((new int[]{3, 4, 5, 12, 13, 14,}), Rule.RuleOperation.AND);
-        anfis.ruleList[11] = new Rule((new int[]{6, 7, 8, 15, 16, 17}), Rule.RuleOperation.AND);
-        anfis.ruleList[12] = new Rule((new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8 }), Rule.RuleOperation.AND);
-        anfis.ruleList[13] = new Rule((new int[]{9, 10, 11, 12, 13, 14, 15, 16, 17}), Rule.RuleOperation.AND);
+        anfis.ruleList = new Rule[15];
+        anfis.ruleList[0] = new Rule((new int[]{0, 5, 15, 20, 25 }), Rule.RuleOperation.AND);
+        anfis.ruleList[1] = new Rule((new int[]{1, 6, 16, 21, 26 }), Rule.RuleOperation.AND);
+        anfis.ruleList[2] = new Rule((new int[]{2, 7, 17, 22, 27 }), Rule.RuleOperation.AND);
+        anfis.ruleList[3] = new Rule((new int[]{3, 8, 18, 23, 28 }), Rule.RuleOperation.AND);
+        anfis.ruleList[4] = new Rule((new int[]{4, 9, 19, 24, 29 }), Rule.RuleOperation.AND);
+
+        anfis.ruleList[5] = new Rule((new int[]{0, 10, 15, 20, 25 }), Rule.RuleOperation.AND);
+        anfis.ruleList[6] = new Rule((new int[]{1, 11, 16, 21, 26 }), Rule.RuleOperation.AND);
+        anfis.ruleList[7] = new Rule((new int[]{2, 12, 17, 22, 27 }), Rule.RuleOperation.AND);
+        anfis.ruleList[8] = new Rule((new int[]{3, 13, 18, 23, 28 }), Rule.RuleOperation.AND);
+        anfis.ruleList[9] = new Rule((new int[]{4, 14, 19, 24, 29 }), Rule.RuleOperation.AND);
+
+        anfis.ruleList[10] = new Rule((new int[]{10, 5, 15, 20, 25 }), Rule.RuleOperation.AND);
+        anfis.ruleList[11] = new Rule((new int[]{11, 6, 16, 21, 26 }), Rule.RuleOperation.AND);
+        anfis.ruleList[12] = new Rule((new int[]{12, 7, 17, 22, 27 }), Rule.RuleOperation.AND);
+        anfis.ruleList[13] = new Rule((new int[]{13, 8, 18, 23, 28 }), Rule.RuleOperation.AND);
+        anfis.ruleList[14] = new Rule((new int[]{14, 9, 19, 24, 29 }), Rule.RuleOperation.AND);
 
         // here anfis generates the remaining nodes
         anfis.init();
@@ -101,10 +120,10 @@ public class AnfisDemo {
     public void trainAnfis() {
         boolean bDither = false;
         //Anfis anfis = setParameters();
-        Anfis anfis = configCustomAnfis();
-        FileOperations.saveAnfisToFile(anfis,"ANFIS_config_v2.xml");
+//        Anfis anfis = configCustomAnfis();
+//        FileOperations.saveAnfisToFile(anfis,"ANFIS_config_v3.xml");
 //        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_sincos.xml");
-//        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_v2.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_config_v3.xml");
 
         //double[][] A = FileOperations.readData("generated_input.csv", ",");
         //double[][] B = FileOperations.readData("generated_output.csv", ",");
@@ -132,14 +151,17 @@ public class AnfisDemo {
             e.printStackTrace();
         }
 
-        int epochs = 150;
+        int epochs = 200;
         double error = 0.0001;
         System.out.println("Starting with:");
         System.out.println("epochs=" + epochs + "; error=" + error + " training data size=" + A.length + " ...");
-        //anfis.startTraining(false, epochs, error, A, B[0], true, false);
-        anfis.adamLearning(20,epochs, error, A, B[0], true, false);
+        long start = System.currentTimeMillis();
+        anfis.startTraining(false, epochs, error, A, B[0], true, false);
+        //anfis.adamLearning(20,epochs, error, A, B[0], true, false);
+        long end = System.currentTimeMillis();
+        System.out.println("Training took: "+(end-start)/1000+" seconds");
         // Save ANFIS config in a file
-        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_adam.xml");
+        FileOperations.saveAnfisToFile(anfis, "ANFIS_conf_trained_bp.xml");
     }
 
     /**
@@ -289,10 +311,10 @@ public class AnfisDemo {
 
     public static void main(String[] args) {
         /* Run this to train ANFIS network */
-        new AnfisDemo().trainAnfis();
+        //new AnfisDemo().trainAnfis();
 
         /* Run this to test ANFIS network */
-        //new AnfisDemo().testAnfis(0, 0, 0);
+        new AnfisDemo().testAnfis(0, 0, 0);
         //new AnfisDemo().testIteratedAnfis();
 
         /* Generate data with ANFIS */
