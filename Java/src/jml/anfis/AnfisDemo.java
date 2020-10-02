@@ -168,7 +168,7 @@ public class AnfisDemo {
      * Load ANFIS from config file and test given parameter
      */
     public void testAnfis(double premiseParamDev, double conseqParamDev, double inputDev) {
-        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_bp.xml");
+        Anfis anfis = FileOperations.loadAnfisFromFile("ANFIS_conf_trained_adam.xml");
         int totalCnt = 0;
         int truePos = 0;
         int falsePos = 0;
@@ -226,6 +226,10 @@ public class AnfisDemo {
         double mse = 0.0;
         for (int i = 0; i < A.length; i++) {
             double[] returnVal = anfis.forwardPass(A[i], -1, false);
+            for (int x = 0;x<A[i].length; x++)
+                System.out.print(A[i][x]+",");
+            System.out.println(returnVal[0]);
+
             mse += Math.pow(returnVal[0] - B[0][i], 2.0) / 2;
 
             minOut = Math.min(minOut, returnVal[0]);
